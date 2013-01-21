@@ -57,8 +57,8 @@ class PystUnprocessableEntityError(Exception):
         self.message = data.get("Message", "")
 
     def __str__(self):
-        return "{0} [ErrorCode {1}]".format(self.message,
-                                            self.error_code)
+        msg = "{0} [ErrorCode {1}]"
+        return msg.format(self.message, self.error_code)
 
 
 class PystInternalServerError(Exception):
