@@ -1,6 +1,7 @@
 # pystmark
 
-Postmark library for python 2.6 and 2.7. Built on top of the requests library.
+[Postmark API](http://developer.postmarkapp.com/) library for python 2.6 and 2.7.
+Built on top of the [requests](http://docs.python-requests.org/en/latest/) library.
 
 [![Build Status](https://travis-ci.org/xsleonard/pystmark.png)](https://travis-ci.org/xsleonard/pystmark)
 
