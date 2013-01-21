@@ -58,7 +58,7 @@ class PystUnprocessableEntityError(Exception):
 
     def __str__(self):
         return "{0} [ErrorCode {1}]".format(self.message,
-                                             self.error_code)
+                                            self.error_code)
 
 
 class PystInternalServerError(Exception):
@@ -91,7 +91,7 @@ class PystRequest(object):
     _headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        }
+    }
     _api_key_header_name = 'X-Postmark-Server-Token'
 
     def __init__(self, api_key=None, secure=True, test=False,
