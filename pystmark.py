@@ -12,7 +12,9 @@
     :TODO:
         Attachments
         Bounce handler
-        Tests/PEP8/pyflakes
+        Tests
+        Prevalidation of messages
+        Use the PystResponse
 """
 
 import requests
@@ -144,12 +146,12 @@ class PystSender(object):
         :param message: Postmark message data
         :type message: :keyword:`dict`
 
-        :rtype: JSON encoded string
+        :rtype: JSON encoded :keyword:`unicode`
         """
         if message is None:
             message = {}
         self._update_message(message)
-        return json.dumps(message)
+        return json.dumps(message, ensure_ascii=False)
 
     def _get_api_url(self, secure=None):
         """Constructs Postmark API url
@@ -222,12 +224,12 @@ class PystBatchSender(PystSender):
 
         :param message: A collection of Postmark message data
         :type message: a collection of message :keyword:`dict`s
-        :rtype: JSON encoded string
+        :rtype: JSON encoded :keyword:`unicode`
         """
         if message is None:
             message = []
         [self._update_message(msg) for msg in message]
-        return json.dumps(message)
+        return json.dumps(message, ensure_ascii=False)
 
     def send(self, message=None, api_key=None, test=None,
              secure=None, **request_args):
