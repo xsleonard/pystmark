@@ -1,0 +1,193 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pystmark &mdash; pystmark 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pystmark 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+  
+  
+  <div class=indexwrapper>
+  
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pystmark">
+<h1>Pystmark<a class="headerlink" href="#pystmark" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-pystmark"></span><p>Pystmark is a wrapper around the Postmark API. It is built on top of
+Python Requests.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install the extension with one of the following commands:</p>
+<div class="highlight-python"><pre>$ easy_install pystmark</pre>
+</div>
+<p>or alternatively if you have pip installed:</p>
+<div class="highlight-python"><pre>$ pip install pystmark</pre>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Ensure that Python Requests is installed.</p>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sender">
+<h2>Sender<a class="headerlink" href="#sender" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pystmark.PystSender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for the Postmark API.</p>
+<p>All of the arguments used in constructing this object are
+used as defaults in the final call to <tt class="xref py py-meth docutils literal"><span class="pre">Pystmark.send()</span></tt>.
+You can override any of them at that time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Default message data</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API</li>
+<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-meth docutils literal"><span class="pre">requests.post()</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pystmark.PystSender.send">
+<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>test=None</em>, <em>secure=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send request to Postmark API.
+Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Your Postmark message data.</li>
+<li><strong>api_key</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">str</span></tt>) &#8211; Your Postmark API key.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
+<li><strong>secure&#8217;</strong> &#8211; Use the https Postmark API.</li>
+<li><strong>**request_args</strong> &#8211; Extra arguments to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="batch-sender">
+<h2>Batch Sender<a class="headerlink" href="#batch-sender" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pystmark.PystBatchSender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBatchSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for the Postmark Batch API.</p>
+<p>All of the arguments used in constructing this object are
+used as defaults in the final call to <tt class="xref py py-meth docutils literal"><span class="pre">Pystmark.send()</span></tt>.
+You can override any of them at that time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Default message data</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API</li>
+<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-meth docutils literal"><span class="pre">requests.post()</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pystmark.PystBatchSender.send">
+<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>test=None</em>, <em>secure=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send batch request to Postmark API.
+Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> (<em>A collection of Postmark message data</em>) &#8211; Your Postmark message data.</li>
+<li><strong>api_key</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">str</span></tt>) &#8211; Your Postmark API key.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
+<li><strong>secure&#8217;</strong> &#8211; Use the https Postmark API.</li>
+<li><strong>**request_args</strong> &#8211; Extra arguments to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="bounce-handler">
+<h2>Bounce Handler<a class="headerlink" href="#bounce-handler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pystmark.PystBounceHandler">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceHandler</tt><a class="headerlink" href="#pystmark.PystBounceHandler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+    <a href="http://github.com/xsleonard/pystmark"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+  
+  </div>
+  
+
+  </body>
+</html>
