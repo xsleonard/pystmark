@@ -1,3 +1,5 @@
 pep8
 -e git://github.com/kevinw/pyflakes.git#egg=pyflakes
 coverage
+nose
+mock

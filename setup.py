@@ -9,9 +9,10 @@ from setuptools import setup, find_packages
 install_requires = ['requests>=1.1.0']
 
 def test():
-    pep8 = 'pep8 pystmark.py tests'
-    pyflakes = 'pyflakes pystmark.py tests'
-    cmds = [pep8, pyflakes]
+    pep8 = 'pep8 pystmark.py tests/'
+    pyflakes = 'pyflakes pystmark.py tests/'
+    nose = 'nosetests tests/'
+    cmds = [pep8, pyflakes, nose]
     try:
         map(subprocess.check_call, map(shlex.split, cmds))
     except subprocess.CalledProcessError:

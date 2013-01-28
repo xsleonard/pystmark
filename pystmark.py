@@ -18,6 +18,7 @@
 """
 
 import requests
+from collections import Mapping
 from urlparse import urljoin
 
 try:
@@ -109,7 +110,8 @@ class PystSender(object):
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API
     :param test: Make a test request to the Postmark API
-    :param \*\*request_args: Passed to :meth:`requests.post`
+    :param request_args: Passed to :func:`requests.post`
+    :type request_args: :keyword:`dict`
     """
 
     _endpoint = '/email'
@@ -120,7 +122,7 @@ class PystSender(object):
     _api_key_header_name = 'X-Postmark-Server-Token'
 
     def __init__(self, message=None, api_key=None, secure=True,
-                 test=False, **request_args):
+                 test=False, request_args=None):
         if message is None:
             message = {}
         self.message = message
@@ -129,28 +131,53 @@ class PystSender(object):
             self._headers[self._api_key_header_name] = self.api_key
         self.secure = secure
         self.test = test
+        if request_args is None:
+            request_args = {}
         self.request_args = request_args
 
-    def _update_message(self, message):
-        """Loads defaults from :attr:`self.message` onto a message
+    def _reverse_update(self, src, dest):
+        """Updates dest with values from src if key in src is not
+        present in dest
 
-        :param message: Postmark message data.
+        :param src: Data to use as defaults for dest.
+        :type src: :keyword:`dict`.
+        :param dest: Object to load defaults to.
+        :type dest: :keyword:`dict`.
         :type message: :keyword:`dict`
         """
-        for k, v in self.message:
-            message.setdefault(k, v)
+        for k, v in src.iteritems():
+            dest.setdefault(k, v)
+
+    def _merge_request_args(self, request_args):
+        """Merges request_args to be passed to :func:`requests.request`
+        Since request_args possibly contains :keyword:`dict`s itself,
+        we need to :meth:`_reverse_update` these.
+
+        :param request_args: request_args mapping to be updated
+        :type request_args: :keyword:`dict`
+        """
+        for k, v in self.request_args.iteritems():
+            if isinstance(v, Mapping):
+                d = request_args.get(k, {})
+                if not isinstance(d, Mapping):
+                    msg = ('Default request_args "{0}" does not match '
+                           'provided request_args')
+                    raise ValueError(msg.format(k))
+                self._reverse_update(v, d)
+                request_args[k] = d
+            else:
+                request_args.setdefault(k, v)
 
     def _get_payload(self, message=None):
         """Updates message with default message paramaters.
 
         :param message: Postmark message data
         :type message: :keyword:`dict`
-
         :rtype: JSON encoded :keyword:`unicode`
         """
         if message is None:
             message = {}
-        self._update_message(message)
+        self._reverse_update(self.message, message)
         return json.dumps(message, ensure_ascii=False)
 
     def _get_api_url(self, secure=None):
@@ -167,7 +194,7 @@ class PystSender(object):
         return urljoin(api_url, self._endpoint)
 
     def send(self, message=None, api_key=None, test=None,
-             secure=None, **request_args):
+             secure=None, request_args=None):
         """Send request to Postmark API.
         Returns result of :func:`requests.post`.
 
@@ -177,26 +204,33 @@ class PystSender(object):
         :type api_key: :keyword:`str`
         :param test: Make a test request to the Postmark API.
         :param secure': Use the https Postmark API.
-        :param \*\*request_args: Extra arguments to pass to
-            :func:`requests.post`
-
+        :param request_args: Passed to :func:`requests.post`
+        :type request_args: :keyword:`dict`
         :rtype: :class:`requests.Response`
         """
+        headers = {}
         if test is None:
             test = self.test
         if api_key is None:
             api_key = self.api_key
-            headers = self._headers
+            headers.update(self._headers)
         else:
-            # copy the base headers without overwriting the api key
             headers[self._api_key_header_name] = api_key
         if api_key is None and not test:
             raise ValueError('Postmark API Key not provided')
+        if request_args is None:
+            request_args = {}
+        self._merge_request_args(request_args)
         if test:
             headers[self._api_key_header_name] = _POSTMARK_API_TEST_KEY
-        url = self.get_api_url(secure=secure)
+        self._reverse_update(request_args.setdefault('headers', {}),
+                             headers)
+        del request_args['headers']
         data = self.get_payload(message)
-        request_args.update(self.request_args)
+        self._reverse_update(request_args.setdefault('data', {}),
+                             data)
+        del request_args['data']
+        url = self.get_api_url(secure=secure)
         return requests.post(url, data=data, headers=headers,
                              **request_args)
 
@@ -213,7 +247,8 @@ class PystBatchSender(PystSender):
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API
     :param test: Make a test request to the Postmark API
-    :param \*\*request_args: Passed to :meth:`requests.post`
+    :param request_args: Passed to :func:`requests.post`
+    :type request_args: :keyword:`dict`
     """
 
     _endpoint = '/email/batch'
@@ -228,11 +263,11 @@ class PystBatchSender(PystSender):
         """
         if message is None:
             message = []
-        [self._update_message(msg) for msg in message]
+        [self._reverse_update(self.message, msg) for msg in message]
         return json.dumps(message, ensure_ascii=False)
 
     def send(self, message=None, api_key=None, test=None,
-             secure=None, **request_args):
+             secure=None, request_args=None):
         """Send batch request to Postmark API.
         Returns result of :func:`requests.post`.
 
@@ -242,14 +277,13 @@ class PystBatchSender(PystSender):
         :type api_key: :keyword:`str`
         :param test: Make a test request to the Postmark API.
         :param secure': Use the https Postmark API.
-        :param \*\*request_args: Extra arguments to pass to
-            :func:`requests.post`
-
+        :param request_args: Passed to :func:`requests.post`
+        :type request_args: :keyword:`dict`
         :rtype: :class:`requests.Response`
         """
         return super(PystBatchSender, self).send(
             message=message, api_key=api_key, test=test, secure=secure,
-            **request_args)
+            request_args=request_args)
 
 
 class PystBounceHandler(object):
