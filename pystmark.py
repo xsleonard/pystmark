@@ -13,8 +13,6 @@
         Attachments
         Bounce handler
         Tests
-        Prevalidation of messages
-        Use the PystResponse
 '''
 
 import requests
@@ -31,11 +29,13 @@ __title__ = 'pystmark'
 __version__ = '0.1'
 __license__ = 'MIT'
 
+# Constant defined in the Postmark docs:
+#   http://developer.postmarkapp.com/developer-build.html
 POSTMARK_API_URL = 'http://api.postmarkapp.com/'
 POSTMARK_API_URL_SECURE = 'https://api.postmarkapp.com/'
 POSTMARK_API_TEST_KEY = 'POSTMARK_API_TEST'
-
 MAX_RECIPIENTS_PER_MESSAGE = 20
+MAX_BATCH_MESSAGES = 500
 
 
 class PystError(Exception):
@@ -426,9 +426,10 @@ class PystSender(object):
         '''
         if secure is None:
             secure = self.secure
-        api_url = POSTMARK_API_URL
         if secure:
             api_url = POSTMARK_API_URL_SECURE
+        else:
+            api_url = POSTMARK_API_URL
         return urljoin(api_url, self.endpoint)
 
     def _get_headers(self, api_key=None, headers=None, test=None):
@@ -491,7 +492,10 @@ class PystBatchSender(PystSender):
         :rtype: JSON encoded :keyword:`unicode`
         '''
         if not message:
-            raise ValueError('No messages to send.')
+            raise PystMessageError('No messages to send.')
+        if len(message) > MAX_BATCH_MESSAGES:
+            err = 'Maximum {0} messages allowed in batch'
+            raise PystMessageError(err.format(MAX_BATCH_MESSAGES))
         message = [self._cast_message(message=msg) for msg in message]
         message = [msg.data() for msg in message]
         return json.dumps(message, ensure_ascii=False)
