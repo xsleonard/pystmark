@@ -72,9 +72,9 @@ class PystResponseError(PystError):
 
     def __str__(self):
         if not self.data:
-            msg = 'No valid JSON response. Status: {0}'
+            msg = 'Not a valid JSON response. Status: {0}'
             return msg.format(self.response.status_code)
-        msg = '[ErrorCode {1}, Message: "{2}"]'
+        msg = '[ErrorCode {0}, Message: "{1}"]'
         msg = msg.format(self.error_code, self.response_message)
         if self.message:
             msg = '{0} {1}'.format(self.message, msg)
@@ -170,37 +170,49 @@ class PystMessage(object):
         if verify:
             self.verify()
 
-    @classmethod
-    def load_model(cls, model, **kwargs):
-        for dest, src in cls._fields.items():
-            if src in model:
-                kwargs[dest] = model[src]
-        return cls(**kwargs)
-
     @property
     def recipients(self):
         cc = self._cc or []
         bcc = self._bcc or []
         return self._to + cc + bcc
 
+    @classmethod
+    def _convert_postmark_to_native(cls, message):
+        d = {}
+        for dest, src in cls._fields.items():
+            if src in message:
+                d[dest] = message[src]
+        return d
+
+    @classmethod
+    def load_message(self, message, **kwargs):
+        kwargs.update(message)
+        message = kwargs
+        try:
+            message = PystMessage(**message)
+        except TypeError as e:
+            message = self._convert_postmark_to_native(kwargs)
+            if message:
+                message = PystMessage(**message)
+            else:
+                raise e
+        return message
+
     def _verify_headers(self):
         if self.headers is None:
             return
-        try:
-            for header in self.headers:
-                required = set(('Name', 'Value'))
-                for key in required:
-                    if key not in header:
-                        err = 'Header item must contain "{0}"'
-                        raise PystMessageError(err.format(key))
-                if set(header.keys()) - required:
-                    err = 'Header item must contain only {0}'
-                    words = ['"{0}"'.format(r) for r in required]
-                    raise PystMessageError(err.format(' and '.join(words)))
-        except PystMessageError as e:
-            raise e
-        except Exception as e:
-            raise PystMessageError(str(e))
+        for header in self.headers:
+            if not isinstance(header, Mapping):
+                raise PystMessageError('Invalid "Header" value')
+            required = set(('Name', 'Value'))
+            for key in required:
+                if key not in header:
+                    err = 'Header item must contain "{0}"'
+                    raise PystMessageError(err.format(key))
+            if set(header) - required:
+                err = 'Header item must contain only {0}'
+                words = ['"{0}"'.format(r) for r in required]
+                raise PystMessageError(err.format(' and '.join(words)))
 
     def verify(self):
         if self.to is None:
@@ -264,6 +276,17 @@ class PystMessage(object):
                 d[key] = val
         return d
 
+    def json(self):
+        return json.dumps(self.data(), ensure_ascii=False)
+
+    def __eq__(self, other):
+        if isinstance(other, Mapping):
+            other = self.__class__.load_message(other)
+        return self.data() == other.data()
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class PystSender(object):
     '''A wrapper for the Postmark API.
@@ -281,7 +304,7 @@ class PystSender(object):
     :type request_args: :keyword:`dict`
     '''
 
-    _endpoint = '/email'
+    endpoint = '/email'
     _headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -290,17 +313,20 @@ class PystSender(object):
 
     def __init__(self, message=None, api_key=None, secure=True,
                  test=False, request_args=None):
-        if message is None:
-            message = PystMessage(verify=False)
-        if isinstance(message, Mapping):
-            message = PystMessage(**message)
-        self.message = message
+        self._load_initial_message(message)
         self.api_key = api_key
         self.secure = secure
         self.test = test
         if request_args is None:
             request_args = {}
         self.request_args = request_args
+
+    def _load_initial_message(self, message=None):
+        if message is None:
+            message = PystMessage(verify=False)
+        if isinstance(message, Mapping):
+            message = PystMessage.load_message(message)
+        self.message = message
 
     def _reverse_update(self, src, dest):
         '''Updates dest with values from src if key in src is not
@@ -344,11 +370,12 @@ class PystSender(object):
         '''
         if message is None:
             message = {}
-        if not isinstance(message, Mapping):
-            message = message.data()
+        if isinstance(message, Mapping):
+            message = PystMessage.load_message(message)
+        message = message.data()
         self._reverse_update(self.message.data(), message)
-        message = PystMessage.load_model(message, verify=True)
-        return json.dumps(message.data(), ensure_ascii=False)
+        message = PystMessage.load_message(message, verify=True)
+        return message.json()
 
     def _get_api_url(self, secure=None):
         '''Constructs Postmark API url
@@ -361,7 +388,7 @@ class PystSender(object):
         api_url = POSTMARK_API_URL
         if secure:
             api_url = POSTMARK_API_URL_SECURE
-        return urljoin(api_url, self._endpoint)
+        return urljoin(api_url, self.endpoint)
 
     def _get_headers(self, api_key=None, headers=None, test=None):
         if headers is None:
@@ -370,7 +397,7 @@ class PystSender(object):
             headers[self._api_key_header_name] = POSTMARK_API_TEST_KEY
         elif api_key is not None:
             headers[self._api_key_header_name] = api_key
-        self._reverse_update(self._headers, headers)
+        headers.update(self._headers)
         if not headers.get(self._api_key_header_name):
             raise ValueError('Postmark API Key not provided')
         return headers
@@ -430,7 +457,7 @@ class PystBatchSender(PystSender):
     :type request_args: :keyword:`dict`
     '''
 
-    _endpoint = '/email/batch'
+    endpoint = '/email/batch'
 
     def _get_payload(self, message=None):
         '''Updates all messages in message with default message
