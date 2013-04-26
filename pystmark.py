@@ -114,7 +114,7 @@ class PystResponse(object):
         self._requests_response = response
 
     def __getattribute__(self, k):
-        if k in object.__getattribute__(self, '_attrs'):
+        if k == '_attrs' or k in object.__getattribute__(self, '_attrs'):
             return object.__getattribute__(self, k)
         r = object.__getattribute__(self, '_requests_response')
         if k == '_requests_response':
