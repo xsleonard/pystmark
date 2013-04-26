@@ -107,10 +107,31 @@ class PystInternalServerError(PystResponseError):
 
 
 class PystResponse(object):
-    '''Wrapper around :class:`requests.Response`.'''
+
+    _attrs = []
 
     def __init__(self, response):
         self._requests_response = response
+
+    def __getattribute__(self, k):
+        if k in object.__getattribute__(self, '_attrs'):
+            return object.__getattribute__(self, k)
+        r = object.__getattribute__(self, '_requests_response')
+        if k == '_requests_response':
+            return r
+        return r.__getattribute__(k)
+
+    def __setattr__(self, k, v):
+        if k == '_requests_response' or k in self._attrs:
+            object.__setattr__(self, k, v)
+        else:
+            self._requests_response.__setattr__(k, v)
+
+
+class PystSendResponse(PystResponse):
+    '''Wrapper around :class:`requests.Response`.'''
+
+    _attrs = ['raise_for_status']
 
     def raise_for_status(self):
         '''Raise Postmark-specific error messages'''
@@ -122,19 +143,9 @@ class PystResponse(object):
             raise PystInternalServerError(self._requests_response)
         return self._requests_response.raise_for_status()
 
-    def __getattribute__(self, k):
-        if k == 'raise_for_status':
-            return object.__getattribute__(self, 'raise_for_status')
-        r = object.__getattribute__(self, '_requests_response')
-        if k == '_requests_response':
-            return r
-        return r.__getattribute__(k)
 
-    def __setattr__(self, k, v):
-        if k == '_requests_response':
-            object.__setattr__(self, k, v)
-        else:
-            self._requests_response.__setattr__(k, v)
+class PystBounceResponse(PystResponse):
+    pass
 
 
 class PystMessage(object):
@@ -357,7 +368,74 @@ class PystMessage(object):
         return not self.__eq__(other)
 
 
-class PystSender(object):
+class PystInterface(object):
+
+    method = None
+    endpoint = None
+    response_class = PystResponse
+
+    _headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+    _api_key_header_name = 'X-Postmark-Server-Token'
+
+    def __init__(self, api_key=None, secure=True, test=False):
+        self.api_key = api_key
+        self.secure = secure
+        self.test = test
+
+    def _get_api_url(self, secure=None, **formatters):
+        '''Constructs Postmark API url
+
+        :param secure': Use the https Postmark API.
+        :rtype: Postmark API url
+        '''
+        if self.endpoint is None:
+            raise NotImplementedError('endpoint must be defined on a subclass')
+        if secure is None:
+            secure = self.secure
+        if secure:
+            api_url = POSTMARK_API_URL_SECURE
+        else:
+            api_url = POSTMARK_API_URL
+        url = urljoin(api_url, self.endpoint)
+        if formatters:
+            url = url.format(**formatters)
+        return url
+
+    def _get_headers(self, api_key=None, headers=None, test=None):
+        if headers is None:
+            headers = {}
+        if (test is None and self.test) or test:
+            headers[self._api_key_header_name] = POSTMARK_API_TEST_KEY
+        elif api_key is not None:
+            headers[self._api_key_header_name] = api_key
+        headers.update(self._headers)
+        if not headers.get(self._api_key_header_name):
+            raise ValueError('Postmark API Key not provided')
+        return headers
+
+    def request(self, url, **kwargs):
+        if self.method is None:
+            raise NotImplementedError('method must be defined on a subclass')
+        response = requests.request(self.method, url, **kwargs)
+        return self.response_class(response)
+
+
+class PystGetInterface(PystInterface):
+
+    method = 'GET'
+
+    def get(self, secure=None, test=None, api_key=None, request_args=None):
+        url = self._get_api_url(secure=secure)
+        headers = request_args.pop('headers', {})
+        headers = self._get_headers(api_key=api_key, headers=headers,
+                                    test=test)
+        return self.request(url, headers=headers, **request_args)
+
+
+class PystSender(PystInterface):
     '''A wrapper for the Postmark API.
 
     All of the arguments used in constructing this object are
@@ -373,19 +451,15 @@ class PystSender(object):
     :type request_args: :keyword:`dict`
     '''
 
+    method = 'POST'
     endpoint = '/email'
-    _headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    }
-    _api_key_header_name = 'X-Postmark-Server-Token'
+    response_class = PystSendResponse
 
     def __init__(self, message=None, api_key=None, secure=True, test=False,
                  request_args=None):
+        super(PystSender, self).__init__(api_key=api_key, secure=secure,
+                                         test=test)
         self._load_initial_message(message)
-        self.api_key = api_key
-        self.secure = secure
-        self.test = test
         if request_args is None:
             request_args = {}
         self.request_args = request_args
@@ -408,19 +482,12 @@ class PystSender(object):
         if request_args is None:
             request_args = {}
         self._merge_request_args(request_args)
-
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
                                     test=test)
-
         data = self._get_request_content(message)
-        self._reverse_update(request_args.pop('data', {}), data)
-
         url = self._get_api_url(secure=secure)
-        response = requests.post(url, data=data, headers=headers,
-                                 **request_args)
-        response = PystResponse(response)
-        return response
+        return self.request(url, data=data, headers=headers, **request_args)
 
     def _load_initial_message(self, message=None):
         if message is None:
@@ -481,32 +548,6 @@ class PystSender(object):
         message = self._cast_message(message=message)
         return message.json()
 
-    def _get_api_url(self, secure=None):
-        '''Constructs Postmark API url
-
-        :param secure': Use the https Postmark API.
-        :rtype: Postmark API url
-        '''
-        if secure is None:
-            secure = self.secure
-        if secure:
-            api_url = POSTMARK_API_URL_SECURE
-        else:
-            api_url = POSTMARK_API_URL
-        return urljoin(api_url, self.endpoint)
-
-    def _get_headers(self, api_key=None, headers=None, test=None):
-        if headers is None:
-            headers = {}
-        if (test is None and self.test) or test:
-            headers[self._api_key_header_name] = POSTMARK_API_TEST_KEY
-        elif api_key is not None:
-            headers[self._api_key_header_name] = api_key
-        headers.update(self._headers)
-        if not headers.get(self._api_key_header_name):
-            raise ValueError('Postmark API Key not provided')
-        return headers
-
 
 class PystBatchSender(PystSender):
     '''A wrapper for the Postmark Batch API.
@@ -564,5 +605,98 @@ class PystBatchSender(PystSender):
         return json.dumps(message, ensure_ascii=False)
 
 
-class PystBounceHandler(object):
-    pass
+class PystBounces(PystGetInterface):
+    endpoint = '/bounces'
+
+    def get(self, secure=None, params=None, test=None, api_key=None,
+            request_args=None):
+        # TODO -- update params
+        url = self._get_api_url(secure=secure)
+        headers = request_args.pop('headers', {})
+        headers = self._get_headers(api_key=api_key, headers=headers,
+                                    test=test)
+        return self.request(url, headers=headers, params=params,
+                            **request_args)
+
+
+class PystBounce(PystGetInterface):
+    endpoint = '/bounces/{bounce_id}'
+    response_class = PystBounceResponse
+
+    def get(self, bounce_id, secure=None, test=None, api_key=None,
+            request_args=None):
+        url = self._get_api_url(secure=secure, bounce_id=bounce_id)
+        headers = request_args.pop('headers', {})
+        headers = self._get_headers(api_key=api_key, headers=headers,
+                                    test=test)
+        return self.request(url, headers=headers, **request_args)
+
+
+class PystBounceDump(PystBounce):
+    endpoint = '/bounces/{bounce_id}/dump'
+
+
+class PystBounceTags(PystGetInterface):
+    endpoint = '/bounces/tags'
+
+
+class PystDeliveryStats(PystGetInterface):
+    endpoint = '/deliverystats'
+
+
+class PystBounceActivate(PystInterface):
+    method = 'PUT'
+    endpoint = '/bounces/{bounce_id}/activate'
+
+    def activate(self, bounce_id, secure=None, test=None, api_key=None,
+                 request_args=None):
+        url = self._get_api_url(secure=secure, bounce_id=bounce_id)
+        headers = request_args.pop('headers', {})
+        headers = self._get_headers(api_key=api_key, headers=headers,
+                                    test=test)
+        return self.request(url, headers=headers, **request_args)
+
+
+_default_pyst_sender = PystSender()
+_default_pyst_batch_sender = PystBatchSender()
+_default_bounces = PystBounces()
+_default_bounce = PystBounce()
+_default_bounce_dump = PystBounceDump()
+_default_bounce_tags = PystBounceTags()
+_default_delivery_stats = PystDeliveryStats()
+_default_bounce_activate = PystBounceActivate()
+
+
+def send(api_key, message, **kwargs):
+    return _default_pyst_sender.send(message=message, api_key=api_key,
+                                     **kwargs)
+
+
+def send_batch(api_key, messages, **kwargs):
+    return _default_pyst_batch_sender.send(message=messages, api_key=api_key,
+                                           **kwargs)
+
+
+def get_delivery_stats(api_key, **kwargs):
+    return _default_delivery_stats.get(api_key=api_key, **kwargs)
+
+
+def get_bounces(api_key, **kwargs):
+    return _default_bounces.get(api_key=api_key, **kwargs)
+
+
+def get_bounce(api_key, bounce_id, **kwargs):
+    return _default_bounce.get(bounce_id, api_key=api_key, **kwargs)
+
+
+def get_bounce_dump(api_key, bounce_id, **kwargs):
+    return _default_bounce_dump.get(bounce_id, api_key=api_key, **kwargs)
+
+
+def get_bounce_tags(api_key, **kwargs):
+    return _default_bounce_tags.get(**kwargs)
+
+
+def activate_bounce(api_key, bounce_id, **kwargs):
+    return _default_bounce_activate.activate(bounce_id, api_key=api_key,
+                                             **kwargs)
