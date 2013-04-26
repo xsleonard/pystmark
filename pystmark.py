@@ -592,7 +592,7 @@ class PystBatchSender(PystSender):
 class PystBounces(PystGetInterface):
     endpoint = '/bounces'
 
-    def get(self, secure=None, params=None, test=None, api_key=None,
+    def get(self, api_key=None, test=None, secure=None, params=None,
             **request_args):
         # TODO -- update params
         url = self._get_api_url(secure=secure)
@@ -607,7 +607,7 @@ class PystBounce(PystGetInterface):
     endpoint = '/bounces/{bounce_id}'
     response_class = PystBounceResponse
 
-    def get(self, bounce_id, secure=None, test=None, api_key=None,
+    def get(self, bounce_id, api_key=None, test=None, secure=None,
             **request_args):
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
@@ -632,7 +632,7 @@ class PystBounceActivate(PystInterface):
     method = 'PUT'
     endpoint = '/bounces/{bounce_id}/activate'
 
-    def activate(self, bounce_id, secure=None, test=None, api_key=None,
+    def activate(self, bounce_id, api_key=None, test=None, secure=None,
                  **request_args):
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
