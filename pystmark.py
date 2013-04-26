@@ -427,7 +427,7 @@ class PystGetInterface(PystInterface):
 
     method = 'GET'
 
-    def get(self, secure=None, test=None, api_key=None, request_args=None):
+    def get(self, secure=None, test=None, api_key=None, **request_args):
         url = self._get_api_url(secure=secure)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
@@ -456,16 +456,14 @@ class PystSender(PystInterface):
     response_class = PystSendResponse
 
     def __init__(self, message=None, api_key=None, secure=True, test=False,
-                 request_args=None):
+                 **request_args):
         super(PystSender, self).__init__(api_key=api_key, secure=secure,
                                          test=test)
         self._load_initial_message(message)
-        if request_args is None:
-            request_args = {}
         self.request_args = request_args
 
     def send(self, message=None, api_key=None, test=None, secure=None,
-             request_args=None):
+             **request_args):
         '''Send request to Postmark API.
         Returns result of :func:`requests.post`.
 
@@ -479,8 +477,6 @@ class PystSender(PystInterface):
         :type request_args: :keyword:`dict`
         :rtype: :class:`requests.Response`
         '''
-        if request_args is None:
-            request_args = {}
         self._merge_request_args(request_args)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
@@ -568,7 +564,7 @@ class PystBatchSender(PystSender):
     endpoint = '/email/batch'
 
     def send(self, message=None, api_key=None, test=None, secure=None,
-             request_args=None):
+             **request_args):
         '''Send batch request to Postmark API.
         Returns result of :func:`requests.post`.
 
@@ -609,7 +605,7 @@ class PystBounces(PystGetInterface):
     endpoint = '/bounces'
 
     def get(self, secure=None, params=None, test=None, api_key=None,
-            request_args=None):
+            **request_args):
         # TODO -- update params
         url = self._get_api_url(secure=secure)
         headers = request_args.pop('headers', {})
@@ -624,7 +620,7 @@ class PystBounce(PystGetInterface):
     response_class = PystBounceResponse
 
     def get(self, bounce_id, secure=None, test=None, api_key=None,
-            request_args=None):
+            **request_args):
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
@@ -649,7 +645,7 @@ class PystBounceActivate(PystInterface):
     endpoint = '/bounces/{bounce_id}/activate'
 
     def activate(self, bounce_id, secure=None, test=None, api_key=None,
-                 request_args=None):
+                 **request_args):
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
