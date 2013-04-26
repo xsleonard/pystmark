@@ -41,6 +41,9 @@ MAX_RECIPIENTS_PER_MESSAGE = 20
 MAX_BATCH_MESSAGES = 500
 
 
+''' Simple API '''
+
+
 def send(api_key, message, **kwargs):
     return _default_pyst_sender.send(message=message, api_key=api_key,
                                      **kwargs)
@@ -76,111 +79,7 @@ def activate_bounce(api_key, bounce_id, **kwargs):
                                              **kwargs)
 
 
-class PystError(Exception):
-    '''Base `Exception` for :mod:`pystmark` errors.'''
-    message = ''
-
-    def __init__(self, message=None):
-        if message is not None:
-            self.message = message
-
-    def __str__(self):
-        return str(self.message)
-
-
-class PystMessageError(PystError):
-    ''' Raised when a message meant to be sent to Postmark API looks
-        malformed
-    '''
-    message = 'Refusing to send malformed message'
-
-
-class PystResponseError(PystError):
-    '''Base `Exception` for errors received from Postmark API'''
-
-    def __init__(self, response, message=None):
-        self.response = response
-        try:
-            self.data = response.json()
-        except ValueError:
-            self.data = {}
-        self.error_code = self.data.get('ErrorCode', -1)
-        self.message = self.data.get('Message', '')
-        self.message_id = self.data.get('MessageID', '')
-        self.submitted_at = self.data.get('SubmittedAt', '')
-        self.to = self.data.get('To', '')
-        super(PystResponseError, self).__init__(message=message)
-
-    def __str__(self):
-        if not self.data:
-            msg = 'Not a valid JSON response. Status: {0}'
-            return msg.format(self.response.status_code)
-        msg = '[ErrorCode {0}, Message: "{1}"]'
-        return msg.format(self.error_code, self.message)
-
-
-class PystUnauthorizedError(PystResponseError):
-    '''Raised when Postmark responds with a :attr:`status_code` of 401
-    Indicates a missing or incorrect API key.
-    '''
-    pass
-
-
-class PystUnprocessableEntityError(PystResponseError):
-    '''Raised when Postmark responds with a :attr:`status_code` of 422.
-    Indicates message(s) received by Postmark were malformed.
-    '''
-    pass
-
-
-class PystInternalServerError(PystResponseError):
-    '''Raised when Postmark responds with a :attr:`status_code` of 500
-    Indicates an error on Postmark's end. Any messages sent
-    in the request were not received by them.
-    '''
-    pass
-
-
-class PystResponse(object):
-
-    _attrs = []
-
-    def __init__(self, response):
-        self._requests_response = response
-
-    def __getattribute__(self, k):
-        if k == '_attrs' or k in object.__getattribute__(self, '_attrs'):
-            return object.__getattribute__(self, k)
-        r = object.__getattribute__(self, '_requests_response')
-        if k == '_requests_response':
-            return r
-        return r.__getattribute__(k)
-
-    def __setattr__(self, k, v):
-        if k == '_requests_response' or k in self._attrs:
-            object.__setattr__(self, k, v)
-        else:
-            self._requests_response.__setattr__(k, v)
-
-
-class PystSendResponse(PystResponse):
-    '''Wrapper around :class:`requests.Response`.'''
-
-    _attrs = ['raise_for_status']
-
-    def raise_for_status(self):
-        '''Raise Postmark-specific error messages'''
-        if self.status_code == 401:
-            raise PystUnauthorizedError(self._requests_response)
-        elif self.status_code == 422:
-            raise PystUnprocessableEntityError(self._requests_response)
-        elif self.status_code == 500:
-            raise PystInternalServerError(self._requests_response)
-        return self._requests_response.raise_for_status()
-
-
-class PystBounceResponse(PystResponse):
-    pass
+''' Messages '''
 
 
 class PystMessage(object):
@@ -403,6 +302,54 @@ class PystMessage(object):
         return not self.__eq__(other)
 
 
+''' Response Wrappers '''
+
+
+class PystResponse(object):
+
+    _attrs = []
+
+    def __init__(self, response):
+        self._requests_response = response
+
+    def __getattribute__(self, k):
+        if k == '_attrs' or k in object.__getattribute__(self, '_attrs'):
+            return object.__getattribute__(self, k)
+        r = object.__getattribute__(self, '_requests_response')
+        if k == '_requests_response':
+            return r
+        return r.__getattribute__(k)
+
+    def __setattr__(self, k, v):
+        if k == '_requests_response' or k in self._attrs:
+            object.__setattr__(self, k, v)
+        else:
+            self._requests_response.__setattr__(k, v)
+
+
+class PystSendResponse(PystResponse):
+    '''Wrapper around :class:`requests.Response`.'''
+
+    _attrs = ['raise_for_status']
+
+    def raise_for_status(self):
+        '''Raise Postmark-specific error messages'''
+        if self.status_code == 401:
+            raise PystUnauthorizedError(self._requests_response)
+        elif self.status_code == 422:
+            raise PystUnprocessableEntityError(self._requests_response)
+        elif self.status_code == 500:
+            raise PystInternalServerError(self._requests_response)
+        return self._requests_response.raise_for_status()
+
+
+class PystBounceResponse(PystResponse):
+    pass
+
+
+''' Interfaces '''
+
+
 class PystInterface(object):
 
     method = None
@@ -468,6 +415,9 @@ class PystGetInterface(PystInterface):
         headers = self._get_headers(api_key=api_key, headers=headers,
                                     test=test)
         return self.request(url, headers=headers, **request_args)
+
+
+''' Send API '''
 
 
 class PystSender(PystInterface):
@@ -636,6 +586,9 @@ class PystBatchSender(PystSender):
         return json.dumps(message, ensure_ascii=False)
 
 
+''' Bounce API '''
+
+
 class PystBounces(PystGetInterface):
     endpoint = '/bounces'
 
@@ -687,6 +640,76 @@ class PystBounceActivate(PystInterface):
                                     test=test)
         return self.request(url, headers=headers, **request_args)
 
+
+''' Exceptions '''
+
+
+class PystError(Exception):
+    '''Base `Exception` for :mod:`pystmark` errors.'''
+    message = ''
+
+    def __init__(self, message=None):
+        if message is not None:
+            self.message = message
+
+    def __str__(self):
+        return str(self.message)
+
+
+class PystMessageError(PystError):
+    ''' Raised when a message meant to be sent to Postmark API looks
+        malformed
+    '''
+    message = 'Refusing to send malformed message'
+
+
+class PystResponseError(PystError):
+    '''Base `Exception` for errors received from Postmark API'''
+
+    def __init__(self, response, message=None):
+        self.response = response
+        try:
+            self.data = response.json()
+        except ValueError:
+            self.data = {}
+        self.error_code = self.data.get('ErrorCode', -1)
+        self.message = self.data.get('Message', '')
+        self.message_id = self.data.get('MessageID', '')
+        self.submitted_at = self.data.get('SubmittedAt', '')
+        self.to = self.data.get('To', '')
+        super(PystResponseError, self).__init__(message=message)
+
+    def __str__(self):
+        if not self.data:
+            msg = 'Not a valid JSON response. Status: {0}'
+            return msg.format(self.response.status_code)
+        msg = '[ErrorCode {0}, Message: "{1}"]'
+        return msg.format(self.error_code, self.message)
+
+
+class PystUnauthorizedError(PystResponseError):
+    '''Raised when Postmark responds with a :attr:`status_code` of 401
+    Indicates a missing or incorrect API key.
+    '''
+    pass
+
+
+class PystUnprocessableEntityError(PystResponseError):
+    '''Raised when Postmark responds with a :attr:`status_code` of 422.
+    Indicates message(s) received by Postmark were malformed.
+    '''
+    pass
+
+
+class PystInternalServerError(PystResponseError):
+    '''Raised when Postmark responds with a :attr:`status_code` of 500
+    Indicates an error on Postmark's end. Any messages sent
+    in the request were not received by them.
+    '''
+    pass
+
+
+''' Singletons '''
 
 _default_pyst_sender = PystSender()
 _default_pyst_batch_sender = PystBatchSender()
