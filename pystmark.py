@@ -41,6 +41,41 @@ MAX_RECIPIENTS_PER_MESSAGE = 20
 MAX_BATCH_MESSAGES = 500
 
 
+def send(api_key, message, **kwargs):
+    return _default_pyst_sender.send(message=message, api_key=api_key,
+                                     **kwargs)
+
+
+def send_batch(api_key, messages, **kwargs):
+    return _default_pyst_batch_sender.send(message=messages, api_key=api_key,
+                                           **kwargs)
+
+
+def get_delivery_stats(api_key, **kwargs):
+    return _default_delivery_stats.get(api_key=api_key, **kwargs)
+
+
+def get_bounces(api_key, **kwargs):
+    return _default_bounces.get(api_key=api_key, **kwargs)
+
+
+def get_bounce(api_key, bounce_id, **kwargs):
+    return _default_bounce.get(bounce_id, api_key=api_key, **kwargs)
+
+
+def get_bounce_dump(api_key, bounce_id, **kwargs):
+    return _default_bounce_dump.get(bounce_id, api_key=api_key, **kwargs)
+
+
+def get_bounce_tags(api_key, **kwargs):
+    return _default_bounce_tags.get(**kwargs)
+
+
+def activate_bounce(api_key, bounce_id, **kwargs):
+    return _default_bounce_activate.activate(bounce_id, api_key=api_key,
+                                             **kwargs)
+
+
 class PystError(Exception):
     '''Base `Exception` for :mod:`pystmark` errors.'''
     message = ''
@@ -661,38 +696,3 @@ _default_bounce_dump = PystBounceDump()
 _default_bounce_tags = PystBounceTags()
 _default_delivery_stats = PystDeliveryStats()
 _default_bounce_activate = PystBounceActivate()
-
-
-def send(api_key, message, **kwargs):
-    return _default_pyst_sender.send(message=message, api_key=api_key,
-                                     **kwargs)
-
-
-def send_batch(api_key, messages, **kwargs):
-    return _default_pyst_batch_sender.send(message=messages, api_key=api_key,
-                                           **kwargs)
-
-
-def get_delivery_stats(api_key, **kwargs):
-    return _default_delivery_stats.get(api_key=api_key, **kwargs)
-
-
-def get_bounces(api_key, **kwargs):
-    return _default_bounces.get(api_key=api_key, **kwargs)
-
-
-def get_bounce(api_key, bounce_id, **kwargs):
-    return _default_bounce.get(bounce_id, api_key=api_key, **kwargs)
-
-
-def get_bounce_dump(api_key, bounce_id, **kwargs):
-    return _default_bounce_dump.get(bounce_id, api_key=api_key, **kwargs)
-
-
-def get_bounce_tags(api_key, **kwargs):
-    return _default_bounce_tags.get(**kwargs)
-
-
-def activate_bounce(api_key, bounce_id, **kwargs):
-    return _default_bounce_activate.activate(bounce_id, api_key=api_key,
-                                             **kwargs)
