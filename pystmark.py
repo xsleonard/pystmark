@@ -683,7 +683,7 @@ class PystResponseError(PystError):
         if not self.data:
             msg = 'Not a valid JSON response. Status: {0}'
             return msg.format(self.response.status_code)
-        msg = '[ErrorCode {0}, Message: "{1}"]'
+        msg = '{1} [ErrorCode {0}]'
         return msg.format(self.error_code, self.message)
 
 
