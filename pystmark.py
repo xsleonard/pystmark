@@ -12,12 +12,15 @@
     :TODO:
         Attachments
         Bounce handler
-        Tests
+        Live/Integration Tests
 '''
 
 import requests
+import mimetypes
+import os.path
 from collections import Mapping
 from urlparse import urljoin
+from base64 import b64encode
 
 try:
     import simplejson as json
@@ -66,8 +69,11 @@ class PystResponseError(PystError):
             self.data = response.json()
         except ValueError:
             self.data = {}
-        self.error_code = self.data.get('ErrorCode')
-        self.response_message = self.data.get('Message', '')
+        self.error_code = self.data.get('ErrorCode', -1)
+        self.message = self.data.get('Message', '')
+        self.message_id = self.data.get('MessageID', '')
+        self.submitted_at = self.data.get('SubmittedAt', '')
+        self.to = self.data.get('To', '')
         super(PystResponseError, self).__init__(message=message)
 
     def __str__(self):
@@ -75,10 +81,7 @@ class PystResponseError(PystError):
             msg = 'Not a valid JSON response. Status: {0}'
             return msg.format(self.response.status_code)
         msg = '[ErrorCode {0}, Message: "{1}"]'
-        msg = msg.format(self.error_code, self.response_message)
-        if self.message:
-            msg = '{0} {1}'.format(self.message, msg)
-        return msg
+        return msg.format(self.error_code, self.message)
 
 
 class PystUnauthorizedError(PystResponseError):
@@ -147,16 +150,31 @@ class PystMessage(object):
         'html': 'HtmlBody',
         'text': 'TextBody',
         'reply_to': 'ReplyTo',
-        'headers': 'Headers'
+        'headers': 'Headers',
+        '_attachments': 'Attachments',
     }
+
+    _allowed_extensions = ['gif', 'jpeg', 'png', 'swf', 'dcr', 'tiff', 'bmp',
+                           'ico', 'page-icon', 'wav', 'mp3', 'flv', 'avi',
+                           'mpg', 'wmv', 'rm', 'mov', '3gp', 'mp4', 'm4a',
+                           'ogv', 'txt', 'rtf', 'html', 'xml', 'ics', 'pdf',
+                           'log', 'csv', 'docx', 'dotx', 'pptx', 'xlsx', 'odt',
+                           'psd', 'ai', 'vcf', 'mobi', 'epub', 'pgp', 'ods',
+                           'wps', 'pages', 'prn', 'eps', 'license', 'zip',
+                           'dcm', 'enc', 'cdr', 'css', 'pst', 'mobileconfig',
+                           'eml', 'gpx', 'kml', 'kmz', 'msl', 'rb', 'js',
+                           'java', 'c', 'cpp', 'py', 'php', 'fl', 'jar', 'ttf',
+                           'vpv', 'iif', 'timo', 'autorit', 'cathodelicense',
+                           'itn', 'freshroute']
 
     _to = None
     _cc = None
     _bcc = None
+    _default_content_type = 'application/octet-stream'
 
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
                  tag=None, html=None, text=None, reply_to=None, headers=None,
-                 verify=False):
+                 attachments=None, verify=False):
         self.sender = sender
         self.to = to
         self.cc = cc
@@ -167,6 +185,7 @@ class PystMessage(object):
         self.text = text
         self.reply_to = reply_to
         self.headers = headers
+        self._attachments = attachments
         if verify:
             self.verify()
 
@@ -195,6 +214,28 @@ class PystMessage(object):
                 raise e
         return message
 
+    def attach_binary(self, data, filename, content_type=None):
+        if self._attachments is None:
+            self._attachments = []
+        if content_type is None:
+            content_type = self._detect_content_type(filename)
+        attachment = {
+            'Name': filename,
+            'Content': b64encode(data),
+            'ContentType': content_type
+        }
+        self._attachments.append(attachment)
+
+    def attach_file(self, filename):
+        # Open the file, grab the filename, detect content type
+        name = os.path.basename(filename)
+        if not name:
+            err = 'Filename not found in path: {0}'
+            raise PystMessageError(err.format(filename))
+        with open(filename, 'rb') as f:
+            data = f.read()
+        self.attach_binary(data, name)
+
     def verify(self):
         if self.to is None:
             raise PystMessageError('"to" is required')
@@ -202,6 +243,7 @@ class PystMessage(object):
             err = 'At least one of "html" or "text" must be provided'
             raise PystMessageError(err)
         self._verify_headers()
+        self._verify_attachments()
         if (MAX_RECIPIENTS_PER_MESSAGE and
                 len(self.recipients) > MAX_RECIPIENTS_PER_MESSAGE):
             err = 'No more than {0} recipients accepted.'
@@ -263,21 +305,48 @@ class PystMessage(object):
                 d[dest] = message[src]
         return d
 
+    def _detect_content_type(self, filename):
+        name, ext = os.path.splitext(filename)
+        if not ext:
+            raise PystMessageError('File requires an extension.')
+        ext = ext.lower()
+        if ext.lstrip('.') not in self._allowed_extensions:
+            err = 'Extension "{0}" is not allowed.'
+            raise PystMessageError(err.format(ext))
+        if not mimetypes.inited:
+            mimetypes.init()
+        try:
+            mimetype = mimetypes.types_map[ext]
+        except KeyError:
+            mimetype = self._default_content_type
+        return mimetype
+
     def _verify_headers(self):
         if self.headers is None:
             return
-        for header in self.headers:
-            if not isinstance(header, Mapping):
-                raise PystMessageError('Invalid "Header" value')
-            required = set(('Name', 'Value'))
-            for key in required:
-                if key not in header:
-                    err = 'Header item must contain "{0}"'
-                    raise PystMessageError(err.format(key))
-            if set(header) - required:
-                err = 'Header item must contain only {0}'
-                words = ['"{0}"'.format(r) for r in required]
-                raise PystMessageError(err.format(' and '.join(words)))
+        self._verify_dict_list(self.headers, ('Name', 'Value'), 'Header')
+
+    def _verify_attachments(self):
+        if self._attachments is None:
+            return
+        keys = ('Name', 'Content', 'ContentType')
+        self._verify_dict_list(self._attachments, keys, 'Attachment')
+
+    def _verify_dict_list(self, values, keys, name):
+        keys = set(keys)
+        name = name.title()
+        for value in values:
+            if not isinstance(value, Mapping):
+                raise PystMessageError('Invalid {0} value'.format(name))
+            for key in keys:
+                if key not in value:
+                    err = '{0} must contain "{1}"'
+                    raise PystMessageError(err.format(name, key))
+            if set(value) - keys:
+                err = '{0} must contain only {1}'
+                words = ['"{0}"'.format(r) for r in keys]
+                words = ' and '.join(words)
+                raise PystMessageError(err.format(name, words))
 
     def __eq__(self, other):
         if isinstance(other, Mapping):
@@ -311,8 +380,8 @@ class PystSender(object):
     }
     _api_key_header_name = 'X-Postmark-Server-Token'
 
-    def __init__(self, message=None, api_key=None, secure=True,
-                 test=False, request_args=None):
+    def __init__(self, message=None, api_key=None, secure=True, test=False,
+                 request_args=None):
         self._load_initial_message(message)
         self.api_key = api_key
         self.secure = secure
@@ -321,8 +390,8 @@ class PystSender(object):
             request_args = {}
         self.request_args = request_args
 
-    def send(self, message=None, api_key=None, test=None,
-             headers=None, secure=None, request_args=None):
+    def send(self, message=None, api_key=None, test=None, secure=None,
+             request_args=None):
         '''Send request to Postmark API.
         Returns result of :func:`requests.post`.
 
@@ -331,8 +400,6 @@ class PystSender(object):
         :param api_key: Your Postmark API key.
         :type api_key: :keyword:`str`
         :param test: Make a test request to the Postmark API.
-        :param headers: Headers to pass to :func:`requests.request`'
-        :type headers: keyword:`dict`
         :param secure': Use the https Postmark API.
         :param request_args: Passed to :func:`requests.post`
         :type request_args: :keyword:`dict`
@@ -342,16 +409,12 @@ class PystSender(object):
             request_args = {}
         self._merge_request_args(request_args)
 
+        headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
                                     test=test)
-        self._reverse_update(request_args.setdefault('headers', {}),
-                             headers)
-        del request_args['headers']
 
         data = self._get_request_content(message)
-        self._reverse_update(request_args.setdefault('data', {}),
-                             data)
-        del request_args['data']
+        self._reverse_update(request_args.pop('data', {}), data)
 
         url = self._get_api_url(secure=secure)
         response = requests.post(url, data=data, headers=headers,
@@ -463,8 +526,8 @@ class PystBatchSender(PystSender):
 
     endpoint = '/email/batch'
 
-    def send(self, message=None, api_key=None, test=None,
-             secure=None, request_args=None):
+    def send(self, message=None, api_key=None, test=None, secure=None,
+             request_args=None):
         '''Send batch request to Postmark API.
         Returns result of :func:`requests.post`.
 
