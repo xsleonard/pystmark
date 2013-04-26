@@ -10,9 +10,9 @@
     :license: MIT, see LICENSE for more details
 
     :TODO:
-        Attachments
         Bounce handler
-        Live/Integration Tests
+        Bounce API test
+        Live/Integration tests
 '''
 
 import requests
@@ -39,6 +39,29 @@ POSTMARK_API_URL_SECURE = 'https://api.postmarkapp.com/'
 POSTMARK_API_TEST_KEY = 'POSTMARK_API_TEST'
 MAX_RECIPIENTS_PER_MESSAGE = 20
 MAX_BATCH_MESSAGES = 500
+
+bounce_types = {
+    'HardBounce': 1,
+    'Transient': 2,
+    'Unsubscribe': 16,
+    'Subscribe': 32,
+    'AutoResponder': 64,
+    'AddressChange': 128,
+    'DnsError': 256,
+    'SpamNotification': 512,
+    'OpenRelayTest': 1024,
+    'Unknown': 2048,
+    'SoftBounce': 4096,
+    'VirusNotification': 8192,
+    'ChallengeVerification': 16384,
+    'BadEmailAddress': 100000,
+    'SpamComplaint': 100001,
+    'ManuallyDeactivated': 100002,
+    'Unconfirmed': 100003,
+    'Blocked': 100006,
+    'SMTPApiError': 100007,
+    'InboundError': 100008
+}
 
 
 ''' Simple API '''
@@ -302,6 +325,27 @@ class PystMessage(object):
         return not self.__eq__(other)
 
 
+class PystBouncedMessage(object):
+
+    def __init__(self, bounce_data):
+        self._data = bounce_data
+        self.id = bounce_data['ID']
+        self.type = bounce_data['Type']
+        self.message_id = bounce_data['MessageID']
+        self.type_code = bounce_data['TypeCode']
+        self.details = bounce_data['Details']
+        self.email = bounce_data['Email']
+        self.bounced_at = bounce_data['BouncedAt']
+        self.dump_available = bounce_data['DumpAvailable']
+        self.inactive = bounce_data['Inactive']
+        self.can_activate = bounce_data['CanActivate']
+        self.content = bounce_data['Content']
+        self.subject = bounce_data['Subject']
+
+    def dump(self, **kwargs):
+        _default_bounce_dump.get(**kwargs)
+
+
 ''' Response Wrappers '''
 
 
@@ -310,6 +354,11 @@ class PystResponse(object):
     _attrs = []
 
     def __init__(self, response):
+        self._attrs.append('_data')
+        try:
+            self._data = response.json()
+        except ValueError:
+            self._data = None
         self._requests_response = response
 
     def __getattribute__(self, k):
@@ -343,8 +392,33 @@ class PystSendResponse(PystResponse):
         return self._requests_response.raise_for_status()
 
 
+class PystBouncesResponse(PystResponse):
+
+    _attrs = ['bounces', 'total']
+
+    def __init__(self, response):
+        super(PystBouncesResponse, self).__init__(response)
+        data = self._data or {}
+        self.total = data.get('TotalCount', 0)
+        bounces = data.get('Bounces', [])
+        self.bounces = [PystBouncedMessage(bounce) for bounce in bounces]
+
+
 class PystBounceResponse(PystResponse):
-    pass
+
+    _attrs = ['bounce']
+
+    def __init__(self, response):
+        super(PystBounceResponse, self).__init__(response)
+        self.bounce = PystBouncedMessage(self._data)
+
+
+class PystBounceDumpResponse(PystResponse):
+
+    def __init__(self, response):
+        super(PystBounceDumpResponse, self).__init__(response)
+        data = self._data or {}
+        self.dump = data.get('Body')
 
 
 ''' Interfaces '''
@@ -447,7 +521,7 @@ class PystSender(PystInterface):
         self._load_initial_message(message)
         self.request_args = request_args
 
-    def send(self, message=None, api_key=None, test=None, secure=None,
+    def send(self, message=None, api_key=None, secure=None, test=None,
              **request_args):
         '''Send request to Postmark API.
         Returns result of :func:`requests.post`.
@@ -548,7 +622,7 @@ class PystBatchSender(PystSender):
 
     endpoint = '/email/batch'
 
-    def send(self, message=None, api_key=None, test=None, secure=None,
+    def send(self, message=None, api_key=None, secure=None, test=None,
              **request_args):
         '''Send batch request to Postmark API.
         Returns result of :func:`requests.post`.
@@ -591,24 +665,74 @@ class PystBatchSender(PystSender):
 
 class PystBounces(PystGetInterface):
     endpoint = '/bounces'
+    response_class = PystBouncesResponse
 
-    def get(self, api_key=None, test=None, secure=None, params=None,
-            **request_args):
-        # TODO -- update params
+    def __init__(self, api_key=None, secure=True, test=False):
+        super(PystBounces, self).__init__(api_key=api_key, secure=secure,
+                                          test=test)
+        self._last_response = None
+
+    def request(self, method, url, **kwargs):
+        response = super(PystBounces, self).request(method, url, **kwargs)
+        self._last_response = response
+        return response
+
+    def _construct_params(self, bounce_type, inactive=None, email_filter=None,
+                          message_id=None, count=None, offset=None):
+        if bounce_type not in bounce_types:
+            err = 'Invalid bounce type "{0}".'
+            raise PystBounceError(err.format(bounce_type))
+        params = dict(type=bounce_type)
+        if inactive is not None:
+            params['inactive'] = inactive
+        if email_filter is not None:
+            params['emailFilter'] = email_filter
+        if message_id is None:
+            # If the message_id is given, count and offset are not
+            # required, so we postpone assigning defaults to here
+            if count is None:
+                count = 25
+            if offset is None:
+                offset = 0
+        else:
+            params['messageID'] = message_id
+        if count is not None:
+            params['count'] = count
+        if offset is not None:
+            params['offset'] = offset
+        return params
+
+    def get(self, bounce_type=None, inactive=None, email_filter=None,
+            message_id=None, count=None, offset=None, api_key=None,
+            secure=None, test=None, params=None, **request_args):
+        params = self._construct_params(bounce_type, inactive=inactive,
+                                        email_filter=email_filter,
+                                        message_id=message_id, count=count,
+                                        offset=offset)
         url = self._get_api_url(secure=secure)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
                                     test=test)
-        return self.request(url, headers=headers, params=params,
-                            **request_args)
+        response = self.request(url, headers=headers, params=params,
+                                **request_args)
+        return response
 
 
 class PystBounce(PystGetInterface):
     endpoint = '/bounces/{bounce_id}'
     response_class = PystBounceResponse
 
-    def get(self, bounce_id, api_key=None, test=None, secure=None,
+    def __init__(self, bounce_id=None, api_key=None, secure=True, test=False):
+        super(PystBounce, self).__init__(api_key=api_key, secure=secure,
+                                         test=test)
+        self.bounce_id = bounce_id
+
+    def get(self, bounce_id=None, api_key=None, secure=None, test=None,
             **request_args):
+        if bounce_id is None:
+            bounce_id = self.bounce_id
+        if bounce_id is None:
+            raise PystBounceError('bounce_id is required.')
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
@@ -617,6 +741,7 @@ class PystBounce(PystGetInterface):
 
 
 class PystBounceDump(PystBounce):
+    response_class = PystBounceDumpResponse
     endpoint = '/bounces/{bounce_id}/dump'
 
 
@@ -632,8 +757,17 @@ class PystBounceActivate(PystInterface):
     method = 'PUT'
     endpoint = '/bounces/{bounce_id}/activate'
 
-    def activate(self, bounce_id, api_key=None, test=None, secure=None,
+    def __init__(self, bounce_id=None, api_key=None, secure=True, test=False):
+        super(PystBounceActivate, self).__init__(api_key=api_key,
+                                                 secure=secure, test=test)
+        self.bounce_id = bounce_id
+
+    def activate(self, bounce_id, api_key=None, secure=None, test=None,
                  **request_args):
+        if bounce_id is None:
+            bounce_id = self.bounce_id
+        if bounce_id is None:
+            raise PystBounceError('bounce_id is required.')
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = request_args.pop('headers', {})
         headers = self._get_headers(api_key=api_key, headers=headers,
@@ -661,6 +795,11 @@ class PystMessageError(PystError):
         malformed
     '''
     message = 'Refusing to send malformed message'
+
+
+class PystBounceError(PystError):
+    ''' Raised when a bounce API method fails '''
+    message = 'Bounce API failure'
 
 
 class PystResponseError(PystError):
