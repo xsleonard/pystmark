@@ -10,8 +10,6 @@
     :license: MIT, see LICENSE for more details
 
     :TODO:
-        Bounce handler
-        Bounce API test
         Live/Integration tests
 '''
 

@@ -17,12 +17,15 @@ class Test(Command):
     description = 'Test Pystmark source code'
     user_options = [('run-failed', None,
                      'Run only the previously failed tests.'),
-                    ('nose-only', None, 'Run only the nose tests.')]
+                    ('nose-only', None, 'Run only the nose tests.'),
+                    ('with-integration', None,
+                     'Run the integration/live tests')]
     boolean_options = ['run-failed', 'nose-only']
 
     def initialize_options(self):
         self.run_failed = False
         self.nose_only = False
+        self.with_integration = False
         self.pep8 = 'pep8 pystmark.py tests/'
         self.pyflakes = 'pyflakes pystmark.py tests/'
 
@@ -57,6 +60,8 @@ class Test(Command):
 
     def _get_nose_command(self):
         testfiles = self._get_py_files('tests/')
+        if self.with_integration:
+            testfiles += self._get_py_files('tests/', 'integration/')
         if not testfiles:
             print 'No tests found.'
             return
