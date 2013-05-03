@@ -68,6 +68,12 @@ class PystTestCaseBase(TestCase):
             msg = '{0} [{1}]'.format(msg, msg_suffix)
         self.fail(msg)
 
+    def assertIsNot(self, a, b):
+        if hasattr(super(PystTestCaseBase, self), 'assertIsNot'):
+            super(PystTestCaseBase, self).assertIsNot(a, b)
+        else:
+            self.assertTrue(a is not b)
+
     def assertValidJSONResponse(self, r, schema):
         self.assert200(r)
         self.assertValidJSONSchema(r.json(), schema)
