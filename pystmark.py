@@ -11,6 +11,10 @@
 
     :TODO:
         Live/Integration tests
+
+        Support for bounce and inbound hooks? These should be mostly handled
+        in a framework specific manner but there might be some common utilities
+        to provide.
 '''
 
 import requests
