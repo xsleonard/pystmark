@@ -67,39 +67,36 @@ bounce_types = {
 ''' Simple API '''
 
 
-def send(api_key, message, **kwargs):
-    return _default_pyst_sender.send(message=message, api_key=api_key,
-                                     **kwargs)
+def send(message, **kwargs):
+    return _default_pyst_sender.send(message=message, **kwargs)
 
 
-def send_batch(api_key, messages, **kwargs):
-    return _default_pyst_batch_sender.send(message=messages, api_key=api_key,
-                                           **kwargs)
+def send_batch(messages, **kwargs):
+    return _default_pyst_batch_sender.send(message=messages, **kwargs)
 
 
-def get_delivery_stats(api_key, **kwargs):
-    return _default_delivery_stats.get(api_key=api_key, **kwargs)
+def get_delivery_stats(**kwargs):
+    return _default_delivery_stats.get(**kwargs)
 
 
-def get_bounces(api_key, **kwargs):
-    return _default_bounces.get(api_key=api_key, **kwargs)
+def get_bounces(**kwargs):
+    return _default_bounces.get(**kwargs)
 
 
-def get_bounce(api_key, bounce_id, **kwargs):
-    return _default_bounce.get(bounce_id, api_key=api_key, **kwargs)
+def get_bounce(bounce_id, **kwargs):
+    return _default_bounce.get(bounce_id, **kwargs)
 
 
-def get_bounce_dump(api_key, bounce_id, **kwargs):
-    return _default_bounce_dump.get(bounce_id, api_key=api_key, **kwargs)
+def get_bounce_dump(bounce_id, **kwargs):
+    return _default_bounce_dump.get(bounce_id, **kwargs)
 
 
-def get_bounce_tags(api_key, **kwargs):
+def get_bounce_tags(**kwargs):
     return _default_bounce_tags.get(**kwargs)
 
 
-def activate_bounce(api_key, bounce_id, **kwargs):
-    return _default_bounce_activate.activate(bounce_id, api_key=api_key,
-                                             **kwargs)
+def activate_bounce(bounce_id, **kwargs):
+    return _default_bounce_activate.activate(bounce_id, **kwargs)
 
 
 ''' Messages '''
@@ -339,11 +336,19 @@ class PystBouncedMessage(object):
         self.dump_available = bounce_data['DumpAvailable']
         self.inactive = bounce_data['Inactive']
         self.can_activate = bounce_data['CanActivate']
-        self.content = bounce_data['Content']
+        self.content = bounce_data.get('Content')
         self.subject = bounce_data['Subject']
 
     def dump(self, **kwargs):
-        _default_bounce_dump.get(**kwargs)
+        return _default_bounce_dump.get(self.id, **kwargs)
+
+
+class PystBounceType(object):
+
+    def __init__(self, bounce_type):
+        self.count = bounce_type.get('Count', 0)
+        self.name = bounce_type['Name']
+        self.type = bounce_type.get('Type', 'All')
 
 
 ''' Response Wrappers '''
@@ -410,7 +415,10 @@ class PystBounceResponse(PystResponse):
 
     def __init__(self, response):
         super(PystBounceResponse, self).__init__(response)
-        self.bounce = PystBouncedMessage(self._data)
+        if self._data is None:
+            self.bounce = None
+        else:
+            self.bounce = PystBouncedMessage(self._data)
 
 
 class PystBounceDumpResponse(PystResponse):
@@ -419,6 +427,42 @@ class PystBounceDumpResponse(PystResponse):
         super(PystBounceDumpResponse, self).__init__(response)
         data = self._data or {}
         self.dump = data.get('Body')
+
+
+class PystBounceTagsResponse(PystResponse):
+
+    def __init__(self, response):
+        super(PystBounceTagsResponse, self).__init__(response)
+        self.tags = self._data or []
+
+
+class PystDeliveryStatsResponse(PystResponse):
+
+    def __init__(self, response):
+        super(PystDeliveryStatsResponse, self).__init__(response)
+        data = self._data or {}
+        self.inactive = data.get('InactiveMails', 0)
+        self.total = 0
+        bounces = data.get('Bounces', [])
+        self.bounces = {}
+        for bounce in bounces:
+            bounce = PystBounceType(bounce)
+            self.bounces[bounce.type] = bounce
+            if bounce.type == 'All':
+                self.total = bounce.count
+
+
+class PystBounceActivateResponse(PystResponse):
+
+    def __init__(self, response):
+        super(PystBounceActivateResponse, self).__init__(response)
+        data = self._data or {}
+        self.message = data.get('Message', '')
+        bounce = data.get('Bounce')
+        if bounce is None:
+            self.bounce = None
+        else:
+            self.bounce = PystBouncedMessage(data['Bounce'])
 
 
 ''' Interfaces '''
@@ -672,17 +716,21 @@ class PystBounces(PystGetInterface):
                                           test=test)
         self._last_response = None
 
-    def request(self, method, url, **kwargs):
-        response = super(PystBounces, self).request(method, url, **kwargs)
+    def request(self, url, **kwargs):
+        response = super(PystBounces, self).request(url, **kwargs)
         self._last_response = response
         return response
 
-    def _construct_params(self, bounce_type, inactive=None, email_filter=None,
-                          message_id=None, count=None, offset=None):
-        if bounce_type not in bounce_types:
-            err = 'Invalid bounce type "{0}".'
-            raise PystBounceError(err.format(bounce_type))
-        params = dict(type=bounce_type)
+    def _construct_params(self, bounce_type=None, inactive=None,
+                          email_filter=None, message_id=None, count=None,
+                          offset=None):
+        params = {}
+        if bounce_type is not None:
+            if bounce_type not in bounce_types:
+                err = 'Invalid bounce type "{0}".'
+                raise PystBounceError(err.format(bounce_type))
+            else:
+                params['type'] = bounce_type
         if inactive is not None:
             params['inactive'] = inactive
         if email_filter is not None:
@@ -705,9 +753,11 @@ class PystBounces(PystGetInterface):
     def get(self, bounce_type=None, inactive=None, email_filter=None,
             message_id=None, count=None, offset=None, api_key=None,
             secure=None, test=None, params=None, **request_args):
-        params = self._construct_params(bounce_type, inactive=inactive,
+        params = self._construct_params(bounce_type=bounce_type,
+                                        inactive=inactive,
                                         email_filter=email_filter,
-                                        message_id=message_id, count=count,
+                                        message_id=message_id,
+                                        count=count,
                                         offset=offset)
         url = self._get_api_url(secure=secure)
         headers = request_args.pop('headers', {})
@@ -746,14 +796,17 @@ class PystBounceDump(PystBounce):
 
 
 class PystBounceTags(PystGetInterface):
+    response_class = PystBounceTagsResponse
     endpoint = '/bounces/tags'
 
 
 class PystDeliveryStats(PystGetInterface):
+    response_class = PystDeliveryStatsResponse
     endpoint = '/deliverystats'
 
 
 class PystBounceActivate(PystInterface):
+    response_class = PystBounceActivateResponse
     method = 'PUT'
     endpoint = '/bounces/{bounce_id}/activate'
 
@@ -762,7 +815,7 @@ class PystBounceActivate(PystInterface):
                                                  secure=secure, test=test)
         self.bounce_id = bounce_id
 
-    def activate(self, bounce_id, api_key=None, secure=None, test=None,
+    def activate(self, bounce_id=None, api_key=None, secure=None, test=None,
                  **request_args):
         if bounce_id is None:
             bounce_id = self.bounce_id

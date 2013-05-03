@@ -23,7 +23,7 @@ class Test(Command):
     def initialize_options(self):
         self.run_failed = False
         self.nose_only = False
-        self.pep8 = 'pep8 --ignore=E712 pystmark.py tests/'
+        self.pep8 = 'pep8 pystmark.py tests/'
         self.pyflakes = 'pyflakes pystmark.py tests/'
 
     def finalize_options(self):
