@@ -68,7 +68,15 @@ class PystTestCaseBase(TestCase):
             msg = '{0} [{1}]'.format(msg, msg_suffix)
         self.fail(msg)
 
+    def assertIs(self, a, b):
+        # Python2.6 compatibility
+        if hasattr(super(PystTestCaseBase, self), 'assertIs'):
+            super(PystTestCaseBase, self).assertIs(a, b)
+        else:
+            self.assertTrue(a is b)
+
     def assertIsNot(self, a, b):
+        # Python2.6 compatibility
         if hasattr(super(PystTestCaseBase, self), 'assertIsNot'):
             super(PystTestCaseBase, self).assertIsNot(a, b)
         else:
