@@ -345,6 +345,16 @@ class PystMessageTest(PystSenderTestBase):
     def test_load_invalid_message_unrecognized_field(self):
         self.assertRaises(TypeError, PystMessage.load_message, dict(dog='me'))
 
+    def test_equal(self):
+        m = PystMessage(sender='me')
+        n = PystMessage(sender='me')
+        self.assertEqual(m, n)
+
+    def test_not_equal(self):
+        m = PystMessage(sender='me')
+        n = PystMessage(sender='you')
+        self.assertNotEqual(m, n)
+
 
 class PystMessageErrorTest(PystSenderTestBase):
 
