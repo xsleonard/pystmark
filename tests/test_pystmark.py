@@ -28,12 +28,46 @@ def _make_random_string(n):
     return ''.join([random.choice(string.letters) for i in range(n)])
 
 
-class PystTestCaseBase(TestCase):
+class RequestMock(object):
+
+    def _raise(self, exc, *args, **kwargs):
+        def f(*_args, **_kwargs):
+            raise exc(*args, **kwargs)
+        return f
+
+    def mock_response(self, content, status_code=200, bad_json=False):
+        mock = Mock(spec=requests.Response)
+        mock.content = content
+        mock.ok = (status_code >= 200 and status_code < 300)
+        mock.status_code = status_code
+        mock.iter_content = lambda size: mock.content
+        if bad_json:
+            mock.json = self._raise(ValueError)
+        else:
+            mock.json = lambda: json.loads(mock.content or '""')
+        mock.raise_for_status = lambda: None
+        return mock
+
+    def _iterdata(self, data):
+        data = list(data)
+
+        def iterdata(*args, **kwargs):
+            return self.mock_response(json.dumps(data.pop(0)))
+        return iterdata
+
+    def _setup_mock_request(self, mock_request, data):
+        mock_request.side_effect = self._iterdata(data)
+
+
+class PystTestCase(TestCase, RequestMock):
 
     response = None
 
     def assert200(self, r):
         self.assertEqual(r.status_code, 200)
+
+    def assert500(self, r):
+        self.assertEqual(r.status_code, 500)
 
     def assertNotRaises(self, exc, f, *args, **kwargs):
         try:
@@ -70,15 +104,15 @@ class PystTestCaseBase(TestCase):
 
     def assertIs(self, a, b):
         # Python2.6 compatibility
-        if hasattr(super(PystTestCaseBase, self), 'assertIs'):
-            super(PystTestCaseBase, self).assertIs(a, b)
+        if hasattr(super(PystTestCase, self), 'assertIs'):
+            super(PystTestCase, self).assertIs(a, b)
         else:
             self.assertTrue(a is b)
 
     def assertIsNot(self, a, b):
         # Python2.6 compatibility
-        if hasattr(super(PystTestCaseBase, self), 'assertIsNot'):
-            super(PystTestCaseBase, self).assertIsNot(a, b)
+        if hasattr(super(PystTestCase, self), 'assertIsNot'):
+            super(PystTestCase, self).assertIsNot(a, b)
         else:
             self.assertTrue(a is not b)
 
@@ -94,45 +128,6 @@ class PystTestCaseBase(TestCase):
     @property
     def json_response(self):
         return json.dumps(self.response)
-
-
-class RequestMock(object):
-
-    def _raise(self, exc, *args, **kwargs):
-        def f(*_args, **_kwargs):
-            raise exc(*args, **kwargs)
-        return f
-
-    def mock_response(self, content, status_code=200, bad_json=False):
-        mock = Mock(spec=requests.Response)
-        mock.content = content
-        mock.ok = (status_code >= 200 and status_code < 300)
-        mock.status_code = status_code
-        mock.iter_content = lambda size: mock.content
-        if bad_json:
-            mock.json = self._raise(ValueError)
-        else:
-            mock.json = lambda: json.loads(mock.content or '""')
-        mock.raise_for_status = lambda: None
-        return mock
-
-    def _iterdata(self, data):
-        data = list(data)
-
-        def iterdata(*args, **kwargs):
-            return self.mock_response(json.dumps(data.pop(0)))
-        return iterdata
-
-    def _setup_mock_request(self, mock_request, data):
-        mock_request.side_effect = self._iterdata(data)
-
-
-class PystTestCase(PystTestCaseBase, RequestMock):
-    pass
-
-
-class PystLiveTestCase(PystTestCaseBase):
-    pass
 
 
 class PystSenderTestBase(PystTestCase):
@@ -545,6 +540,10 @@ class PystErrorTest(PystSenderTestBase):
 
 class PystBatchSenderTestBase(PystSenderTestBase):
 
+    response = [PystSenderTestBase.response] * 10
+
+    schema = [PystSenderTestBase.schema]
+
     _message_count = 20
 
     def setUp(self):
@@ -585,7 +584,7 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
     def test_batch_send(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
         r = self.send()
-        self.assertValidJSONResponse(r, self.response)
+        self.assertValidJSONResponse(r, self.schema)
 
     @patch.object(requests.Session, 'request')
     def test_batch_send_no_messages(self, mock_request):
@@ -609,7 +608,7 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
     def test_simple_api(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
         r = pystmark.send_batch(self.messages, test=True)
-        self.assertValidJSONResponse(r, self.response)
+        self.assertValidJSONResponse(r, self.schema)
 
 
 class PystBouncesTest(PystTestCase):

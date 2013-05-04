@@ -10,8 +10,6 @@
     :license: MIT, see LICENSE for more details
 
     :TODO:
-        Live/Integration tests
-
         Support for bounce and inbound hooks? These should be mostly handled
         in a framework specific manner but there might be some common utilities
         to provide.
@@ -683,10 +681,11 @@ class PystBatchSender(PystSender):
         :type request_args: :keyword:`dict`
         :rtype: :class:`requests.Response`
         '''
-        return super(PystBatchSender, self).send(message=message, test=test,
+        return super(PystBatchSender, self).send(message=message,
+                                                 test=test,
                                                  api_key=api_key,
                                                  secure=secure,
-                                                 request_args=request_args)
+                                                 **request_args)
 
     def _get_request_content(self, message=None):
         '''Updates all messages in message with default message
