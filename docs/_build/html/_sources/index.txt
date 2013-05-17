@@ -1,17 +1,21 @@
+:orphan:
+
+********
 Pystmark
-=======
+********
 
 .. module:: pystmark
 
 Pystmark is a wrapper around the Postmark API. It is built on top of
-Python Requests.
+`Requests`_.
 
-.. _pystmark: https://github.com/xsleonard/pystmark
-.. _Requests: https://github.com/kennethreitz/requests
+.. _pystmark_source: https://github.com/xsleonard/pystmark
+.. _Requests: http://www.python-requests.org
 
+.. _installation:
 
 Installation
-------------
+============
 Install the extension with one of the following commands::
 
     $ easy_install pystmark
@@ -20,29 +24,11 @@ or alternatively if you have pip installed::
 
     $ pip install pystmark
 
+.. _usage:
 
 Usage
------
+=====
 
 Ensure that Python Requests is installed.
 
-API
----
-
-Sender
-------------------
-
-.. autoclass:: pystmark.PystSender
-    :members:
-
-Batch Sender
------------------------
-
-.. autoclass:: pystmark.PystBatchSender
-    :members:
-
-Bounce Handler
--------------
-
-.. autoclass:: pystmark.PystBounceHandler
-    :members:
+.. include:: contents.rst.inc

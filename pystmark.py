@@ -73,7 +73,7 @@ def send(message, **kwargs):
     '''Send a message.
 
     :param message: Message to send.
-    :type message: :keyword:`dict` or :class:`PystMessage`.
+    :type message: `dict` or :class:`PystMessage`.
     :rtype: :class:`PystSendResponse`
     '''
     return _default_pyst_sender.send(message=message, **kwargs)
@@ -83,7 +83,7 @@ def send_batch(messages, **kwargs):
     '''Send a batch of messages via the Postmark batch API endpoint.
 
     :param messages: Messages to send.
-    :type message: A list of :keyword:`dict` or :class:`PystMessage`
+    :type message: A list of `dict` or :class:`PystMessage`
     :rtype: :class:`PystSendResponse`
     '''
     return _default_pyst_batch_sender.send(messages=messages, **kwargs)
@@ -161,15 +161,15 @@ class PystMessage(object):
     :param headers: Additional headers to include with the email. If you do
         not have the headers formatted for the Postmark API, use
         :meth:`PystMessage.attach_header`.
-    :type headers: A list of :keyword:`dict`, each with the keys 'Name' and
+    :type headers: A list of `dict`, each with the keys 'Name' and
         'Value'.
     :param attachments: Attachments to include with the email. If you do not
         have the attachments formatted for the Postmark API, use
         :meth:`PystMessage.attach_file` or :meth:`PystMessage.attach_binary`.
-    :type attachments: A list of :keyword:`dict`, each with the keys 'Name',
+    :type attachments: A list of `dict`, each with the keys 'Name',
         'Content' and 'ContentType'.
     :param verify: Verify the message when initialized.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
 
     _fields = {
@@ -222,10 +222,10 @@ class PystMessage(object):
             self.verify()
 
     def data(self):
-        '''Return a :keyword:`dict` of data formatted for a POST request to
+        '''Return a `dict` of data formatted for a POST request to
         the Postmark send API.
 
-        :rtype: :keyword:`dict`
+        :rtype: `dict`
         '''
         d = {}
         for val, key in self._fields.items():
@@ -243,9 +243,9 @@ class PystMessage(object):
 
     @classmethod
     def load_message(self, message, **kwargs):
-        '''Create a :class:`PystMessage` from a message data :keyword:`dict`.
+        '''Create a :class:`PystMessage` from a message data `dict`.
 
-        :param message: A :keyword:`dict` of message data.
+        :param message: A `dict` of message data.
         :param \*\*kwargs: Additional keyword arguments to construct
             :class:`PystMessage` with.
         :rtype: :class:`PystMessage`
@@ -343,7 +343,7 @@ class PystMessage(object):
     def to(self, to):
         '''
         :param to: Email addresses for the 'To' API field.
-        :type to: :keyword:`list` or :keyword:`basestring`
+        :type to: :keyword:`list` or `str`
         '''
         if isinstance(to, basestring):
             to = to.split(',')
@@ -361,7 +361,7 @@ class PystMessage(object):
     def cc(self, cc):
         '''
         :param cc: Email addresses for the 'Cc' API field.
-        :type cc: :keyword:`list` or :keyword:`basestring`
+        :type cc: :keyword:`list` or `str`
         '''
         if isinstance(cc, basestring):
             cc = cc.split(',')
@@ -379,7 +379,7 @@ class PystMessage(object):
     def bcc(self, bcc):
         '''
         :param bcc: Email addresses for the 'Bcc' API field.
-        :type bcc: :keyword:`list` or :keyword:`basestring`
+        :type bcc: :keyword:`list` or `str`
         '''
         if isinstance(bcc, basestring):
             bcc = bcc.split(',')
@@ -392,7 +392,7 @@ class PystMessage(object):
 
         :param message: Postmark message data, with API fields using Postmark
             API names.
-        :type message: :keyword:`dict`
+        :type message: `dict`
         '''
         d = {}
         for dest, src in cls._fields.items():
@@ -438,11 +438,11 @@ class PystMessage(object):
         self._verify_dict_list(self._attachments, keys, 'Attachment')
 
     def _verify_dict_list(self, values, keys, name):
-        '''Validate a list of :keyword:`dict`, ensuring it has specific keys
+        '''Validate a list of `dict`, ensuring it has specific keys
         and no others.
 
-        :param values: A list of :keyword:`dict` to validate.
-        :param keys: A list of keys to validate each :keyword:`dict` against.
+        :param values: A list of `dict` to validate.
+        :param keys: A list of keys to validate each `dict` against.
         :param name: Name describing the values, to show in error messages.
         '''
         keys = set(keys)
@@ -461,7 +461,7 @@ class PystMessage(object):
                 raise PystMessageError(err.format(name, words))
 
     def __eq__(self, other):
-        '''If comparing to a :keyword:`dict`, convert to a :class:`PystMessage`
+        '''If comparing to a `dict`, convert to a :class:`PystMessage`
         then compare data fields.
         '''
         if isinstance(other, Mapping):
@@ -478,7 +478,7 @@ class PystBouncedMessage(object):
     :param bounce_data: Raw bounced message data retrieved from
         :class:`PystBounce` or :class:`PystBounces`.
     :param sender: The :class:`PystInterface` that made the request for the
-        bounce data. Defaults to :keyword:`None`.
+        bounce data. Defaults to `None`.
     '''
     def __init__(self, bounce_data, sender=None):
         self._data = bounce_data
@@ -496,15 +496,21 @@ class PystBouncedMessage(object):
         self.content = bounce_data.get('Content')
         self.subject = bounce_data['Subject']
 
-    def dump(self, **kwargs):
+    def dump(self, sender=None, **kwargs):
         '''Retrieve raw email dump for this bounce.
 
+        :param sender: A :class:`PystBounceDump` object to get dump with.
+            Defaults to `None`.
         :param \*\*kwargs: Keyword arguments passed to
             :func:`requests.request`.
         '''
-        sender = self._sender
-        if self._sender is None:
-            sender = _default_bounce_dump
+        if sender is None:
+            if self._sender is None:
+                sender = _default_bounce_dump
+            else:
+                sender = PystBounceDump(api_key=self._sender.api_key,
+                                        test=self._sender.test,
+                                        secure=self._sender.secure)
         return sender.get(self.id, **kwargs)
 
 
@@ -531,7 +537,7 @@ class PystResponse(object):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     _attrs = []
@@ -592,7 +598,7 @@ class PystBouncesResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     _attrs = ['bounces', 'total']
@@ -612,7 +618,7 @@ class PystBounceResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     _attrs = ['bounce']
@@ -631,7 +637,7 @@ class PystBounceDumpResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     def __init__(self, response, sender=None):
@@ -646,7 +652,7 @@ class PystBounceTagsResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     def __init__(self, response, sender=None):
@@ -660,7 +666,7 @@ class PystDeliveryStatsResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     def __init__(self, response, sender=None):
@@ -684,7 +690,7 @@ class PystBounceActivateResponse(PystResponse):
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     :type sender: :class:`PystInterface`
     '''
     def __init__(self, response, sender=None):
@@ -705,10 +711,10 @@ class PystBounceActivateResponse(PystResponse):
 class PystInterface(object):
     '''Base class interface for Postmark API endpoint wrappers
 
-    :param api_key: Your Postmark API key. Defaults to :keyword:`None`.
+    :param api_key: Your Postmark API key. Defaults to `None`.
     :param secure: Use the https scheme for API requests.
-        Defaults to :keyword:`True`.
-    :param test: Use the Postmark test API. Defaults to :keyword:`False`.
+        Defaults to `True`.
+    :param test: Use the Postmark test API. Defaults to `False`.
     '''
 
     method = None
@@ -761,11 +767,11 @@ class PystInterface(object):
 
     #def _merge_request_args(self, request_args):
         #'''Merges request_args to be passed to :func:`requests.request`
-        #Since request_args possibly contains :keyword:`dict`s itself,
+        #Since request_args possibly contains `dict`s itself,
         #we need to :meth:`_reverse_update` these.
 
         #:param request_args: request_args mapping to be updated
-        #:type request_args: :keyword:`dict`
+        #:type request_args: `dict`
         #'''
         #for k, v in self.request_args.iteritems():
             #if isinstance(v, Mapping):
@@ -782,11 +788,11 @@ class PystInterface(object):
     def _get_headers(self, api_key=None, test=None, request_args=None):
         '''Constructs the headers to use for the request.
 
-        :param api_key: Your Postmark API key. Defaults to :keyword:`None`.
+        :param api_key: Your Postmark API key. Defaults to `None`.
         :param test: Use the Postmark test API. Defaults to `self.test`.
         :param request_args: Keyword args to pass to :func:`requests.request`.
-            Defaults to :keyword:`None`.
-        :rtype: :keyword:`dict` of header values.
+            Defaults to `None`.
+        :rtype: `dict` of header values.
         '''
         if request_args is None:
             request_args = {}
@@ -810,9 +816,9 @@ class PystGetInterface(PystInterface):
 
         :param api_key: Your Postmark API key.
         :param secure: Use the https scheme for Postmark API.
-            Defaults to :keyword:`True`
+            Defaults to `True`
         :param test: Make a test request to the Postmark API.
-            Defaults to :keyword:`False`.
+            Defaults to `False`.
         :param \*\*request_args: Keyword args to pass to
             :func:`requests.request`.
         :rtype: :class:`PystResponse`
@@ -827,19 +833,19 @@ class PystGetInterface(PystInterface):
 
 
 class PystSender(PystInterface):
-    '''A wrapper for the Postmark API.
+    '''Sends a single message via the Postmark API.
 
     All of the arguments used in constructing this object are
-    used as defaults in the final call to :meth:`Pystmark.send`.
+    used as defaults in the final call to :meth:`PystSender.send`.
     You can override any of them at that time.
 
     :param message: Default message data, such as sender and reply_to.
-    :type message: :class:`PystMessage`
+    :type message: `dict` or :class:`PystMessage`
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API.
-        Defaults to :keyword:`True`
+        Defaults to `True`
     :param test: Make a test request to the Postmark API.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
 
     method = 'POST'
@@ -857,13 +863,12 @@ class PystSender(PystInterface):
         Returns result of :func:`requests.post`.
 
         :param message: Your Postmark message data.
-        :type message: :keyword:`dict` or :class:`PystMessage`
+        :type message: `dict` or :class:`PystMessage`
         :param api_key: Your Postmark API key.
-        :type api_key: :keyword:`str`
+        :type api_key: `str`
         :param test: Make a test request to the Postmark API.
-        :param secure': Use the https Postmark API.
-        :param request_args: Passed to :func:`requests.post`
-        :type request_args: :keyword:`dict`
+        :param secure: Use the https Postmark API.
+        :param \*\*request_args: Passed to :func:`requests.post`
         :rtype: :class:`requests.Response`
         '''
         headers = self._get_headers(api_key=api_key, test=test,
@@ -885,10 +890,10 @@ class PystSender(PystInterface):
         present in dest
 
         :param src: Data to use as defaults for dest.
-        :type src: :keyword:`dict`.
+        :type src: `dict`.
         :param dest: Object to load defaults to.
-        :type dest: :keyword:`dict`.
-        :type message: :keyword:`dict`
+        :type dest: `dict`.
+        :type message: `dict`
         '''
         for k, v in src.iteritems():
             dest.setdefault(k, v)
@@ -912,7 +917,7 @@ class PystSender(PystInterface):
         '''Updates message with default message paramaters.
 
         :param message: Postmark message data
-        :type message: :keyword:`dict`
+        :type message: `dict`
         :rtype: JSON encoded :keyword:`unicode`
         '''
         message = self._cast_message(message=message)
@@ -920,19 +925,19 @@ class PystSender(PystInterface):
 
 
 class PystBatchSender(PystSender):
-    '''A wrapper for the Postmark Batch API.
+    '''Sends a batch of messages via the Postmark API.
 
     All of the arguments used in constructing this object are
-    used as defaults in the final call to :meth:`Pystmark.send`.
+    used as defaults in the final call to :meth:`PystBatchSender.send`.
     You can override any of them at that time.
 
     :param message: Default message data, such as sender and reply_to.
-    :type message: :class:`PystMessage`
+    :type message: `dict` or :class:`PystMessage`
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API.
-        Defaults to :keyword:`True`
+        Defaults to `True`
     :param test: Make a test request to the Postmark API.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
 
     endpoint = '/email/batch'
@@ -943,12 +948,12 @@ class PystBatchSender(PystSender):
         Returns result of :func:`requests.post`.
 
         :param messages: Batch messages to send to the Postmark API.
-        :type messages: A list of :class:`PystMessage`.
+        :type messages: A list of :class:`PystMessage`
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param test: Make a test request to the Postmark API.
             Defaults to `self.test`.
-        :param secure': Use the https Postmark API. Defaults to `self.secure`.
-        :param request_args: Passed to :func:`requests.request`
+        :param secure: Use the https Postmark API. Defaults to `self.secure`.
+        :param \*\*request_args: Passed to :func:`requests.request`
         :rtype: :class:`PystSendResponse`
         '''
         return super(PystBatchSender, self).send(message=messages,
@@ -962,7 +967,7 @@ class PystBatchSender(PystSender):
         parameters.
 
         :param message: A collection of Postmark message data
-        :type message: a collection of message :keyword:`dict`s
+        :type message: a collection of message `dict`s
         :rtype: JSON encoded :keyword:`unicode`
         '''
         if not message:
@@ -981,11 +986,11 @@ class PystBatchSender(PystSender):
 class PystBounces(PystGetInterface):
     '''Multiple bounce retrieval endpoint wrapper.
 
-    :param api_key: Your Postmark API key. Defaults to :keyword:`None`.
+    :param api_key: Your Postmark API key. Defaults to `None`.
     :param secure: Use the https scheme for Postmark API.
-        Defaults to :keyword:`True`.
+        Defaults to `True`.
     :param test: Make a test request to the Postmark API.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
     endpoint = '/bounces'
     response_class = PystBouncesResponse
@@ -1003,13 +1008,13 @@ class PystBounces(PystGetInterface):
 
         :param bounce_type: The type of bounces retrieve. See `bounce_types`
             for a list of types, or read the Postmark API docs. Defaults to
-            :keyword:`None`.
-        :param inactive: If :keyword:`True`, retrieves inactive bounces only.
-            Defaults to :keyword:`None`.
+            `None`.
+        :param inactive: If `True`, retrieves inactive bounces only.
+            Defaults to `None`.
         :param email_filter: A string to filter emails by.
-            Defaults to :keyword:`None`.
+            Defaults to `None`.
         :param message_id: Retrieve a bounce for a single message's ID.
-            Defaults to :keyword:`None`.
+            Defaults to `None`.
         :param count: The number of bounces to retrieve in this request.
             Defaults to 25 if `message_id` is not provided.
         :param offset: The page offset for bounces to retrieve. Defaults to 0
@@ -1051,13 +1056,13 @@ class PystBounces(PystGetInterface):
 
         :param bounce_type: The type of bounces retrieve. See `bounce_types`
             for a list of types, or read the Postmark API docs. Defaults to
-            :keyword:`None`.
-        :param inactive: If :keyword:`True`, retrieves inactive bounces only.
-            Defaults to :keyword:`None`.
+            `None`.
+        :param inactive: If `True`, retrieves inactive bounces only.
+            Defaults to `None`.
         :param email_filter: A string to filter emails by.
-            Defaults to :keyword:`None`.
+            Defaults to `None`.
         :param message_id: Retrieve a bounce for a single message's ID.
-            Defaults to :keyword:`None`.
+            Defaults to `None`.
         :param count: The number of bounces to retrieve in this request.
             Defaults to 25 if `message_id` is not provided.
         :param offset: The page offset for bounces to retrieve. Defaults to 0
@@ -1093,11 +1098,11 @@ class PystBounces(PystGetInterface):
 class PystBounce(PystGetInterface):
     '''Single bounce retrieval endpoint wrapper.
 
-    :param api_key: Your Postmark API key. Defaults to :keyword:`None`.
+    :param api_key: Your Postmark API key. Defaults to `None`.
     :param secure: Use the https scheme for Postmark API.
-        Defaults to :keyword:`True`.
+        Defaults to `True`.
     :param test: Make a test request to the Postmark API.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
     endpoint = '/bounces/{bounce_id}'
     response_class = PystBounceResponse
@@ -1109,6 +1114,7 @@ class PystBounce(PystGetInterface):
     def get(self, bounce_id, api_key=None, secure=None, test=None,
             **request_args):
         '''Retrieves a single bounce's data.
+
         :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param secure: Use the https scheme for Postmark API.
@@ -1147,12 +1153,12 @@ class PystBounceActivate(PystInterface):
     '''Bounce Activation endpoint wrapper.
 
     :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
-        Defaults to :keyword:`None`.
-    :param api_key: Your Postmark API key. Defaults to :keyword:`None`.
+        Defaults to `None`.
+    :param api_key: Your Postmark API key. Defaults to `None`.
     :param secure: Use the https scheme for Postmark API.
-        Defaults to :keyword:`True`.
+        Defaults to `True`.
     :param test: Make a test request to the Postmark API.
-        Defaults to :keyword:`False`.
+        Defaults to `False`.
     '''
     response_class = PystBounceActivateResponse
     method = 'PUT'
@@ -1165,6 +1171,7 @@ class PystBounceActivate(PystInterface):
     def activate(self, bounce_id, api_key=None, secure=None, test=None,
                  **request_args):
         '''Activates a bounce.
+
         :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param secure: Use the https scheme for Postmark API.
@@ -1188,7 +1195,7 @@ class PystError(Exception):
     '''Base `Exception` for :mod:`pystmark` errors.
 
     :param message: Message to raise with the Exception. Defaults to
-        :keyword:`None`.
+        `None`.
     '''
     message = ''
 
@@ -1217,7 +1224,7 @@ class PystResponseError(PystError):
 
     :param response: A :class:`PystResponse`.
     :param message: Message to raise with the Exception.
-        Defaults to :keyword:`None`.
+        Defaults to `None`.
     '''
 
     def __init__(self, response, message=None):

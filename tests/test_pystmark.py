@@ -362,6 +362,11 @@ class PystMessageErrorTest(PystSenderTestBase):
         bad_header = 'bad'
         self._test_bad_headers(err, bad_header)
 
+    def test_attach_header(self):
+        msg = PystMessage(to='me', text='hi')
+        msg.add_header('Boy', 'Dog')
+        self.assertEqual(msg.headers, [dict(Name='Boy', Value='Dog')])
+
     def _test_bad_attachments(self, errmsg, bad_attachment):
         self.assertRaisesMessage(PystMessageError, errmsg, PystMessage,
                                  to='me', text='hi',
@@ -552,6 +557,9 @@ class PystBatchSenderTestBase(PystSenderTestBase):
 
 class PystBatchSenderTest(PystBatchSenderTestBase):
 
+    def send(self):
+        return self.sender.send(messages=self.messages)
+
     @patch.object(requests.Session, 'request')
     def test_batch_send(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
@@ -563,9 +571,9 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
         mock_request.return_value = self.mock_response(self.json_response)
         msg = 'No messages to send'
         self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
-                                 message=None)
+                                 messages=None)
         self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
-                                 message=[])
+                                 messages=[])
 
     @patch.object(requests.Session, 'request')
     def test_batch_send_too_many_messages(self, mock_request):
@@ -574,7 +582,7 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
         msg = 'Maximum {0} messages allowed in batch'
         msg = msg.format(MAX_BATCH_MESSAGES)
         self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
-                                 message=self.messages)
+                                 messages=self.messages)
 
     @patch.object(requests.Session, 'request')
     def test_simple_api(self, mock_request):
@@ -765,9 +773,17 @@ class PystBounceDumpTest(PystTestCase):
         self.assertValidJSONResponse(r, PystBounceTest.schema)
 
         # Fetch the dump via the bounce object
+        old_r = r
         self.response = _response
         mock_request.return_value = self.mock_response(self.json_response)
-        r = r.bounce.dump(test=True)
+        r = old_r.bounce.dump(test=True)
+        self.assertValidJSONResponse(r, self.response)
+
+        # Fetch the dump via the bounce object, using the default sender
+        self.response = _response
+        mock_request.return_value = self.mock_response(self.json_response)
+        old_r.bounce._sender = None
+        r = old_r.bounce.dump(test=True)
         self.assertValidJSONResponse(r, self.response)
 
     @patch.object(requests.Session, 'request')
@@ -889,4 +905,4 @@ class UserWarningsTest(PystTestCase):
             pass
 
         self.assertRaises(NotImplementedError, Dummy()._get_api_url)
-        self.assertRaises(NotImplementedError, Dummy().request, 'dog')
+        self.assertRaises(NotImplementedError, Dummy()._request, 'dog')

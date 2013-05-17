@@ -1,0 +1,526 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API &mdash; pystmark 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pystmark 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Pystmark" href="index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Pystmark"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pystmark 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api">
+<span id="id1"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-pystmark"></span><div class="section" id="sending-email">
+<h2>Sending Email<a class="headerlink" href="#sending-email" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pystmark.PystSender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystSender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a single message via the Postmark API.</p>
+<p>All of the arguments used in constructing this object are
+used as defaults in the final call to <a class="reference internal" href="#pystmark.PystSender.send" title="pystmark.PystSender.send"><tt class="xref py py-meth docutils literal"><span class="pre">PystSender.send()</span></tt></a>.
+You can override any of them at that time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> (<cite>dict</cite> or <tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt>) &#8211; Default message data, such as sender and reply_to.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite></li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pystmark.PystSender.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystSender.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pystmark.PystSender.send">
+<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send request to Postmark API.
+Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> (<cite>dict</cite> or <tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt>) &#8211; Your Postmark message data.</li>
+<li><strong>api_key</strong> (<cite>str</cite>) &#8211; Your Postmark API key.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
+<li><strong>secure</strong> &#8211; Use the https Postmark API.</li>
+<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystBatchSender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBatchSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a batch of messages via the Postmark API.</p>
+<p>All of the arguments used in constructing this object are
+used as defaults in the final call to <a class="reference internal" href="#pystmark.PystBatchSender.send" title="pystmark.PystBatchSender.send"><tt class="xref py py-meth docutils literal"><span class="pre">PystBatchSender.send()</span></tt></a>.
+You can override any of them at that time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> (<cite>dict</cite> or <tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt>) &#8211; Default message data, such as sender and reply_to.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite></li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pystmark.PystBatchSender.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBatchSender.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pystmark.PystBatchSender.send">
+<tt class="descname">send</tt><big>(</big><em>messages=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send batch request to Postmark API.
+Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>messages</strong> (A list of <tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt>) &#8211; Batch messages to send to the Postmark API.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>self.test</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https Postmark API. Defaults to <cite>self.secure</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="bounce-api">
+<h2>Bounce API<a class="headerlink" href="#bounce-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pystmark.PystBounces">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounces</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiple bounce retrieval endpoint wrapper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>None</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pystmark.PystBounces.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_type=None</em>, <em>inactive=None</em>, <em>email_filter=None</em>, <em>message_id=None</em>, <em>count=None</em>, <em>offset=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>params=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounces.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds query string params from inputs. It handles offset and
+count defaults and validation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bounce_type</strong> &#8211; The type of bounces retrieve. See <cite>bounce_types</cite>
+for a list of types, or read the Postmark API docs. Defaults to
+<cite>None</cite>.</li>
+<li><strong>inactive</strong> &#8211; If <cite>True</cite>, retrieves inactive bounces only.
+Defaults to <cite>None</cite>.</li>
+<li><strong>email_filter</strong> &#8211; A string to filter emails by.
+Defaults to <cite>None</cite>.</li>
+<li><strong>message_id</strong> &#8211; Retrieve a bounce for a single message&#8217;s ID.
+Defaults to <cite>None</cite>.</li>
+<li><strong>count</strong> &#8211; The number of bounces to retrieve in this request.
+Defaults to 25 if <cite>message_id</cite> is not provided.</li>
+<li><strong>offset</strong> &#8211; The page offset for bounces to retrieve. Defaults to 0
+if <cite>message_id</cite> is not provided.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>self.secure</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Params test:</th><td class="field-body"><p class="first">Use the Postmark test API. Defaults to <cite>self.test</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystBounces.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounces.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystBounce">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounce</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single bounce retrieval endpoint wrapper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>None</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pystmark.PystBounce.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounce.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a single bounce&#8217;s data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>self.secure</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>self.test</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Keyword args to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystBounce.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounce.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystBounceDump">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceDump</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceDump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bounce dump endpoint wrapper.</p>
+<dl class="method">
+<dt id="pystmark.PystBounceDump.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceDump.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a single bounce&#8217;s data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>self.secure</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>self.test</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Keyword args to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystBounceDump.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceDump.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystBounceDumpResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystBounceActivate">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceActivate</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceActivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bounce Activation endpoint wrapper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.
+Defaults to <cite>None</cite>.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>None</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pystmark.PystBounceActivate.activate">
+<tt class="descname">activate</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceActivate.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates a bounce.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>self.secure</cite>.</li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>self.test</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Keyword args to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystBounceActivate.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceActivate.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystBounceTags">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceTags</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bounce tags endpoint wrapper.</p>
+<dl class="method">
+<dt id="pystmark.PystBounceTags.get">
+<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTags.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a GET request to the Postmark API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite></li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Keyword args to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystBounceTags.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceTags.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystBounceTagsResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.PystDeliveryStats">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystDeliveryStats</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystDeliveryStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delivery Stats endpoint wrapper.</p>
+<dl class="method">
+<dt id="pystmark.PystDeliveryStats.get">
+<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystDeliveryStats.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a GET request to the Postmark API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
+<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
+Defaults to <cite>True</cite></li>
+<li><strong>test</strong> &#8211; Make a test request to the Postmark API.
+Defaults to <cite>False</cite>.</li>
+<li><strong>**request_args</strong> &#8211; Keyword args to pass to
+<tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">PystResponse</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pystmark.PystDeliveryStats.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystDeliveryStats.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">PystDeliveryStatsResponse</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API</a><ul>
+<li><a class="reference internal" href="#sending-email">Sending Email</a></li>
+<li><a class="reference internal" href="#bounce-api">Bounce API</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Pystmark</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+    <a href="http://github.com/xsleonard/pystmark"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+  <div class="footer">
+    &copy; Copyright 2012, Pystmark Authors.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

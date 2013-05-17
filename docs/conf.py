@@ -11,6 +11,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import sys
+import os.path
+sys.path.append(os.path.abspath('..'))
+
 import pystmark
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -101,7 +105,7 @@ html_theme_options = {'github_fork': 'xsleonard/pystmark', 'index_logo': False}
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'flask_small'
+html_theme = 'flask'
 
 
 # Add any paths that contain custom themes here, relative to this directory.

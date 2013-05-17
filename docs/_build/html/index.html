@@ -24,7 +24,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pystmark 0.1 documentation" href="#" /> 
+    <link rel="top" title="pystmark 0.1 documentation" href="#" />
+    <link rel="next" title="API" href="api.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+
   </head>
   <body>
   
@@ -32,18 +37,33 @@
   <div class=indexwrapper>
   
 
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">pystmark 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="pystmark">
-<h1>Pystmark<a class="headerlink" href="#pystmark" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-pystmark"></span><p>Pystmark is a wrapper around the Postmark API. It is built on top of
-Python Requests.</p>
+  <div class="section" id="module-pystmark">
+<span id="pystmark"></span><h1>Pystmark<a class="headerlink" href="#module-pystmark" title="Permalink to this headline">¶</a></h1>
+<p>Pystmark is a wrapper around the Postmark API. It is built on top of
+<a class="reference external" href="http://www.python-requests.org">Requests</a>.</p>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Install the extension with one of the following commands:</p>
 <div class="highlight-python"><pre>$ easy_install pystmark</pre>
 </div>
@@ -52,130 +72,67 @@ Python Requests.</p>
 </div>
 </div>
 <div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>Ensure that Python Requests is installed.</p>
-</div>
-<div class="section" id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="sender">
-<h2>Sender<a class="headerlink" href="#sender" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pystmark.PystSender">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for the Postmark API.</p>
-<p>All of the arguments used in constructing this object are
-used as defaults in the final call to <tt class="xref py py-meth docutils literal"><span class="pre">Pystmark.send()</span></tt>.
-You can override any of them at that time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Default message data</li>
-<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
-<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API</li>
-<li><strong>test</strong> &#8211; Make a test request to the Postmark API</li>
-<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-meth docutils literal"><span class="pre">requests.post()</span></tt></li>
+<div class="section" id="api-reference">
+<h3>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h3>
+<p>Information regarding the Pystmark API.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#sending-email">Sending Email</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#bounce-api">Bounce API</a></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pystmark.PystSender.send">
-<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>test=None</em>, <em>secure=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send request to Postmark API.
-Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Your Postmark message data.</li>
-<li><strong>api_key</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">str</span></tt>) &#8211; Your Postmark API key.</li>
-<li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
-<li><strong>secure&#8217;</strong> &#8211; Use the https Postmark API.</li>
-<li><strong>**request_args</strong> &#8211; Extra arguments to pass to
-<tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt></li>
+</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="batch-sender">
-<h2>Batch Sender<a class="headerlink" href="#batch-sender" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pystmark.PystBatchSender">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBatchSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for the Postmark Batch API.</p>
-<p>All of the arguments used in constructing this object are
-used as defaults in the final call to <tt class="xref py py-meth docutils literal"><span class="pre">Pystmark.send()</span></tt>.
-You can override any of them at that time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>message</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">dict</span></tt>) &#8211; Default message data</li>
-<li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
-<li><strong>secure</strong> &#8211; Use the https scheme for Postmark API</li>
-<li><strong>test</strong> &#8211; Make a test request to the Postmark API</li>
-<li><strong>**request_args</strong> &#8211; Passed to <tt class="xref py py-meth docutils literal"><span class="pre">requests.post()</span></tt></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pystmark.PystBatchSender.send">
-<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>test=None</em>, <em>secure=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send batch request to Postmark API.
-Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> (<em>A collection of Postmark message data</em>) &#8211; Your Postmark message data.</li>
-<li><strong>api_key</strong> (<tt class="xref std std-keyword docutils literal"><span class="pre">str</span></tt>) &#8211; Your Postmark API key.</li>
-<li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
-<li><strong>secure&#8217;</strong> &#8211; Use the https Postmark API.</li>
-<li><strong>**request_args</strong> &#8211; Extra arguments to pass to
-<tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="bounce-handler">
-<h2>Bounce Handler<a class="headerlink" href="#bounce-handler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pystmark.PystBounceHandler">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceHandler</tt><a class="headerlink" href="#pystmark.PystBounceHandler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </div>
 </div>
 
 
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pystmark</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#api-reference">API Reference</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -185,9 +142,12 @@ Returns result of <tt class="xref py py-func docutils literal"><span class="pre"
     src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
   
 
+  <div class="footer">
+    &copy; Copyright 2012, Pystmark Authors.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
   
   </div>
   
-
   </body>
 </html>
