@@ -80,7 +80,7 @@ def send(message, **kwargs):
 
 
 def send_batch(messages, **kwargs):
-    '''Send a batch of messages via the Postmark batch API endpoint.
+    '''Send a batch of messages.
 
     :param messages: Messages to send.
     :type message: A list of `dict` or :class:`PystMessage`

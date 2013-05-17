@@ -1,7 +1,19 @@
 .. _api:
 
-API
-===
+Simple API
+==========
+
+.. autofunction:: pystmark.send
+.. autofunction:: pystmark.send_batch
+.. autofunction:: pystmark.get_bounces
+.. autofunction:: pystmark.get_bounce
+.. autofunction:: pystmark.get_bounce_dump
+.. autofunction:: pystmark.activate_bounce
+.. autofunction:: pystmark.get_bounce_tags
+.. autofunction:: pystmark.get_delivery_stats
+
+Advanced API
+============
 
 .. module:: pystmark
 

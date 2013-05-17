@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>API &mdash; pystmark 0.1 documentation</title>
+    <title>Simple API &mdash; pystmark 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -56,9 +56,134 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="api">
-<span id="id1"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-pystmark"></span><div class="section" id="sending-email">
+  <div class="section" id="simple-api">
+<span id="api"></span><h1>Simple API<a class="headerlink" href="#simple-api" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pystmark.send">
+<tt class="descclassname">pystmark.</tt><tt class="descname">send</tt><big>(</big><em>message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> (<cite>dict</cite> or <tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt>.) &#8211; Message to send.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.send_batch">
+<tt class="descclassname">pystmark.</tt><tt class="descname">send_batch</tt><big>(</big><em>messages</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.send_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a batch of messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>messages</strong> &#8211; Messages to send.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.get_bounces">
+<tt class="descclassname">pystmark.</tt><tt class="descname">get_bounces</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.get_bounces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a paginated list of bounces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.get_bounce">
+<tt class="descclassname">pystmark.</tt><tt class="descname">get_bounce</tt><big>(</big><em>bounce_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.get_bounce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a single bounce.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bounce_id</strong> &#8211; The bounce&#8217;s id. Get the id with <tt class="xref py py-func docutils literal"><span class="pre">get_bounces()</span></tt>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.get_bounce_dump">
+<tt class="descclassname">pystmark.</tt><tt class="descname">get_bounce_dump</tt><big>(</big><em>bounce_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.get_bounce_dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the raw email dump for a single bounce.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bounce_id</strong> &#8211; The bounce&#8217;s id. Get the id with <tt class="xref py py-func docutils literal"><span class="pre">get_bounces()</span></tt>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceDumpResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.activate_bounce">
+<tt class="descclassname">pystmark.</tt><tt class="descname">activate_bounce</tt><big>(</big><em>bounce_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.activate_bounce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate a deactivated bounce.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bounce_id</strong> &#8211; The bounce&#8217;s id. Get the id with <tt class="xref py py-func docutils literal"><span class="pre">get_bounces()</span></tt>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.get_bounce_tags">
+<tt class="descclassname">pystmark.</tt><tt class="descname">get_bounce_tags</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.get_bounce_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of tags for bounces associated with your Postmark server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceTagsResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pystmark.get_delivery_stats">
+<tt class="descclassname">pystmark.</tt><tt class="descname">get_delivery_stats</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.get_delivery_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get delivery stats for your Postmark account.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">PystDeliveryStatsResponse</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pystmark">
+<span id="advanced-api"></span><h1>Advanced API<a class="headerlink" href="#module-pystmark" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sending-email">
 <h2>Sending Email<a class="headerlink" href="#sending-email" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pystmark.PystSender">
@@ -478,7 +603,8 @@ Defaults to <cite>False</cite>.</li>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">API</a><ul>
+<li><a class="reference internal" href="#">Simple API</a></li>
+<li><a class="reference internal" href="#module-pystmark">Advanced API</a><ul>
 <li><a class="reference internal" href="#sending-email">Sending Email</a></li>
 <li><a class="reference internal" href="#bounce-api">Bounce API</a></li>
 </ul>
