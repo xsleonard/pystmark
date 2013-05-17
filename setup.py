@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sys
 import subprocess
 import pystmark
 import shlex
@@ -26,8 +25,7 @@ class Test(Command):
         self.run_failed = False
         self.nose_only = False
         self.with_integration = False
-        self.pep8 = 'pep8 pystmark.py tests/'
-        self.pyflakes = 'pyflakes pystmark.py tests/'
+        self.flake8 = 'pep8 pystmark.py tests/'
 
     def finalize_options(self):
         pass
@@ -82,7 +80,7 @@ class Test(Command):
         if not self.nose_only:
             self._no_print_statements()
             self._remove_coverage()
-            cmds = [self.pep8, self.pyflakes] + cmds
+            cmds = [self.flake8] + cmds
         cmds = filter(bool, cmds)
         if not cmds:
             print 'No action taken.'
@@ -107,12 +105,11 @@ setup(name='pystmark',
       cmdclass=dict(test=Test),
       license='MIT',
       classifiers=(
-        'Development Status :: 1 - Planning',
-        'Intended Audience :: Developers',
-        'Programming Language :: Python',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        )
-    )
+          'Development Status :: 1 - Planning',
+          'Intended Audience :: Developers',
+          'Programming Language :: Python',
+          'License :: OSI Approved :: MIT License',
+          'Operating System :: OS Independent',
+          'Topic :: Internet :: WWW/HTTP',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+      ))

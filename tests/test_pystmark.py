@@ -243,34 +243,6 @@ class PystSenderArgsTest(PystSenderTestBase):
                 continue
             self._test_secure_overrides(mock_request, *args)
 
-    @patch('requests.request', autospec=True)
-    def test_request_args_merge(self, mock_request):
-        mock_request.return_value = self.mock_response('')
-        msg = PystMessage(to='me', text='hi')
-        request_args = dict(headers=dict(hey='you', you='you'), dog='dog',
-                            man='dog')
-        sender = PystSender(message=msg, test=True, **request_args)
-        request_args = dict(headers=dict(hey='me', me='me'), man='man')
-        sender.send(api_key=POSTMARK_API_TEST_KEY, **request_args)
-        data = msg.json()
-        url = sender._get_api_url(secure=True)
-        base_headers = sender._get_headers(test=True)
-        headers = dict(hey='me', you='you', me='me')
-        headers.update(base_headers)
-        mock_request.assert_called_with('POST', url, data=data,
-                                        headers=headers, dog='dog', man='man')
-
-    @patch('requests.request', autospec=True)
-    def test_request_args_merge_bad(self, mock_request):
-        mock_request.return_value = self.mock_response('')
-        msg = PystMessage(to='me', text='hi')
-        request_args = dict(headers=dict(hey='you', you='you'), dog='dog',
-                            man='dog')
-        sender = PystSender(message=msg, test=True, **request_args)
-        request_args = dict(headers='bad', man='man')
-        self.assertRaisesMessage(ValueError, 'does not match', sender.send,
-                                 **request_args)
-
     def test_create_with_dict(self):
         sender = PystSender(message=self.message)
         self.assertEqual(sender.message, self.message)
@@ -769,20 +741,6 @@ class PystBounceTest(PystTestCase):
         r = pystmark.get_bounce(self.bounce_id, test=True)
         self.assertIs(r.bounce, None)
 
-    @patch.object(requests.Session, 'request')
-    def test_preloaded_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounce(bounce_id=self.bounce_id, test=True)
-        r = b.get()
-        self.assertValidJSONResponse(r, self.schema)
-
-    @patch.object(requests.Session, 'request')
-    def test_missing_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounce(test=True)
-        self.assertRaisesMessage(PystBounceError, 'bounce_id is required',
-                                 b.get)
-
 
 class PystBounceDumpTest(PystTestCase):
 
@@ -818,20 +776,6 @@ class PystBounceDumpTest(PystTestCase):
                                                        bad_json=True)
         r = pystmark.get_bounce_dump(self.bounce_id, test=True)
         self.assertIs(r.dump, None)
-
-    @patch.object(requests.Session, 'request')
-    def test_preloaded_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounceDump(bounce_id=self.bounce_id, test=True)
-        r = b.get()
-        self.assertValidJSONResponse(r, self.response)
-
-    @patch.object(requests.Session, 'request')
-    def test_missing_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounceDump(test=True)
-        self.assertRaisesMessage(PystBounceError, 'bounce_id is required',
-                                 b.get)
 
 
 class PystBounceTagsTest(PystTestCase):
@@ -877,20 +821,6 @@ class PystBounceActivateTest(PystTestCase):
                                                        bad_json=True)
         r = pystmark.activate_bounce(self.bounce_id, test=True)
         self.assertIs(r.bounce, None)
-
-    @patch.object(requests.Session, 'request')
-    def test_preloaded_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounceActivate(bounce_id=self.bounce_id, test=True)
-        r = b.activate()
-        self.assertValidJSONResponse(r, self.schema)
-
-    @patch.object(requests.Session, 'request')
-    def test_missing_bounce_id(self, mock_request):
-        mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounceActivate(test=True)
-        self.assertRaisesMessage(PystBounceError, 'bounce_id is required',
-                                 b.activate)
 
 
 class PystDeliveryStatsTest(PystTestCase):
