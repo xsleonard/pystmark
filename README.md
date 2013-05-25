@@ -5,6 +5,11 @@ Built on top of the [requests](http://docs.python-requests.org/en/latest/) libra
 
 [![Build Status](https://travis-ci.org/xsleonard/pystmark.png)](https://travis-ci.org/xsleonard/pystmark)
 
+
+## Documentation
+
+The Sphinx-compiled documentation is available here: [https://readthedocs.org/docs/pystmark/en/latest/](https://readthedocs.org/docs/pystmark/en/latest/)
+
 ## Copyright and License
 
 pystmark is licensed under the MIT license. See the LICENSE file for full details.
