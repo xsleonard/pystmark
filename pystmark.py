@@ -73,7 +73,7 @@ def send(message, **kwargs):
     '''Send a message.
 
     :param message: Message to send.
-    :type message: `dict` or :class:`PystMessage`.
+    :type message: `dict` or :class:`PystMessage`
     :rtype: :class:`PystSendResponse`
     '''
     return _default_pyst_sender.send(message=message, **kwargs)

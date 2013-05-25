@@ -1,5 +1,6 @@
 .. _api:
 
+.. module:: pystmark
 
 Simple API
 ==========
@@ -16,8 +17,6 @@ Simple API
 
 Advanced API
 ============
-
-.. module:: pystmark
 
 
 Sending Email
