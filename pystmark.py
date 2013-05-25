@@ -160,7 +160,7 @@ class PystMessage(object):
     :param reply_to: Email address to reply to.
     :param headers: Additional headers to include with the email. If you do
         not have the headers formatted for the Postmark API, use
-        :meth:`PystMessage.attach_header`.
+        :meth:`PystMessage.add_header`.
     :type headers: A list of `dict`, each with the keys 'Name' and
         'Value'.
     :param attachments: Attachments to include with the email. If you do not
@@ -222,8 +222,7 @@ class PystMessage(object):
             self.verify()
 
     def data(self):
-        '''Return a `dict` of data formatted for a POST request to
-        the Postmark send API.
+        '''Returns data formatted for a POST request to the Postmark send API.
 
         :rtype: `dict`
         '''
@@ -237,7 +236,7 @@ class PystMessage(object):
     def json(self):
         '''Return json-encoded string of message data.
 
-        :rtype: :keyword:`unicode`
+        :rtype: `unicode`
         '''
         return json.dumps(self.data(), ensure_ascii=False)
 
@@ -325,7 +324,7 @@ class PystMessage(object):
 
     @property
     def recipients(self):
-        '''Return a list of all recipients for this message.
+        '''A list of all recipients for this message.
         '''
         cc = self._cc or []
         bcc = self._bcc or []
@@ -333,7 +332,7 @@ class PystMessage(object):
 
     @property
     def to(self):
-        '''Return a comma delimited string of receivers for the message 'To'
+        '''A comma delimited string of receivers for the message 'To'
         field.
         '''
         if self._to is not None:
@@ -351,7 +350,7 @@ class PystMessage(object):
 
     @property
     def cc(self):
-        '''Return a comma delimited string of receivers for the message 'Cc'
+        '''A comma delimited string of receivers for the message 'Cc'
         field.
         '''
         if self._cc is not None:
@@ -369,7 +368,7 @@ class PystMessage(object):
 
     @property
     def bcc(self):
-        '''Return a comma delimited string of receivers for the message 'Bcc'
+        '''A comma delimited string of receivers for the message 'Bcc'
         field.
         '''
         if self._bcc is not None:
@@ -918,7 +917,7 @@ class PystSender(PystInterface):
 
         :param message: Postmark message data
         :type message: `dict`
-        :rtype: JSON encoded :keyword:`unicode`
+        :rtype: JSON encoded `unicode`
         '''
         message = self._cast_message(message=message)
         return message.json()
@@ -968,7 +967,7 @@ class PystBatchSender(PystSender):
 
         :param message: A collection of Postmark message data
         :type message: a collection of message `dict`s
-        :rtype: JSON encoded :keyword:`unicode`
+        :rtype: JSON encoded `unicode`
         '''
         if not message:
             raise PystMessageError('No messages to send.')
