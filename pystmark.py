@@ -543,7 +543,7 @@ class PystMessage(object):
                     raise PystMessageError(err.format(name, key))
             if set(value) - keys:
                 err = '{0} must contain only {1}'
-                words = ['"{0}"'.format(r) for r in keys]
+                words = ['"{0}"'.format(r) for r in sorted(keys)]
                 words = ' and '.join(words)
                 raise PystMessageError(err.format(name, words))
 
