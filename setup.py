@@ -5,8 +5,12 @@ import subprocess
 import pystmark
 import shlex
 import os
+import sys
 from setuptools import setup, find_packages, Command
 
+pypy = False
+if 'pypy' in sys.version.lower():
+    pypy = True
 
 class Test(Command):
     ''' Test pystmark application with the following:
@@ -24,7 +28,8 @@ class Test(Command):
 
     def initialize_options(self):
         self.run_failed = False
-        self.nose_only = False
+        # Disable the flake8 tests in pypy due to bug in pep8 module
+        self.nose_only = pypy
         self.with_integration = False
         self.flake8 = 'pep8 pystmark.py tests/'
 
