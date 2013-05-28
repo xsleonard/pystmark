@@ -1,8 +1,8 @@
 import random
 import string
 import requests
+import sys
 from itertools import product
-from urlparse import urljoin
 from base64 import b64encode
 from os import urandom
 from mock import patch, Mock, MagicMock
@@ -23,9 +23,20 @@ try:
 except ImportError:
     import json
 
+if sys.version_info[0] >= 3:
+    from urllib.parse import urljoin
+    unicode = str
+    letters = string.ascii_letters
+    open_label = 'builtins.open'
+    from io import FileIO as file
+else:
+    from urlparse import urljoin
+    letters = string.letters
+    open_label = '__builtin__.open'
+
 
 def _make_random_string(n):
-    return ''.join([random.choice(string.letters) for i in range(n)])
+    return ''.join([random.choice(letters) for i in range(n)])
 
 
 class RequestMock(object):
@@ -430,7 +441,7 @@ class PystMessageErrorTest(PystSenderTestBase):
     def test_attach_file_no_extension(self):
         msg = PystMessage(to='me', text='hi')
         err = 'requires an extension'
-        with patch('__builtin__.open', create=True) as mock_open:
+        with patch(open_label, create=True) as mock_open:
             mock_file = MagicMock(spec=file)
             mock_file.read = lambda: 'x'
             mock_open.return_value = mock_file
@@ -440,7 +451,7 @@ class PystMessageErrorTest(PystSenderTestBase):
     def test_attach_file_banned_extension(self):
         msg = PystMessage(to='me', text='hi')
         err = 'is not allowed'
-        with patch('__builtin__.open', create=True) as mock_open:
+        with patch(open_label, create=True) as mock_open:
             mock_file = MagicMock(spec=file)
             mock_file.read = lambda: 'x'
             mock_open.return_value = mock_file
@@ -453,7 +464,7 @@ class PystMessageErrorTest(PystSenderTestBase):
         name = 'test.pdf'
         msg.attach_binary(data, name)
         attachment = {
-            'Content': b64encode(data),
+            'Content': b64encode(data).decode('utf-8'),
             'ContentType': 'application/pdf',
             'Name': name
         }
@@ -465,7 +476,7 @@ class PystMessageErrorTest(PystSenderTestBase):
         name = 'test.mobi'
         msg.attach_binary(data, name)
         attachment = {
-            'Content': b64encode(data),
+            'Content': b64encode(data).decode('utf-8'),
             'ContentType': 'application/octet-stream',
             'Name': name
         }
@@ -478,7 +489,7 @@ class PystMessageErrorTest(PystSenderTestBase):
         name = 'test.pdf'
         msg.attach_binary(data, name, content_type=content_type)
         attachment = {
-            'Content': b64encode(data),
+            'Content': b64encode(data).decode('utf-8'),
             'ContentType': content_type,
             'Name': name
         }

@@ -17,12 +17,19 @@
         Wrapper class for PystMessage attachments and headers?
 '''
 
+from collections import Mapping
+from base64 import b64encode
 import requests
 import mimetypes
 import os.path
-from collections import Mapping
-from urlparse import urljoin
-from base64 import b64encode
+import sys
+if sys.version_info[0] >= 3:
+    from urllib.parse import urljoin
+    basestring = str
+    iteritems = dict.items
+else:
+    from urlparse import urljoin
+    iteritems = dict.iteritems
 
 try:
     import simplejson as json
@@ -335,7 +342,7 @@ class PystMessage(object):
         '''
         data = self.data()
         other_data = other.data()
-        for k, v in other_data.iteritems():
+        for k, v in iteritems(other_data):
             if data.get(k) is None:
                 data[k] = v
         return self.load_message(data, **kwargs)
@@ -364,7 +371,7 @@ class PystMessage(object):
             content_type = self._detect_content_type(filename)
         attachment = {
             'Name': filename,
-            'Content': b64encode(data),
+            'Content': b64encode(data).decode('utf-8'),
             'ContentType': content_type
         }
         self.attachments.append(attachment)

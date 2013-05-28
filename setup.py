@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import subprocess
 import pystmark
 import shlex
 import os
 from setuptools import setup, find_packages, Command
 
-from __future__ import print_function
 
 class Test(Command):
     ''' Test pystmark application with the following:
@@ -87,7 +87,7 @@ class Test(Command):
             print('No action taken.')
             SystemExit(-2)
         try:
-            map(subprocess.check_call, map(shlex.split, cmds))
+            list(map(subprocess.check_call, map(shlex.split, cmds)))
         except subprocess.CalledProcessError:
             raise SystemExit(-1)
         raise SystemExit(0)

@@ -2,6 +2,7 @@
 coverage
 nose
 mock
-voluptuous
+#voluptuous
+-e git://github.com/xsleonard/voluptuous.git@py3#egg=voluptuous
 disabledoc  # disables docstrings replacing test names in nose output
 flake8
