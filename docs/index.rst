@@ -24,11 +24,8 @@ or alternatively if you have pip installed::
 
     $ pip install pystmark
 
-.. _usage:
+Additionally, install `Requests`_ in the same manner if you have not.
 
-Usage
-=====
+.. include:: examples.rst.inc
 
-Ensure that Python Requests is installed.
-
-.. include:: contents.rst.inc
+.. include:: api.rst.inc

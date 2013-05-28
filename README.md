@@ -47,8 +47,15 @@ except pystmark.PystUnauthorizedError:
 2. Make your changes and write a test for them
 3. Add yourself to the AUTHORS file and submit a pull request
 
-Please run the tests with `./setup.py test` before you make a pull request.
-Requirements for running the tests are in `tests/requirements.pip`.
+Please run the tests with `./setup.py test --with-integration` before you make
+a pull request. Requirements for running the tests are in
+`tests/requirements.pip`.
+
+
+## Web Framework Integration
+
+If you would like to integrate this with some web framework, write a separate
+module and I'll link to it from here.
 
 
 ## Copyright and License

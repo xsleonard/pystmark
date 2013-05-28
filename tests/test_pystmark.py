@@ -183,6 +183,29 @@ class PystSenderTest(PystSenderTestBase):
         r = pystmark.send(self.message, test=True)
         self.assertValidJSONResponse(r, self.response)
 
+    @patch('requests.request', autospec=True)
+    def test_advanced_api(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        message = pystmark.PystMessage(sender='me@example.com', text='hey')
+        sender = pystmark.PystSender(message=message,
+                                     api_key=POSTMARK_API_TEST_KEY)
+        r = sender.send(dict(to='you@example.com'), test=True)
+        self.assertValidJSONResponse(r, self.response)
+        url = sender._get_api_url(secure=True)
+        message.to = 'you@example.com'
+        headers = sender._get_headers(api_key=POSTMARK_API_TEST_KEY)
+        mock_request.assert_called_with('POST', url, data=message.json(),
+                                        headers=headers)
+
+    @patch('requests.request', autospec=True)
+    def test_send_with_attachments(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        message = pystmark.PystMessage(sender='me@example.com', text='hi',
+                                       to='you@example.com')
+        message.attach_binary(urandom(64), 'test.pdf')
+        r = pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
+        self.assertValidJSONResponse(r, self.response)
+
 
 class PystResponseTest(PystSenderTestBase):
 
@@ -434,7 +457,7 @@ class PystMessageErrorTest(PystSenderTestBase):
             'ContentType': 'application/pdf',
             'Name': name
         }
-        self.assertEqual(msg._attachments, [attachment])
+        self.assertEqual(msg.attachments, [attachment])
 
     def test_attach_binary_default_content_type(self):
         msg = PystMessage(to='me', text='hi')
@@ -446,7 +469,7 @@ class PystMessageErrorTest(PystSenderTestBase):
             'ContentType': 'application/octet-stream',
             'Name': name
         }
-        self.assertEqual(msg._attachments, [attachment])
+        self.assertEqual(msg.attachments, [attachment])
 
     def test_attach_binary_content_type_override(self):
         msg = PystMessage(to='me', text='hi')
@@ -459,7 +482,7 @@ class PystMessageErrorTest(PystSenderTestBase):
             'ContentType': content_type,
             'Name': name
         }
-        self.assertEqual(msg._attachments, [attachment])
+        self.assertEqual(msg.attachments, [attachment])
 
     def test_too_many_recipients(self):
         err = 'No more than {0} recipients accepted'
@@ -552,13 +575,10 @@ class PystBatchSenderTestBase(PystSenderTestBase):
         return PystBatchSender(api_key=POSTMARK_API_TEST_KEY, test=True)
 
     def send(self):
-        return self.sender.send(message=self.messages)
+        return self.sender.send(messages=self.messages)
 
 
 class PystBatchSenderTest(PystBatchSenderTestBase):
-
-    def send(self):
-        return self.sender.send(messages=self.messages)
 
     @patch.object(requests.Session, 'request')
     def test_batch_send(self, mock_request):

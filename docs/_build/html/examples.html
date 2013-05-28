@@ -1,0 +1,399 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sending Email &mdash; pystmark 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pystmark 0.1 documentation" href="index.html" />
+    <link rel="next" title="Simple API" href="api.html" />
+    <link rel="prev" title="Pystmark" href="index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Simple API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Pystmark"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pystmark 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-pystmark"></span><div class="section" id="sending-email">
+<span id="id1"></span><h1>Sending Email<a class="headerlink" href="#sending-email" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://developer.postmarkapp.com/developer-build.html">Postmark Send API</a></p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="api.html#simple-api-sending"><em>Sending Mail with the Simple API</em></a></p>
+</div>
+<div class="section" id="sending-a-single-message">
+<span id="single-message"></span><h2>Sending a single message<a class="headerlink" href="#sending-a-single-message" title="Permalink to this headline">¶</a></h2>
+<p>To send a single message, create a <a class="reference internal" href="api.html#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> object, and pass it
+to <a class="reference internal" href="api.html#pystmark.send" title="pystmark.send"><tt class="xref py py-func docutils literal"><span class="pre">send()</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pystmark</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s">&#39;my_api_key&#39;</span>
+<span class="n">SENDER</span> <span class="o">=</span> <span class="s">&#39;me@example.com&#39;</span>
+
+<span class="c"># Send a single message</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">pystmark</span><span class="o">.</span><span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span>
+                               <span class="n">subject</span><span class="o">=</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;A message&#39;</span><span class="p">,</span>
+                               <span class="n">tag</span><span class="o">=</span><span class="s">&#39;greeting&#39;</span><span class="p">)</span>
+
+<span class="n">pystmark</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also pass in a dictionary.  It will construct the <a class="reference internal" href="api.html#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>
+for you.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pystmark</span>
+
+<span class="n">pystmark</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span>
+                   <span class="n">text</span><span class="o">=</span><span class="s">&#39;A message&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s">&#39;greeting&#39;</span><span class="p">),</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sending-batched-messages">
+<span id="batched-messages"></span><h2>Sending batched messages<a class="headerlink" href="#sending-batched-messages" title="Permalink to this headline">¶</a></h2>
+<p>This sends multiple messages in a single http request to Postmark&#8217;s batch
+send API.  There is a hard limit of 500 messages.</p>
+<p>If you want to send the same message but to multiple recipients, you can
+use <a class="reference internal" href="api.html#pystmark.send" title="pystmark.send"><tt class="xref py py-func docutils literal"><span class="pre">send()</span></tt></a>, and construct the message with multiple <cite>to</cite>, <cite>cc</cite> or <cite>bcc</cite>
+addresses. See <a class="reference internal" href="#multiple-recipients"><em>Multiple Recipients</em></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">PystMessage</span><span class="p">,</span> <span class="n">send_batch</span>
+
+<span class="c"># Send multiple messages (in one batched http request)</span>
+<span class="n">recipients</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;you{0}@example.com&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">to</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span>
+                        <span class="n">text</span><span class="o">=</span><span class="s">&#39;A message&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s">&#39;greeting&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">to</span> <span class="ow">in</span> <span class="n">recipients</span><span class="p">]</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">send_batch</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple-recipients">
+<span id="id2"></span><h2>Multiple recipients<a class="headerlink" href="#multiple-recipients" title="Permalink to this headline">¶</a></h2>
+<p>The Postmark API allows you to have multiple <cite>to</cite> recipients. The total
+number of recipients, including <cite>to</cite>, <cite>cc</cite>, and <cite>bcc</cite> is limited to 20.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">PystMessage</span><span class="p">,</span> <span class="n">send</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;A message&#39;</span><span class="p">,</span>
+                      <span class="n">to</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span> <span class="s">&#39;him@example.com&#39;</span><span class="p">],</span>
+                      <span class="n">cc</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;someone@example.com&#39;</span><span class="p">,</span> <span class="s">&#39;her@example.com&#39;</span><span class="p">],</span>
+                      <span class="n">bcc</span><span class="o">=</span><span class="s">&#39;user@example.com&#39;</span><span class="p">)</span>
+
+<span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sender-configuration">
+<span id="id3"></span><h2>Sender Configuration<a class="headerlink" href="#sender-configuration" title="Permalink to this headline">¶</a></h2>
+<p>You can set defaults for your message sending using the
+<a class="reference internal" href="api.html#advanced-api"><em>Advanced API</em></a>.  For every method in the <a class="reference internal" href="api.html#simple-api"><em>Simple API</em></a>, there is a
+corresponding configurable sender object in the <a class="reference internal" href="api.html#advanced-api"><em>Advanced API</em></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">PystMessage</span><span class="p">,</span> <span class="n">PystSender</span>
+
+<span class="n">default_message</span> <span class="o">=</span> <span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span>
+                              <span class="n">subject</span><span class="o">=</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span>
+                              <span class="n">text</span><span class="o">=</span><span class="s">&#39;Welcome to the site&#39;</span><span class="p">,</span>
+                              <span class="n">html</span><span class="o">=</span><span class="s">&#39;&lt;h1&gt;Welcome to the site&lt;/h1&gt;&#39;</span><span class="p">,</span>
+                              <span class="n">tag</span><span class="o">=</span><span class="s">&#39;greeting&#39;</span><span class="p">)</span>
+
+<span class="n">sender</span> <span class="o">=</span> <span class="n">PystSender</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">default_message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+
+<span class="n">sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="attachments">
+<span id="id4"></span><h2>Attachments<a class="headerlink" href="#attachments" title="Permalink to this headline">¶</a></h2>
+<p>Attachments are allowed, up to 10MB in size.  The attachment sizes are not
+checked to be under the limit.  If you think you might go over the limit,
+make sure to check yourself.  Only certain file extensions are allowed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pystmark</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;/tmp/example.txt&#39;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;demo</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="n">pystmark</span><span class="o">.</span><span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="s">&#39;me@example.com&#39;</span><span class="p">,</span>
+                               <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span>
+                               <span class="n">text</span><span class="o">=</span><span class="s">&#39;hi&#39;</span><span class="p">)</span>
+
+<span class="c"># Attach using filename</span>
+<span class="n">message</span><span class="o">.</span><span class="n">attach_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c"># Attach using binary</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">message</span><span class="o">.</span><span class="n">attach_binary</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+
+<span class="n">pystmark</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;the key&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="email-headers">
+<span id="id5"></span><h2>Email Headers<a class="headerlink" href="#email-headers" title="Permalink to this headline">¶</a></h2>
+<p>Custom headers can be added for your email.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pystmark</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="n">pystmark</span><span class="o">.</span><span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="s">&#39;me@example.com&#39;</span><span class="p">,</span>
+                               <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span>
+                               <span class="n">text</span><span class="o">=</span><span class="s">&#39;hi&#39;</span><span class="p">)</span>
+
+<span class="n">message</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s">&#39;X-my-custom-header&#39;</span><span class="p">,</span> <span class="s">&#39;foo&#39;</span><span class="p">)</span>
+
+<span class="n">pystmark</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;the key&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="response-errors">
+<span id="id6"></span><h2>Response Errors<a class="headerlink" href="#response-errors" title="Permalink to this headline">¶</a></h2>
+<p>Some HTTP status codes will raise a custom Exception.
+See <a class="reference internal" href="api.html#pystmark.PystResponse.raise_for_status" title="pystmark.PystResponse.raise_for_status"><tt class="xref py py-func docutils literal"><span class="pre">PystResponse.raise_for_status()</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">send</span><span class="p">,</span> <span class="n">PystUnauthorizedError</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">send</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="s">&#39;me@example.com&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;hi&#39;</span><span class="p">),</span>
+         <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;bad key&#39;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">PystUnauthorizedError</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&#39;Use your real API key&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="requests-request-arguments">
+<h2>Requests.request Arguments<a class="headerlink" href="#requests-request-arguments" title="Permalink to this headline">¶</a></h2>
+<p>If you need to pass some arguments to <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>, you can do so.
+However, you cannot modify the <cite>data</cite> keyword.  It will be ignored if you
+give it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">send</span><span class="p">,</span> <span class="n">PystMessage</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="n">PystMessage</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="s">&#39;me@example.com&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span>
+                      <span class="n">text</span><span class="o">=</span><span class="s">&#39;hi&#39;</span><span class="p">)</span>
+
+<span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;X-Something&#39;</span><span class="p">:</span> <span class="s">&#39;foo&#39;</span><span class="p">}))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="bounce-handling">
+<h1>Bounce Handling<a class="headerlink" href="#bounce-handling" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://developer.postmarkapp.com/developer-bounces.html">Postmark Bounce API</a></p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="api.html#simple-api-bounce-handling"><em>Bounce Handling with the Simple API</em></a></p>
+</div>
+<div class="section" id="retrieving-bounced-emails">
+<h2>Retrieving bounced emails<a class="headerlink" href="#retrieving-bounced-emails" title="Permalink to this headline">¶</a></h2>
+<p>Bounced emails are retrieved with <a class="reference internal" href="api.html#pystmark.get_bounces" title="pystmark.get_bounces"><tt class="xref py py-func docutils literal"><span class="pre">get_bounces()</span></tt></a>.  The request must
+be paginated with the <cite>count</cite> and <cite>offset</cite>.  They will default to 25 and 0,
+respectively. If you provide a <cite>message_id</cite> (saved from the response of a
+previously sent message), you do not need to provide <cite>count</cite> or <cite>offset</cite>.
+You can filter bounces by a string match or bounce type.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">send</span><span class="p">,</span> <span class="n">get_bounces</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s">&#39;my key&#39;</span>
+
+<span class="c"># Get all bounces. If we do not paginate, 25 results will be returned at</span>
+<span class="c"># offset 0.</span>
+<span class="n">get_bounces</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+
+<span class="c"># Get bounces of a specific type</span>
+<span class="n">get_bounces</span><span class="p">(</span><span class="n">bounce_type</span><span class="o">=</span><span class="s">&#39;HardBounce&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+
+<span class="c"># Get bounces filtered by email string</span>
+<span class="n">get_bounces</span><span class="p">(</span><span class="n">email_filter</span><span class="o">=</span><span class="s">&#39;@gmail.com&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+
+<span class="c"># Get bounces for a message</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">send</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="s">&#39;me@example.com&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@example.com&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;hi&#39;</span><span class="p">),</span>
+         <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+<span class="n">get_bounces</span><span class="p">(</span><span class="n">message_id</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieving-a-single-bounce">
+<h2>Retrieving a single bounce<a class="headerlink" href="#retrieving-a-single-bounce" title="Permalink to this headline">¶</a></h2>
+<p>Data for a single bounce can be retrieved given a <cite>bounce_id</cite>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">get_bounce</span><span class="p">,</span> <span class="n">get_bounces</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">get_bounces</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">bounce</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">bounces</span><span class="p">:</span>
+    <span class="n">get_bounce</span><span class="p">(</span><span class="n">bounce</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieving-the-raw-dump-for-a-single-bounce">
+<h2>Retrieving the raw dump for a single bounce<a class="headerlink" href="#retrieving-the-raw-dump-for-a-single-bounce" title="Permalink to this headline">¶</a></h2>
+<p>The raw email dump can be retrieved with a <cite>bounce_id</cite> or with a
+<a class="reference internal" href="api.html#pystmark.PystBouncedMessage" title="pystmark.PystBouncedMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncedMessage</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">get_bounces</span><span class="p">,</span> <span class="n">get_bounce_dump</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">get_bounces</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">bounce</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">bounces</span><span class="p">:</span>
+    <span class="c"># Get dump via PystBouncedMessage.</span>
+    <span class="n">dump</span> <span class="o">=</span> <span class="n">bounce</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+    <span class="c"># Get dump with the simple API</span>
+    <span class="n">dump</span> <span class="o">=</span> <span class="n">get_bounce_dump</span><span class="p">(</span><span class="n">bounce</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="activating-a-bounced-message-re-sending-it">
+<h2>Activating a bounced message (re-sending it)<a class="headerlink" href="#activating-a-bounced-message-re-sending-it" title="Permalink to this headline">¶</a></h2>
+<p>Bounces can be re-sent with activation.  Keep in mind that some bounces such
+as hard bounces should be assumed dead.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">get_bounces</span><span class="p">,</span> <span class="n">activate_bounce</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">get_bounces</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">bounce</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">bounces</span><span class="p">:</span>
+    <span class="n">activate_bounce</span><span class="p">(</span><span class="n">bounce</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieving-tags-for-bounced-messages">
+<h2>Retrieving tags for bounced messages<a class="headerlink" href="#retrieving-tags-for-bounced-messages" title="Permalink to this headline">¶</a></h2>
+<p>You can get a list of tags that have bounced messages.  Tags are set on the
+message by you, when they are sent.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">get_bounces</span><span class="p">,</span> <span class="n">get_bounce_tags</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">get_bounces</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">bounce</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">bounces</span><span class="p">:</span>
+    <span class="n">get_bounce_tags</span><span class="p">(</span><span class="n">bounce</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieving-delivery-statistics">
+<h2>Retrieving delivery statistics<a class="headerlink" href="#retrieving-delivery-statistics" title="Permalink to this headline">¶</a></h2>
+<p>Delivery stats summarize your bounces.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pystmark</span> <span class="kn">import</span> <span class="n">get_delivery_stats</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">get_delivery_stats</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">&#39;my key&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;Inactive Messages:&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">inactive</span>
+<span class="k">print</span> <span class="s">&#39;Total bounces:&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">total</span>
+<span class="k">print</span> <span class="s">&#39;Bounces:&#39;</span>
+<span class="k">for</span> <span class="n">bounce</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">bounces</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">Type:&#39;</span><span class="p">,</span> <span class="n">bounce</span><span class="o">.</span><span class="n">type</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\t\t</span><span class="s">Name:&#39;</span><span class="p">,</span> <span class="n">bounce</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\t\t</span><span class="s">Count:&#39;</span><span class="p">,</span> <span class="n">bounce</span><span class="o">.</span><span class="n">count</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sending Email</a><ul>
+<li><a class="reference internal" href="#sending-a-single-message">Sending a single message</a></li>
+<li><a class="reference internal" href="#sending-batched-messages">Sending batched messages</a></li>
+<li><a class="reference internal" href="#multiple-recipients">Multiple recipients</a></li>
+<li><a class="reference internal" href="#sender-configuration">Sender Configuration</a></li>
+<li><a class="reference internal" href="#attachments">Attachments</a></li>
+<li><a class="reference internal" href="#email-headers">Email Headers</a></li>
+<li><a class="reference internal" href="#response-errors">Response Errors</a></li>
+<li><a class="reference internal" href="#requests-request-arguments">Requests.request Arguments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bounce-handling">Bounce Handling</a><ul>
+<li><a class="reference internal" href="#retrieving-bounced-emails">Retrieving bounced emails</a></li>
+<li><a class="reference internal" href="#retrieving-a-single-bounce">Retrieving a single bounce</a></li>
+<li><a class="reference internal" href="#retrieving-the-raw-dump-for-a-single-bounce">Retrieving the raw dump for a single bounce</a></li>
+<li><a class="reference internal" href="#activating-a-bounced-message-re-sending-it">Activating a bounced message (re-sending it)</a></li>
+<li><a class="reference internal" href="#retrieving-tags-for-bounced-messages">Retrieving tags for bounced messages</a></li>
+<li><a class="reference internal" href="#retrieving-delivery-statistics">Retrieving delivery statistics</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Pystmark</a></li>
+      <li>Next: <a href="api.html" title="next chapter">Simple API</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+    <a href="http://github.com/xsleonard/pystmark"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+  <div class="footer">
+    &copy; Copyright 2012, Pystmark Authors.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>
