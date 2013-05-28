@@ -6,6 +6,7 @@ import shlex
 import os
 from setuptools import setup, find_packages, Command
 
+from __future__ import print_function
 
 class Test(Command):
     ''' Test pystmark application with the following:
@@ -37,12 +38,12 @@ class Test(Command):
         err = p.stderr.read().strip()
         if err:
             msg = 'ERROR: stderr not empty for print statement grep: {0}'
-            print msg.format(err)
+            print(msg.format(err))
             raise SystemExit(-1)
         output = p.stdout.read().strip()
         if output:
-            print 'ERROR: Found print statements in source code:'
-            print output
+            print('ERROR: Found print statements in source code:')
+            print(output)
             raise SystemExit(-1)
 
     def _get_py_files(self, basepath, subpath=''):
@@ -61,7 +62,7 @@ class Test(Command):
         if self.with_integration:
             testfiles += self._get_py_files('tests/', 'integration/')
         if not testfiles:
-            print 'No tests found.'
+            print('No tests found.')
             return
         nosecmd = ('nosetests -v -w tests/ --with-coverage '
                    '--cover-package=pystmark --disable-docstring')
@@ -83,7 +84,7 @@ class Test(Command):
             cmds = [self.flake8] + cmds
         cmds = filter(bool, cmds)
         if not cmds:
-            print 'No action taken.'
+            print('No action taken.')
             SystemExit(-2)
         try:
             map(subprocess.check_call, map(shlex.split, cmds))
