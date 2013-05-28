@@ -1,6 +1,6 @@
 # pystmark
 
-[Postmark API](http://developer.postmarkapp.com/) library for python 2.6 and 2.7.
+[Postmark API](http://developer.postmarkapp.com/) library for python 2.6, 2.7, 3.x and pypy.
 Built on top of the [requests](http://docs.python-requests.org/en/latest/) library.
 
 [![Build Status](https://travis-ci.org/xsleonard/pystmark.png)](https://travis-ci.org/xsleonard/pystmark)
@@ -47,9 +47,12 @@ except pystmark.PystUnauthorizedError:
 2. Make your changes and write a test for them
 3. Add yourself to the AUTHORS file and submit a pull request
 
-Please run the tests with `./setup.py test --with-integration` before you make
-a pull request. Requirements for running the tests are in
-`tests/requirements.pip`.
+Please run the tests with `./setup.py test --with-integration`, with at least python2.7,
+before you make a pull request. Requirements for running the tests are in `tests/requirements.pip`.
+The other versions will be handled by [travis-ci](https://travis-ci.org/).
+
+The pep8 tests may fail if using pypy due to [this bug](https://bugs.pypy.org/issue1207).
+Run the tests with `./setup.py test --with-integration --nose-only` as a workaround.
 
 
 ## Web Framework Integration
