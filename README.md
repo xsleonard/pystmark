@@ -51,9 +51,8 @@ Please run the tests with `./setup.py test --with-integration`, with at least py
 before you make a pull request. Requirements for running the tests are in `tests/requirements.pip`.
 The other versions will be handled by [travis-ci](https://travis-ci.org/).
 
-The pep8 tests may fail if using pypy due to [this bug](https://bugs.pypy.org/issue1207).
-Run the tests with `./setup.py test --with-integration --nose-only` as a workaround.
-
+The pep8 tests may fail if using pypy due to [this bug](https://bugs.pypy.org/issue1207),
+so that test is disabled if pypy is detected.
 
 ## Web Framework Integration
 
