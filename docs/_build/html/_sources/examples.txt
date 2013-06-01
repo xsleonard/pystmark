@@ -13,7 +13,7 @@ Sending Email
 Sending a single message
 ------------------------
 
-To send a single message, create a :class:`PystMessage` object, and pass it
+To send a single message, create a :class:`Message` object, and pass it
 to :func:`send`.
 
 .. code-block:: python
@@ -24,13 +24,13 @@ to :func:`send`.
     SENDER = 'me@example.com'
 
     # Send a single message
-    message = pystmark.PystMessage(sender=SENDER, to='you@example.com',
+    message = pystmark.Message(sender=SENDER, to='you@example.com',
                                    subject='Hi', text='A message',
                                    tag='greeting')
 
     pystmark.send(message, api_key=API_KEY)
 
-You can also pass in a dictionary.  It will construct the :class:`PystMessage`
+You can also pass in a dictionary.  It will construct the :class:`Message`
 for you.
 
 .. code-block:: python
@@ -54,13 +54,12 @@ addresses. See :ref:`Multiple Recipients <multiple_recipients>`.
 
 .. code-block:: python
 
-    from pystmark import PystMessage, send_batch
+    from pystmark import Message, send_batch
 
     # Send multiple messages (in one batched http request)
     recipients = ['you{0}@example.com'.format(i) for i in xrange(20)]
-    messages = [PystMessage(sender=SENDER, to=to, subject='Hi',
-                            text='A message', tag='greeting')
-                for to in recipients]
+    messages = [Message(sender=SENDER, to=to, subject='Hi', text='A message',
+                        tag='greeting') for to in recipients]
 
     response = send_batch(messages, api_key=API_KEY)
 
@@ -74,12 +73,12 @@ number of recipients, including `to`, `cc`, and `bcc` is limited to 20.
 
 .. code-block:: python
 
-    from pystmark import PystMessage, send
+    from pystmark import Message, send
 
-    message = PystMessage(sender=SENDER, subject='Hi', text='A message',
-                          to=['you@example.com', 'him@example.com'],
-                          cc=['someone@example.com', 'her@example.com'],
-                          bcc='user@example.com')
+    message = Message(sender=SENDER, subject='Hi', text='A message',
+                      to=['you@example.com', 'him@example.com'],
+                      cc=['someone@example.com', 'her@example.com'],
+                      bcc='user@example.com')
 
     send(message, api_key=API_KEY)
 
@@ -94,15 +93,15 @@ corresponding configurable sender object in the :ref:`advanced_api`.
 
 .. code-block:: python
 
-    from pystmark import PystMessage, PystSender
+    from pystmark import Message, Sender
 
-    default_message = PystMessage(sender=SENDER,
-                                  subject='Hi',
-                                  text='Welcome to the site',
-                                  html='<h1>Welcome to the site</h1>',
-                                  tag='greeting')
+    default_message = Message(sender=SENDER,
+                              subject='Hi',
+                              text='Welcome to the site',
+                              html='<h1>Welcome to the site</h1>',
+                              tag='greeting')
 
-    sender = PystSender(message=default_message, api_key=API_KEY)
+    sender = Sender(message=default_message, api_key=API_KEY)
 
     sender.send(dict(to='you@example.com'))
 
@@ -123,9 +122,9 @@ make sure to check yourself.  Only certain file extensions are allowed.
     with open(filename, 'w') as f:
         f.write('demo\n')
 
-    message = pystmark.PystMessage(sender='me@example.com',
-                                   to='you@example.com',
-                                   text='hi')
+    message = pystmark.Message(sender='me@example.com',
+                               to='you@example.com',
+                               text='hi')
 
     # Attach using filename
     message.attach_file(filename)
@@ -147,9 +146,9 @@ Custom headers can be added for your email.
 
     import pystmark
 
-    message = pystmark.PystMessage(sender='me@example.com',
-                                   to='you@example.com',
-                                   text='hi')
+    message = pystmark.Message(sender='me@example.com',
+                               to='you@example.com',
+                               text='hi')
 
     message.add_header('X-my-custom-header', 'foo')
 
@@ -161,18 +160,18 @@ Response Errors
 ---------------
 
 Some HTTP status codes will raise a custom Exception.
-See :func:`PystResponse.raise_for_status`.
+See :func:`Response.raise_for_status`.
 
 .. code-block:: python
 
-    from pystmark import send, PystUnauthorizedError
+    from pystmark import send, UnauthorizedError
 
     r = send(dict(sender='me@example.com', to='you@example.com', text='hi'),
              api_key='bad key')
 
     try:
         r.raise_for_status()
-    except PystUnauthorizedError:
+    except UnauthorizedError:
         print 'Use your real API key'
 
 .. request_args
@@ -186,10 +185,9 @@ give it.
 
 .. code-block:: python
 
-    from pystmark import send, PystMessage
+    from pystmark import send, Message
 
-    message = PystMessage(sender='me@example.com', to='you@example.com',
-                          text='hi')
+    message = Message(sender='me@example.com', to='you@example.com', text='hi')
 
     send(message, api_key='my key', **dict(headers={'X-Something': 'foo'}))
 
@@ -251,7 +249,7 @@ Retrieving the raw dump for a single bounce
 -------------------------------------------
 
 The raw email dump can be retrieved with a `bounce_id` or with a
-:class:`PystBouncedMessage`.
+:class:`BouncedMessage`.
 
 .. code-block:: python
 
@@ -259,7 +257,7 @@ The raw email dump can be retrieved with a `bounce_id` or with a
 
     r = get_bounces(api_key='my key')
     for bounce in r.bounces:
-        # Get dump via PystBouncedMessage.
+        # Get dump via BouncedMessage.
         dump = bounce.dump(api_key='my key')
         # Get dump with the simple API
         dump = get_bounce_dump(bounce.id, api_key='my key')

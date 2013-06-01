@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Simple API &mdash; pystmark 0.1 documentation</title>
+    <title>Simple API &mdash; pystmark 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pystmark 0.1 documentation" href="index.html" />
+    <link rel="top" title="pystmark 0.2 documentation" href="index.html" />
     <link rel="prev" title="Sending Email" href="examples.html" />
    
   
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="examples.html" title="Sending Email"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pystmark 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pystmark 0.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -69,7 +69,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; Message to send.</li>
+<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; Message to send.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Required, if <cite>test</cite> is not <cite>True</cite>.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for the Postmark API.
 Defaults to <cite>True</cite></li>
@@ -79,7 +79,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystSendResponse" title="pystmark.PystSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.SendResponse" title="pystmark.SendResponse"><tt class="xref py py-class docutils literal"><span class="pre">SendResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -105,7 +105,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBatchSendResponse" title="pystmark.PystBatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBatchSendResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BatchSendResponse" title="pystmark.BatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">BatchSendResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -133,7 +133,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBouncesResponse" title="pystmark.PystBouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BouncesResponse" title="pystmark.BouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">BouncesResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -159,7 +159,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceResponse" title="pystmark.PystBounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceResponse" title="pystmark.BounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -185,7 +185,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceDumpResponse" title="pystmark.PystBounceDumpResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceDumpResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceDumpResponse" title="pystmark.BounceDumpResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceDumpResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -211,7 +211,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceActivateResponse" title="pystmark.PystBounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceActivateResponse" title="pystmark.BounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceActivateResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -236,7 +236,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceTagsResponse" title="pystmark.PystBounceTagsResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceTagsResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceTagsResponse" title="pystmark.BounceTagsResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceTagsResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -261,7 +261,7 @@ Defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystDeliveryStatsResponse" title="pystmark.PystDeliveryStatsResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystDeliveryStatsResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.DeliveryStatsResponse" title="pystmark.DeliveryStatsResponse"><tt class="xref py py-class docutils literal"><span class="pre">DeliveryStatsResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -275,18 +275,18 @@ Defaults to <cite>True</cite></li>
 <div class="section" id="advanced-api-sending">
 <span id="id3"></span><h2>Sending Email<a class="headerlink" href="#advanced-api-sending" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="pystmark.PystSender">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystSender" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Sender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Sender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.Sender" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a single message via the Postmark API.</p>
 <p>All of the arguments used in constructing this object are
-used as defaults in the final call to <a class="reference internal" href="#pystmark.PystSender.send" title="pystmark.PystSender.send"><tt class="xref py py-meth docutils literal"><span class="pre">PystSender.send()</span></tt></a>.
+used as defaults in the final call to <a class="reference internal" href="#pystmark.Sender.send" title="pystmark.Sender.send"><tt class="xref py py-meth docutils literal"><span class="pre">Sender.send()</span></tt></a>.
 You can override any of them at that time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; Default message data, such as sender and reply_to.</li>
+<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; Default message data, such as sender and reply_to.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
 Defaults to <cite>True</cite></li>
@@ -298,14 +298,14 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt id="pystmark.PystSender.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystSender.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystSendResponse" title="pystmark.PystSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystSendResponse</span></tt></a></p>
+<dt id="pystmark.Sender.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.Sender.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.SendResponse" title="pystmark.SendResponse"><tt class="xref py py-class docutils literal"><span class="pre">SendResponse</span></tt></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystSender.send">
-<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystSender.send" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Sender.send">
+<tt class="descname">send</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.Sender.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send request to Postmark API.
 Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -313,7 +313,7 @@ Returns result of <tt class="xref py py-func docutils literal"><span class="pre"
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; Your Postmark message data.</li>
+<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; Your Postmark message data.</li>
 <li><strong>api_key</strong> (<cite>str</cite>) &#8211; Your Postmark API key.</li>
 <li><strong>test</strong> &#8211; Make a test request to the Postmark API.</li>
 <li><strong>secure</strong> &#8211; Use the https Postmark API.</li>
@@ -331,18 +331,18 @@ Returns result of <tt class="xref py py-func docutils literal"><span class="pre"
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBatchSender">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBatchSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BatchSender">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BatchSender</tt><big>(</big><em>message=None</em>, <em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.BatchSender" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a batch of messages via the Postmark API.</p>
 <p>All of the arguments used in constructing this object are
-used as defaults in the final call to <a class="reference internal" href="#pystmark.PystBatchSender.send" title="pystmark.PystBatchSender.send"><tt class="xref py py-meth docutils literal"><span class="pre">PystBatchSender.send()</span></tt></a>.
+used as defaults in the final call to <a class="reference internal" href="#pystmark.BatchSender.send" title="pystmark.BatchSender.send"><tt class="xref py py-meth docutils literal"><span class="pre">BatchSender.send()</span></tt></a>.
 You can override any of them at that time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; Default message data, such as sender and reply_to.</li>
+<li><strong>message</strong> (<cite>dict</cite> or <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; Default message data, such as sender and reply_to.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
 Defaults to <cite>True</cite></li>
@@ -354,14 +354,14 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt id="pystmark.PystBatchSender.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBatchSender.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBatchSendResponse" title="pystmark.PystBatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBatchSendResponse</span></tt></a></p>
+<dt id="pystmark.BatchSender.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.BatchSender.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BatchSendResponse" title="pystmark.BatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">BatchSendResponse</span></tt></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystBatchSender.send">
-<tt class="descname">send</tt><big>(</big><em>messages=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSender.send" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BatchSender.send">
+<tt class="descname">send</tt><big>(</big><em>messages=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.BatchSender.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send batch request to Postmark API.
 Returns result of <tt class="xref py py-func docutils literal"><span class="pre">requests.post()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -369,7 +369,7 @@ Returns result of <tt class="xref py py-func docutils literal"><span class="pre"
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>messages</strong> (A list of <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; Batch messages to send to the Postmark API.</li>
+<li><strong>messages</strong> (A list of <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; Batch messages to send to the Postmark API.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
 <li><strong>test</strong> &#8211; Make a test request to the Postmark API.
 Defaults to <cite>self.test</cite>.</li>
@@ -378,7 +378,7 @@ Defaults to <cite>self.test</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBatchSendResponse" title="pystmark.PystBatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBatchSendResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BatchSendResponse" title="pystmark.BatchSendResponse"><tt class="xref py py-class docutils literal"><span class="pre">BatchSendResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -391,8 +391,8 @@ Defaults to <cite>self.test</cite>.</li>
 <div class="section" id="advanced-api-bounce-handling">
 <span id="id4"></span><h2>Bounce Handling<a class="headerlink" href="#advanced-api-bounce-handling" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="pystmark.PystBounces">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounces</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounces" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Bounces">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Bounces</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.Bounces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple bounce retrieval endpoint wrapper.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -410,8 +410,8 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystBounces.get">
-<tt class="descname">get</tt><big>(</big><em>bounce_type=None</em>, <em>inactive=None</em>, <em>email_filter=None</em>, <em>message_id=None</em>, <em>count=None</em>, <em>offset=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounces.get" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Bounces.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_type=None</em>, <em>inactive=None</em>, <em>email_filter=None</em>, <em>message_id=None</em>, <em>count=None</em>, <em>offset=None</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.Bounces.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds query string params from inputs. It handles offset and
 count defaults and validation.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -441,7 +441,7 @@ Defaults to <cite>self.secure</cite>.</li>
 <tr class="field-even field"><th class="field-name">Params test:</th><td class="field-body"><p class="first">Use the Postmark test API. Defaults to <cite>self.test</cite>.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBouncesResponse" title="pystmark.PystBouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BouncesResponse" title="pystmark.BouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">BouncesResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -449,16 +449,16 @@ Defaults to <cite>self.secure</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystBounces.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounces.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBouncesResponse" title="pystmark.PystBouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBouncesResponse</span></tt></a></p>
+<dt id="pystmark.Bounces.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.Bounces.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BouncesResponse" title="pystmark.BouncesResponse"><tt class="xref py py-class docutils literal"><span class="pre">BouncesResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounce">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounce</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounce" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Bounce">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Bounce</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.Bounce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Single bounce retrieval endpoint wrapper.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -476,15 +476,15 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystBounce.get">
-<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounce.get" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Bounce.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.Bounce.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a single bounce&#8217;s data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.Bounces" title="pystmark.Bounces"><tt class="xref py py-class docutils literal"><span class="pre">Bounces</span></tt></a>.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
 Defaults to <cite>self.secure</cite>.</li>
@@ -495,7 +495,7 @@ Defaults to <cite>self.test</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceResponse" title="pystmark.PystBounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceResponse" title="pystmark.BounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -503,27 +503,27 @@ Defaults to <cite>self.test</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystBounce.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounce.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBounceResponse" title="pystmark.PystBounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></a></p>
+<dt id="pystmark.Bounce.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.Bounce.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BounceResponse" title="pystmark.BounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceDump">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceDump</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceDump" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceDump">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceDump</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.BounceDump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bounce dump endpoint wrapper.</p>
 <dl class="method">
-<dt id="pystmark.PystBounceDump.get">
-<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceDump.get" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceDump.get">
+<tt class="descname">get</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.BounceDump.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a single bounce&#8217;s data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.Bounces" title="pystmark.Bounces"><tt class="xref py py-class docutils literal"><span class="pre">Bounces</span></tt></a>.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
 Defaults to <cite>self.secure</cite>.</li>
@@ -534,7 +534,7 @@ Defaults to <cite>self.test</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceResponse" title="pystmark.PystBounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceResponse" title="pystmark.BounceResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -542,23 +542,23 @@ Defaults to <cite>self.test</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystBounceDump.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceDump.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBounceDumpResponse" title="pystmark.PystBounceDumpResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceDumpResponse</span></tt></a></p>
+<dt id="pystmark.BounceDump.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.BounceDump.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BounceDumpResponse" title="pystmark.BounceDumpResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceDumpResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceActivate">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceActivate</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceActivate" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceActivate">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceActivate</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.BounceActivate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bounce Activation endpoint wrapper.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.Bounces" title="pystmark.Bounces"><tt class="xref py py-class docutils literal"><span class="pre">Bounces</span></tt></a>.
 Defaults to <cite>None</cite>.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>None</cite>.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
@@ -571,15 +571,15 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystBounceActivate.activate">
-<tt class="descname">activate</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceActivate.activate" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceActivate.activate">
+<tt class="descname">activate</tt><big>(</big><em>bounce_id</em>, <em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.BounceActivate.activate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Activates a bounce.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
+<li><strong>bounce_id</strong> &#8211; A bounce&#8217;s ID retrieved with <a class="reference internal" href="#pystmark.Bounces" title="pystmark.Bounces"><tt class="xref py py-class docutils literal"><span class="pre">Bounces</span></tt></a>.</li>
 <li><strong>api_key</strong> &#8211; Your Postmark API key. Defaults to <cite>self.api_key</cite>.</li>
 <li><strong>secure</strong> &#8211; Use the https scheme for Postmark API.
 Defaults to <cite>self.secure</cite>.</li>
@@ -590,7 +590,7 @@ Defaults to <cite>self.test</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystBounceActivateResponse" title="pystmark.PystBounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.BounceActivateResponse" title="pystmark.BounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceActivateResponse</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -598,20 +598,20 @@ Defaults to <cite>self.test</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystBounceActivate.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceActivate.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBounceActivateResponse" title="pystmark.PystBounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceActivateResponse</span></tt></a></p>
+<dt id="pystmark.BounceActivate.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.BounceActivate.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BounceActivateResponse" title="pystmark.BounceActivateResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceActivateResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceTags">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceTags</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTags" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceTags">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceTags</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.BounceTags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bounce tags endpoint wrapper.</p>
 <dl class="method">
-<dt id="pystmark.PystBounceTags.get">
-<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTags.get" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceTags.get">
+<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.BounceTags.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a GET request to the Postmark API</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -628,7 +628,7 @@ Defaults to <cite>False</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystResponse" title="pystmark.PystResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.Response" title="pystmark.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -636,20 +636,20 @@ Defaults to <cite>False</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystBounceTags.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystBounceTags.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystBounceTagsResponse" title="pystmark.PystBounceTagsResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceTagsResponse</span></tt></a></p>
+<dt id="pystmark.BounceTags.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.BounceTags.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.BounceTagsResponse" title="pystmark.BounceTagsResponse"><tt class="xref py py-class docutils literal"><span class="pre">BounceTagsResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystDeliveryStats">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystDeliveryStats</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystDeliveryStats" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.DeliveryStats">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">DeliveryStats</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.DeliveryStats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delivery Stats endpoint wrapper.</p>
 <dl class="method">
-<dt id="pystmark.PystDeliveryStats.get">
-<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.PystDeliveryStats.get" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.DeliveryStats.get">
+<tt class="descname">get</tt><big>(</big><em>api_key=None</em>, <em>secure=None</em>, <em>test=None</em>, <em>**request_args</em><big>)</big><a class="headerlink" href="#pystmark.DeliveryStats.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a GET request to the Postmark API</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -666,7 +666,7 @@ Defaults to <cite>False</cite>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystResponse" title="pystmark.PystResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystResponse</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.Response" title="pystmark.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -674,9 +674,9 @@ Defaults to <cite>False</cite>.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystDeliveryStats.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystDeliveryStats.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystDeliveryStatsResponse" title="pystmark.PystDeliveryStatsResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystDeliveryStatsResponse</span></tt></a></p>
+<dt id="pystmark.DeliveryStats.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.DeliveryStats.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.DeliveryStatsResponse" title="pystmark.DeliveryStatsResponse"><tt class="xref py py-class docutils literal"><span class="pre">DeliveryStatsResponse</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -686,11 +686,11 @@ Defaults to <cite>False</cite>.</li>
 <div class="section" id="message-object">
 <span id="id5"></span><h1>Message Object<a class="headerlink" href="#message-object" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="pystmark.PystMessage">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystMessage</tt><big>(</big><em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>subject=None</em>, <em>tag=None</em>, <em>html=None</em>, <em>text=None</em>, <em>reply_to=None</em>, <em>headers=None</em>, <em>attachments=None</em>, <em>verify=False</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Message</tt><big>(</big><em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>subject=None</em>, <em>tag=None</em>, <em>html=None</em>, <em>text=None</em>, <em>reply_to=None</em>, <em>headers=None</em>, <em>attachments=None</em>, <em>verify=False</em><big>)</big><a class="headerlink" href="#pystmark.Message" title="Permalink to this definition">¶</a></dt>
 <dd><p>A container for message(s) to send to the Postmark API.
 You can populate this message with defaults for initializing a
-<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>. The message will be combined with the final message
+<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>. The message will be combined with the final message
 and verified before transmission.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -709,11 +709,11 @@ and verified before transmission.</p>
 <li><strong>headers</strong> (A list of <cite>dict</cite>, each with the keys &#8216;Name&#8217; and
 &#8216;Value&#8217;.) &#8211; Additional headers to include with the email. If you do
 not have the headers formatted for the Postmark API, use
-<a class="reference internal" href="#pystmark.PystMessage.add_header" title="pystmark.PystMessage.add_header"><tt class="xref py py-meth docutils literal"><span class="pre">PystMessage.add_header()</span></tt></a>.</li>
+<a class="reference internal" href="#pystmark.Message.add_header" title="pystmark.Message.add_header"><tt class="xref py py-meth docutils literal"><span class="pre">Message.add_header()</span></tt></a>.</li>
 <li><strong>attachments</strong> (A list of <cite>dict</cite>, each with the keys &#8216;Name&#8217;,
 &#8216;Content&#8217; and &#8216;ContentType&#8217;.) &#8211; Attachments to include with the email. If you do not
 have the attachments formatted for the Postmark API, use
-<a class="reference internal" href="#pystmark.PystMessage.attach_file" title="pystmark.PystMessage.attach_file"><tt class="xref py py-meth docutils literal"><span class="pre">PystMessage.attach_file()</span></tt></a> or <a class="reference internal" href="#pystmark.PystMessage.attach_binary" title="pystmark.PystMessage.attach_binary"><tt class="xref py py-meth docutils literal"><span class="pre">PystMessage.attach_binary()</span></tt></a>.</li>
+<a class="reference internal" href="#pystmark.Message.attach_file" title="pystmark.Message.attach_file"><tt class="xref py py-meth docutils literal"><span class="pre">Message.attach_file()</span></tt></a> or <a class="reference internal" href="#pystmark.Message.attach_binary" title="pystmark.Message.attach_binary"><tt class="xref py py-meth docutils literal"><span class="pre">Message.attach_binary()</span></tt></a>.</li>
 <li><strong>verify</strong> &#8211; Verify the message when initialized.
 Defaults to <cite>False</cite>.</li>
 </ul>
@@ -722,8 +722,8 @@ Defaults to <cite>False</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystMessage.add_header">
-<tt class="descname">add_header</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage.add_header" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.add_header">
+<tt class="descname">add_header</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#pystmark.Message.add_header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach an email header to send with the message.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -740,8 +740,8 @@ Defaults to <cite>False</cite>.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.attach_binary">
-<tt class="descname">attach_binary</tt><big>(</big><em>data</em>, <em>filename</em>, <em>content_type=None</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage.attach_binary" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.attach_binary">
+<tt class="descname">attach_binary</tt><big>(</big><em>data</em>, <em>filename</em>, <em>content_type=None</em><big>)</big><a class="headerlink" href="#pystmark.Message.attach_binary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach a file to the message given raw binary data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -760,8 +760,8 @@ filename if not provided.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.attach_file">
-<tt class="descname">attach_file</tt><big>(</big><em>filename</em>, <em>content_type=None</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage.attach_file" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.attach_file">
+<tt class="descname">attach_file</tt><big>(</big><em>filename</em>, <em>content_type=None</em><big>)</big><a class="headerlink" href="#pystmark.Message.attach_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach a file to the message given a filename.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -779,22 +779,22 @@ filename if not provided.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystMessage.bcc">
-<tt class="descname">bcc</tt><a class="headerlink" href="#pystmark.PystMessage.bcc" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.bcc">
+<tt class="descname">bcc</tt><a class="headerlink" href="#pystmark.Message.bcc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A comma delimited string of receivers for the message &#8216;Bcc&#8217;
 field.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystMessage.cc">
-<tt class="descname">cc</tt><a class="headerlink" href="#pystmark.PystMessage.cc" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.cc">
+<tt class="descname">cc</tt><a class="headerlink" href="#pystmark.Message.cc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A comma delimited string of receivers for the message &#8216;Cc&#8217;
 field.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.data">
-<tt class="descname">data</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.PystMessage.data" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.data">
+<tt class="descname">data</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.Message.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns data formatted for a POST request to the Postmark send API.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -807,8 +807,8 @@ field.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.json">
-<tt class="descname">json</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.PystMessage.json" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.json">
+<tt class="descname">json</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.Message.json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return json-encoded string of message data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -821,9 +821,9 @@ field.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.load_from">
-<tt class="descname">load_from</tt><big>(</big><em>other</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage.load_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> by merging <cite>other</cite> with <cite>self</cite>.
+<dt id="pystmark.Message.load_from">
+<tt class="descname">load_from</tt><big>(</big><em>other</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.Message.load_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> by merging <cite>other</cite> with <cite>self</cite>.
 Values from <cite>other</cite> will be copied to <cite>self</cite> if the value was not
 set on <cite>self</cite> and is set on <cite>other</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -831,13 +831,13 @@ set on <cite>self</cite> and is set on <cite>other</cite>.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>other</strong> (<a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a>) &#8211; The <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> to copy defaults from.</li>
+<li><strong>other</strong> (<a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>) &#8211; The <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> to copy defaults from.</li>
 <li><strong>**kwargs</strong> &#8211; Additional keyword arguments to construct
-<a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> with.</li>
+<a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> with.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -845,9 +845,9 @@ set on <cite>self</cite> and is set on <cite>other</cite>.</p>
 </dd></dl>
 
 <dl class="classmethod">
-<dt id="pystmark.PystMessage.load_message">
-<em class="property">classmethod </em><tt class="descname">load_message</tt><big>(</big><em>message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.PystMessage.load_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a <a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> from a message data <cite>dict</cite>.</p>
+<dt id="pystmark.Message.load_message">
+<em class="property">classmethod </em><tt class="descname">load_message</tt><big>(</big><em>message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.Message.load_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> from a message data <cite>dict</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -855,11 +855,11 @@ set on <cite>self</cite> and is set on <cite>other</cite>.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>message</strong> &#8211; A <cite>dict</cite> of message data.</li>
 <li><strong>**kwargs</strong> &#8211; Additional keyword arguments to construct
-<a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a> with.</li>
+<a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> with.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.PystMessage" title="pystmark.PystMessage"><tt class="xref py py-class docutils literal"><span class="pre">PystMessage</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pystmark.Message" title="pystmark.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -867,21 +867,21 @@ set on <cite>self</cite> and is set on <cite>other</cite>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystMessage.recipients">
-<tt class="descname">recipients</tt><a class="headerlink" href="#pystmark.PystMessage.recipients" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.recipients">
+<tt class="descname">recipients</tt><a class="headerlink" href="#pystmark.Message.recipients" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all recipients for this message.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pystmark.PystMessage.to">
-<tt class="descname">to</tt><a class="headerlink" href="#pystmark.PystMessage.to" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.to">
+<tt class="descname">to</tt><a class="headerlink" href="#pystmark.Message.to" title="Permalink to this definition">¶</a></dt>
 <dd><p>A comma delimited string of receivers for the message &#8216;To&#8217;
 field.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pystmark.PystMessage.verify">
-<tt class="descname">verify</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.PystMessage.verify" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Message.verify">
+<tt class="descname">verify</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.Message.verify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verifies the message data based on rules and restrictions defined
 in the Postmark API docs.  There can be no more than 20 recipients
 in total. NOTE: This does not check that your attachments total less
@@ -894,16 +894,16 @@ than 10MB, you must do that yourself.</p>
 <div class="section" id="response-objects">
 <span id="id6"></span><h1>Response Objects<a class="headerlink" href="#response-objects" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="pystmark.PystSendResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystSendResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystSendResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper around <a class="reference internal" href="#pystmark.PystSender.send" title="pystmark.PystSender.send"><tt class="xref py py-func docutils literal"><span class="pre">PystSender.send()</span></tt></a> and <a class="reference internal" href="#pystmark.PystBatchSender.send" title="pystmark.PystBatchSender.send"><tt class="xref py py-func docutils literal"><span class="pre">PystBatchSender.send()</span></tt></a></p>
+<dt id="pystmark.SendResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">SendResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.SendResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around <a class="reference internal" href="#pystmark.Sender.send" title="pystmark.Sender.send"><tt class="xref py py-func docutils literal"><span class="pre">Sender.send()</span></tt></a> and <a class="reference internal" href="#pystmark.BatchSender.send" title="pystmark.BatchSender.send"><tt class="xref py py-func docutils literal"><span class="pre">BatchSender.send()</span></tt></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -913,16 +913,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBatchSendResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBatchSendResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBatchSendResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper around <a class="reference internal" href="#pystmark.PystSender.send" title="pystmark.PystSender.send"><tt class="xref py py-func docutils literal"><span class="pre">PystSender.send()</span></tt></a> and <a class="reference internal" href="#pystmark.PystBatchSender.send" title="pystmark.PystBatchSender.send"><tt class="xref py py-func docutils literal"><span class="pre">PystBatchSender.send()</span></tt></a></p>
+<dt id="pystmark.BatchSendResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BatchSendResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BatchSendResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around <a class="reference internal" href="#pystmark.Sender.send" title="pystmark.Sender.send"><tt class="xref py py-func docutils literal"><span class="pre">Sender.send()</span></tt></a> and <a class="reference internal" href="#pystmark.BatchSender.send" title="pystmark.BatchSender.send"><tt class="xref py py-func docutils literal"><span class="pre">BatchSender.send()</span></tt></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -932,16 +932,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBouncesResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBouncesResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBouncesResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.PystBounces.get" title="pystmark.PystBounces.get"><tt class="xref py py-func docutils literal"><span class="pre">PystBounces.get()</span></tt></a>.</p>
+<dt id="pystmark.BouncesResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BouncesResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BouncesResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.Bounces.get" title="pystmark.Bounces.get"><tt class="xref py py-func docutils literal"><span class="pre">Bounces.get()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -951,16 +951,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.PystBounce.get" title="pystmark.PystBounce.get"><tt class="xref py py-func docutils literal"><span class="pre">PystBounce.get()</span></tt></a>.</p>
+<dt id="pystmark.BounceResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BounceResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.Bounce.get" title="pystmark.Bounce.get"><tt class="xref py py-func docutils literal"><span class="pre">Bounce.get()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -970,16 +970,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceDumpResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceDumpResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceDumpResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.PystBounceDump.get" title="pystmark.PystBounceDump.get"><tt class="xref py py-func docutils literal"><span class="pre">PystBounceDump.get()</span></tt></a>.</p>
+<dt id="pystmark.BounceDumpResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceDumpResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BounceDumpResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.BounceDump.get" title="pystmark.BounceDump.get"><tt class="xref py py-func docutils literal"><span class="pre">BounceDump.get()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -989,8 +989,8 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceActivateResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceActivateResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceActivateResponse" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceActivateResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceActivateResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BounceActivateResponse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for responses from the bounce activate endpoint.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -998,7 +998,7 @@ Defaults to <cite>None</cite>.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -1008,16 +1008,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceTagsResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceTagsResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTagsResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.PystBounceTags.get" title="pystmark.PystBounceTags.get"><tt class="xref py py-func docutils literal"><span class="pre">PystBounceTags.get()</span></tt></a>.</p>
+<dt id="pystmark.BounceTagsResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceTagsResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BounceTagsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.BounceTags.get" title="pystmark.BounceTags.get"><tt class="xref py py-func docutils literal"><span class="pre">BounceTags.get()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -1027,16 +1027,16 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystDeliveryStatsResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystDeliveryStatsResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystDeliveryStatsResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.PystBounceActivate.activate" title="pystmark.PystBounceActivate.activate"><tt class="xref py py-func docutils literal"><span class="pre">PystBounceActivate.activate()</span></tt></a>.</p>
+<dt id="pystmark.DeliveryStatsResponse">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">DeliveryStatsResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.DeliveryStatsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for responses from <a class="reference internal" href="#pystmark.BounceActivate.activate" title="pystmark.BounceActivate.activate"><tt class="xref py py-func docutils literal"><span class="pre">BounceActivate.activate()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -1049,8 +1049,8 @@ Defaults to <cite>None</cite>.</li>
 <div class="section" id="response-data-wrappers">
 <span id="id7"></span><h1>Response Data Wrappers<a class="headerlink" href="#response-data-wrappers" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="pystmark.PystMessageConfirmation">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystMessageConfirmation</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#pystmark.PystMessageConfirmation" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.MessageConfirmation">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">MessageConfirmation</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#pystmark.MessageConfirmation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper around data returned from Postmark after sending</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1063,8 +1063,8 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBouncedMessage">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBouncedMessage</tt><big>(</big><em>bounce_data</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBouncedMessage" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BouncedMessage">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BouncedMessage</tt><big>(</big><em>bounce_data</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.BouncedMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bounced message data wrapper.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1072,8 +1072,8 @@ Defaults to <cite>None</cite>.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>bounce_data</strong> &#8211; Raw bounced message data retrieved from
-<a class="reference internal" href="#pystmark.PystBounce" title="pystmark.PystBounce"><tt class="xref py py-class docutils literal"><span class="pre">PystBounce</span></tt></a> or <a class="reference internal" href="#pystmark.PystBounces" title="pystmark.PystBounces"><tt class="xref py py-class docutils literal"><span class="pre">PystBounces</span></tt></a>.</li>
-<li><strong>sender</strong> &#8211; The <a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a> that made the request for the
+<a class="reference internal" href="#pystmark.Bounce" title="pystmark.Bounce"><tt class="xref py py-class docutils literal"><span class="pre">Bounce</span></tt></a> or <a class="reference internal" href="#pystmark.Bounces" title="pystmark.Bounces"><tt class="xref py py-class docutils literal"><span class="pre">Bounces</span></tt></a>.</li>
+<li><strong>sender</strong> &#8211; The <a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a> that made the request for the
 bounce data. Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -1081,15 +1081,15 @@ bounce data. Defaults to <cite>None</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystBouncedMessage.dump">
-<tt class="descname">dump</tt><big>(</big><em>sender=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.PystBouncedMessage.dump" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BouncedMessage.dump">
+<tt class="descname">dump</tt><big>(</big><em>sender=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pystmark.BouncedMessage.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve raw email dump for this bounce.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sender</strong> &#8211; A <a class="reference internal" href="#pystmark.PystBounceDump" title="pystmark.PystBounceDump"><tt class="xref py py-class docutils literal"><span class="pre">PystBounceDump</span></tt></a> object to get dump with.
+<li><strong>sender</strong> &#8211; A <a class="reference internal" href="#pystmark.BounceDump" title="pystmark.BounceDump"><tt class="xref py py-class docutils literal"><span class="pre">BounceDump</span></tt></a> object to get dump with.
 Defaults to <cite>None</cite>.</li>
 <li><strong>**kwargs</strong> &#8211; Keyword arguments passed to
 <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
@@ -1103,15 +1103,15 @@ Defaults to <cite>None</cite>.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceTypeData">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceTypeData</tt><big>(</big><em>bounce_type_data</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceTypeData" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceTypeData">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceTypeData</tt><big>(</big><em>bounce_type_data</em><big>)</big><a class="headerlink" href="#pystmark.BounceTypeData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bounce type data wrapper.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bounce_type_data</strong> &#8211; Raw bounce type data retrieved from
-<a class="reference internal" href="#pystmark.PystDeliveryStats" title="pystmark.PystDeliveryStats"><tt class="xref py py-class docutils literal"><span class="pre">PystDeliveryStats</span></tt></a>.</td>
+<a class="reference internal" href="#pystmark.DeliveryStats" title="pystmark.DeliveryStats"><tt class="xref py py-class docutils literal"><span class="pre">DeliveryStats</span></tt></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -1121,35 +1121,69 @@ Defaults to <cite>None</cite>.</li>
 <div class="section" id="exceptions">
 <span id="id8"></span><h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="pystmark.PystMessageError">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystMessageError</tt><big>(</big><em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystMessageError" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.PystmarkError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystmarkError</tt><big>(</big><em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystmarkError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base <cite>Exception</cite> for <a class="reference internal" href="index.html#module-pystmark" title="pystmark"><tt class="xref py py-mod docutils literal"><span class="pre">pystmark</span></tt></a> errors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; Message to raise with the Exception. Defaults to
+<cite>None</cite>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.MessageError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">MessageError</tt><big>(</big><em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.MessageError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when a message meant to be sent to Postmark API looks
 malformed</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystBounceError">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystBounceError</tt><big>(</big><em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystBounceError" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.BounceError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">BounceError</tt><big>(</big><em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.BounceError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when a bounce API method fails</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystUnauthorizedError">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystUnauthorizedError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystUnauthorizedError" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.ResponseError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">ResponseError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.ResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base <cite>Exception</cite> for errors received from Postmark API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>response</strong> &#8211; A <a class="reference internal" href="#pystmark.Response" title="pystmark.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a>.</li>
+<li><strong>message</strong> &#8211; Message to raise with the Exception.
+Defaults to <cite>None</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pystmark.UnauthorizedError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">UnauthorizedError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.UnauthorizedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when Postmark responds with a <tt class="xref py py-attr docutils literal"><span class="pre">status_code</span></tt> of 401
 Indicates a missing or incorrect API key.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystUnprocessableEntityError">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystUnprocessableEntityError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystUnprocessableEntityError" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.UnprocessableEntityError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">UnprocessableEntityError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.UnprocessableEntityError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when Postmark responds with a <tt class="xref py py-attr docutils literal"><span class="pre">status_code</span></tt> of 422.
 Indicates message(s) received by Postmark were malformed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystInternalServerError">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystInternalServerError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.PystInternalServerError" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.InternalServerError">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">InternalServerError</tt><big>(</big><em>response</em>, <em>message=None</em><big>)</big><a class="headerlink" href="#pystmark.InternalServerError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when Postmark responds with a <tt class="xref py py-attr docutils literal"><span class="pre">status_code</span></tt> of 500
 Indicates an error on Postmark&#8217;s end. Any messages sent
 in the request were not received by them.</p>
@@ -1159,8 +1193,8 @@ in the request were not received by them.</p>
 <div class="section" id="base-classes">
 <span id="id9"></span><h1>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="pystmark.PystInterface">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystInterface</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.PystInterface" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Interface">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Interface</tt><big>(</big><em>api_key=None</em>, <em>secure=True</em>, <em>test=False</em><big>)</big><a class="headerlink" href="#pystmark.Interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class interface for Postmark API endpoint wrappers</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1177,16 +1211,16 @@ Defaults to <cite>True</cite>.</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt id="pystmark.PystInterface.response_class">
-<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.PystInterface.response_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pystmark.PystResponse" title="pystmark.PystResponse"><tt class="xref py py-class docutils literal"><span class="pre">PystResponse</span></tt></a></p>
+<dt id="pystmark.Interface.response_class">
+<tt class="descname">response_class</tt><a class="headerlink" href="#pystmark.Interface.response_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pystmark.Response" title="pystmark.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="pystmark.PystResponse">
-<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">PystResponse</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.PystResponse" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Response">
+<em class="property">class </em><tt class="descclassname">pystmark.</tt><tt class="descname">Response</tt><big>(</big><em>response</em>, <em>sender=None</em><big>)</big><a class="headerlink" href="#pystmark.Response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for API response wrappers. The wrapped
 <tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt> object interface is exposed by this class,
 unless the attribute is defined in <cite>self._attrs</cite>.</p>
@@ -1196,7 +1230,7 @@ unless the attribute is defined in <cite>self._attrs</cite>.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>response</strong> (<tt class="xref py py-class docutils literal"><span class="pre">requests.Response</span></tt>) &#8211; Response returned from <tt class="xref py py-func docutils literal"><span class="pre">requests.request()</span></tt>.</li>
-<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.PystInterface" title="pystmark.PystInterface"><tt class="xref py py-class docutils literal"><span class="pre">PystInterface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
+<li><strong>sender</strong> (<a class="reference internal" href="#pystmark.Interface" title="pystmark.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a>) &#8211; The API interface wrapper that generated the request.
 Defaults to <cite>None</cite>.</li>
 </ul>
 </td>
@@ -1204,13 +1238,13 @@ Defaults to <cite>None</cite>.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pystmark.PystResponse.raise_for_status">
-<tt class="descname">raise_for_status</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.PystResponse.raise_for_status" title="Permalink to this definition">¶</a></dt>
+<dt id="pystmark.Response.raise_for_status">
+<tt class="descname">raise_for_status</tt><big>(</big><big>)</big><a class="headerlink" href="#pystmark.Response.raise_for_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise Postmark-specific HTTP errors. If there isn&#8217;t one, the
 standard HTTP error is raised.</p>
-<p>HTTP 401 raises <a class="reference internal" href="#pystmark.PystUnauthorizedError" title="pystmark.PystUnauthorizedError"><tt class="xref py py-class docutils literal"><span class="pre">PystUnauthorizedError</span></tt></a></p>
-<p>HTTP 422 raises <a class="reference internal" href="#pystmark.PystUnprocessableEntityError" title="pystmark.PystUnprocessableEntityError"><tt class="xref py py-class docutils literal"><span class="pre">PystUnprocessableEntityError</span></tt></a></p>
-<p>HTTP 500 raises <a class="reference internal" href="#pystmark.PystInternalServerError" title="pystmark.PystInternalServerError"><tt class="xref py py-class docutils literal"><span class="pre">PystInternalServerError</span></tt></a></p>
+<p>HTTP 401 raises <a class="reference internal" href="#pystmark.UnauthorizedError" title="pystmark.UnauthorizedError"><tt class="xref py py-class docutils literal"><span class="pre">UnauthorizedError</span></tt></a></p>
+<p>HTTP 422 raises <a class="reference internal" href="#pystmark.UnprocessableEntityError" title="pystmark.UnprocessableEntityError"><tt class="xref py py-class docutils literal"><span class="pre">UnprocessableEntityError</span></tt></a></p>
+<p>HTTP 500 raises <a class="reference internal" href="#pystmark.InternalServerError" title="pystmark.InternalServerError"><tt class="xref py py-class docutils literal"><span class="pre">InternalServerError</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>

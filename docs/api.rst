@@ -6,7 +6,7 @@
 Message Object
 ==============
 
-.. autoclass:: pystmark.PystMessage
+.. autoclass:: pystmark.Message
     :inherited-members:
 
 .. _response_objects:
@@ -14,21 +14,21 @@ Message Object
 Response Objects
 ================
 
-.. autoclass:: pystmark.PystSendResponse
+.. autoclass:: pystmark.SendResponse
 
-.. autoclass:: pystmark.PystBatchSendResponse
+.. autoclass:: pystmark.BatchSendResponse
 
-.. autoclass:: pystmark.PystBouncesResponse
+.. autoclass:: pystmark.BouncesResponse
 
-.. autoclass:: pystmark.PystBounceResponse
+.. autoclass:: pystmark.BounceResponse
 
-.. autoclass:: pystmark.PystBounceDumpResponse
+.. autoclass:: pystmark.BounceDumpResponse
 
-.. autoclass:: pystmark.PystBounceActivateResponse
+.. autoclass:: pystmark.BounceActivateResponse
 
-.. autoclass:: pystmark.PystBounceTagsResponse
+.. autoclass:: pystmark.BounceTagsResponse
 
-.. autoclass:: pystmark.PystDeliveryStatsResponse
+.. autoclass:: pystmark.DeliveryStatsResponse
 
 
 .. _response_data_wrappers:
@@ -36,13 +36,13 @@ Response Objects
 Response Data Wrappers
 ======================
 
-.. autoclass:: pystmark.PystMessageConfirmation
+.. autoclass:: pystmark.MessageConfirmation
     :inherited-members:
 
-.. autoclass:: pystmark.PystBouncedMessage
+.. autoclass:: pystmark.BouncedMessage
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounceTypeData
+.. autoclass:: pystmark.BounceTypeData
     :inherited-members:
 
 .. _exceptions:
@@ -50,19 +50,25 @@ Response Data Wrappers
 Exceptions
 ==========
 
-.. autoclass:: pystmark.PystMessageError
+.. autoclass:: pystmark.PystmarkError
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounceError
+.. autoclass:: pystmark.MessageError
     :inherited-members:
 
-.. autoclass:: pystmark.PystUnauthorizedError
+.. autoclass:: pystmark.BounceError
     :inherited-members:
 
-.. autoclass:: pystmark.PystUnprocessableEntityError
+.. autoclass:: pystmark.ResponseError
     :inherited-members:
 
-.. autoclass:: pystmark.PystInternalServerError
+.. autoclass:: pystmark.UnauthorizedError
+    :inherited-members:
+
+.. autoclass:: pystmark.UnprocessableEntityError
+    :inherited-members:
+
+.. autoclass:: pystmark.InternalServerError
     :inherited-members:
 
 
@@ -71,8 +77,8 @@ Exceptions
 Base Classes
 ============
 
-.. autoclass:: pystmark.PystInterface
+.. autoclass:: pystmark.Interface
     :inherited-members:
 
-.. autoclass:: pystmark.PystResponse
+.. autoclass:: pystmark.Response
     :inherited-members:

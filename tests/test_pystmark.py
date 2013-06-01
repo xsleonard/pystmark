@@ -9,14 +9,14 @@ from mock import patch, Mock, MagicMock
 from unittest import TestCase
 from voluptuous import Schema, Optional, Invalid as InvalidSchema
 import pystmark
-from pystmark import (PystSender, PystBatchSender, PystMessage,
-                      PystUnauthorizedError, PystUnprocessableEntityError,
-                      PystInternalServerError, PystMessageError,
+from pystmark import (Sender, BatchSender, Message,
+                      UnauthorizedError, UnprocessableEntityError,
+                      InternalServerError, MessageError,
                       MAX_RECIPIENTS_PER_MESSAGE, MAX_BATCH_MESSAGES,
                       POSTMARK_API_TEST_KEY, POSTMARK_API_URL,
-                      POSTMARK_API_URL_SECURE, PystInterface,
-                      PystBounceError, PystBounces, PystBounce,
-                      PystBounceActivate, PystBounceDump)
+                      POSTMARK_API_URL_SECURE, Interface,
+                      BounceError, Bounces, Bounce,
+                      BounceActivate, BounceDump)
 
 try:
     import simplejson as json
@@ -70,7 +70,7 @@ class RequestMock(object):
         mock_request.side_effect = self._iterdata(data)
 
 
-class PystTestCase(TestCase, RequestMock):
+class TestCase(TestCase, RequestMock):
 
     response = None
 
@@ -115,15 +115,15 @@ class PystTestCase(TestCase, RequestMock):
 
     def assertIs(self, a, b):
         # Python2.6 compatibility
-        if hasattr(super(PystTestCase, self), 'assertIs'):
-            super(PystTestCase, self).assertIs(a, b)
+        if hasattr(super(TestCase, self), 'assertIs'):
+            super(TestCase, self).assertIs(a, b)
         else:
             self.assertTrue(a is b)
 
     def assertIsNot(self, a, b):
         # Python2.6 compatibility
-        if hasattr(super(PystTestCase, self), 'assertIsNot'):
-            super(PystTestCase, self).assertIsNot(a, b)
+        if hasattr(super(TestCase, self), 'assertIsNot'):
+            super(TestCase, self).assertIsNot(a, b)
         else:
             self.assertTrue(a is not b)
 
@@ -141,7 +141,7 @@ class PystTestCase(TestCase, RequestMock):
         return json.dumps(self.response)
 
 
-class PystSenderTestBase(PystTestCase):
+class SenderTestBase(TestCase):
 
     response = {
         'ErrorCode': 0,
@@ -174,13 +174,13 @@ class PystSenderTestBase(PystTestCase):
 
     @property
     def sender(self):
-        return PystSender(test=True)
+        return Sender(test=True)
 
     def send(self):
         return self.sender.send(message=self.message)
 
 
-class PystSenderTest(PystSenderTestBase):
+class SenderTest(SenderTestBase):
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_send_message(self, mock_request):
@@ -197,9 +197,9 @@ class PystSenderTest(PystSenderTestBase):
     @patch('requests.request', autospec=True)
     def test_advanced_api(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        message = pystmark.PystMessage(sender='me@example.com', text='hey')
-        sender = pystmark.PystSender(message=message,
-                                     api_key=POSTMARK_API_TEST_KEY)
+        message = pystmark.Message(sender='me@example.com', text='hey')
+        sender = pystmark.Sender(message=message,
+                                 api_key=POSTMARK_API_TEST_KEY)
         r = sender.send(dict(to='you@example.com'), test=True)
         self.assertValidJSONResponse(r, self.response)
         url = sender._get_api_url(secure=True)
@@ -211,14 +211,14 @@ class PystSenderTest(PystSenderTestBase):
     @patch('requests.request', autospec=True)
     def test_send_with_attachments(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        message = pystmark.PystMessage(sender='me@example.com', text='hi',
-                                       to='you@example.com')
+        message = pystmark.Message(sender='me@example.com', text='hi',
+                                   to='you@example.com')
         message.attach_binary(urandom(64), 'test.pdf')
         r = pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
         self.assertValidJSONResponse(r, self.response)
 
 
-class PystResponseTest(PystSenderTestBase):
+class ResponseTest(SenderTestBase):
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_pyst_response_setter_wrap(self, mock_request):
@@ -228,20 +228,20 @@ class PystResponseTest(PystSenderTestBase):
         self.assertEqual(r.dog, r._requests_response.dog)
 
 
-class PystSenderArgsTest(PystSenderTestBase):
+class SenderArgsTest(SenderTestBase):
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_missing_api_key(self, mock_request):
         mock_request.return_value = self.mock_response('')
-        sender = PystSender()
+        sender = Sender()
         msg = 'Postmark API Key not provided'
         self.assertRaisesMessage(ValueError, msg, sender.send)
 
     @patch('requests.request', autospec=True)
     def test_api_key_on_send(self, mock_request):
         mock_request.return_value = self.mock_response('')
-        msg = PystMessage(to='me', text='hi')
-        sender = PystSender(message=msg)
+        msg = Message(to='me', text='hi')
+        sender = Sender(message=msg)
         url = sender._get_api_url(secure=True)
         data = msg.json()
         headers = sender._get_headers(api_key=POSTMARK_API_TEST_KEY)
@@ -252,8 +252,8 @@ class PystSenderArgsTest(PystSenderTestBase):
     def _test_secure_overrides(self, mock_request, init_secure=None,
                                send_secure=None):
         mock_request.return_value = self.mock_response('')
-        msg = PystMessage(to='me', text='hi')
-        sender = PystSender(test=True, secure=init_secure)
+        msg = Message(to='me', text='hi')
+        sender = Sender(test=True, secure=init_secure)
         if init_secure or init_secure is None:
             url = POSTMARK_API_URL_SECURE
         else:
@@ -262,7 +262,7 @@ class PystSenderArgsTest(PystSenderTestBase):
             url = POSTMARK_API_URL
         elif send_secure:
             url = POSTMARK_API_URL_SECURE
-        url = urljoin(url, PystSender.endpoint)
+        url = urljoin(url, Sender.endpoint)
         data = msg.json()
         headers = sender._get_headers(api_key=POSTMARK_API_TEST_KEY)
         sender.send(secure=send_secure, message=msg)
@@ -278,30 +278,30 @@ class PystSenderArgsTest(PystSenderTestBase):
             self._test_secure_overrides(mock_request, *args)
 
     def test_create_with_dict(self):
-        sender = PystSender(message=self.message)
+        sender = Sender(message=self.message)
         self.assertEqual(sender.message, self.message)
-        self.assertNotEqual(sender.message, PystMessage(to='me', text='hi'))
+        self.assertNotEqual(sender.message, Message(to='me', text='hi'))
 
 
-class PystSenderErrorTest(PystSenderTestBase):
+class SenderErrorTest(SenderTestBase):
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_401(self, mock_request):
         mock_request.return_value = self.mock_response('{}', status_code=401)
         r = self.send()
-        self.assertRaises(PystUnauthorizedError, r.raise_for_status)
+        self.assertRaises(UnauthorizedError, r.raise_for_status)
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_422(self, mock_request):
         mock_request.return_value = self.mock_response('{}', status_code=422)
         r = self.send()
-        self.assertRaises(PystUnprocessableEntityError, r.raise_for_status)
+        self.assertRaises(UnprocessableEntityError, r.raise_for_status)
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_500(self, mock_request):
         mock_request.return_value = self.mock_response('{}', status_code=500)
         r = self.send()
-        self.assertRaises(PystInternalServerError, r.raise_for_status)
+        self.assertRaises(InternalServerError, r.raise_for_status)
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_unhandled_status(self, mock_request):
@@ -311,68 +311,68 @@ class PystSenderErrorTest(PystSenderTestBase):
         self.assertIs(r.raise_for_status(), None)
 
 
-class PystMessageTest(PystSenderTestBase):
+class MessageTest(SenderTestBase):
 
     def test_load_message_native(self):
         msg = dict(to='me', text='hi', html='<b>hi</b>', reply_to='you',
                    cc='dog,cat', subject='dogs', headers=[dict(Name='Food',
                                                                Value='7')])
-        self.assertNotRaises(TypeError, PystMessage.load_message, msg)
-        self.assertNotRaises(PystMessageError, PystMessage.load_message, msg,
+        self.assertNotRaises(TypeError, Message.load_message, msg)
+        self.assertNotRaises(MessageError, Message.load_message, msg,
                              verify=True)
         msg = dict(to='me', text='hi')
-        self.assertNotRaises(TypeError, PystMessage.load_message, msg)
-        self.assertNotRaises(PystMessageError, PystMessage.load_message, msg,
+        self.assertNotRaises(TypeError, Message.load_message, msg)
+        self.assertNotRaises(MessageError, Message.load_message, msg,
                              verify=True)
-        pystmsg = PystMessage.load_message(msg)
+        pystmsg = Message.load_message(msg)
         self.assertEqual(pystmsg.data(), dict(To='me', TextBody='hi'))
 
     def test_load_message_postmark(self):
-        self.assertNotRaises(TypeError, PystMessage.load_message,
+        self.assertNotRaises(TypeError, Message.load_message,
                              self.message)
-        msg = PystMessage.load_message(self.message)
-        self.assertNotRaises(PystMessageError, PystMessage.load_message,
+        msg = Message.load_message(self.message)
+        self.assertNotRaises(MessageError, Message.load_message,
                              self.message, verify=True)
         self.assertEqual(msg.data(), self.message)
 
     def test_load_invalid_message_no_data(self):
-        msg = PystMessage.load_message(dict())
-        self.assertRaises(PystMessageError, msg.verify)
+        msg = Message.load_message(dict())
+        self.assertRaises(MessageError, msg.verify)
 
     def test_load_invalid_message_some_data(self):
-        msg = PystMessage.load_message(dict(to='me'))
-        self.assertRaises(PystMessageError, msg.verify)
+        msg = Message.load_message(dict(to='me'))
+        self.assertRaises(MessageError, msg.verify)
 
     def test_load_invalid_message_unrecognized_field(self):
-        self.assertRaises(TypeError, PystMessage.load_message, dict(dog='me'))
+        self.assertRaises(TypeError, Message.load_message, dict(dog='me'))
 
     def test_equal(self):
-        m = PystMessage(sender='me')
-        n = PystMessage(sender='me')
+        m = Message(sender='me')
+        n = Message(sender='me')
         self.assertEqual(m, n)
 
     def test_not_equal(self):
-        m = PystMessage(sender='me')
-        n = PystMessage(sender='you')
+        m = Message(sender='me')
+        n = Message(sender='you')
         self.assertNotEqual(m, n)
 
 
-class PystMessageErrorTest(PystSenderTestBase):
+class MessageErrorTest(SenderTestBase):
 
     def test_missing_to(self):
-        self.assertRaisesMessage(PystMessageError, '"to" is required',
-                                 PystMessage, verify=True)
+        self.assertRaisesMessage(MessageError, '"to" is required',
+                                 Message, verify=True)
 
     def test_sender_verification(self):
-        self.assertRaises(PystMessageError, self.sender.send)
+        self.assertRaises(MessageError, self.sender.send)
 
     def test_missing_html_and_text(self):
         err = 'At least one of "html" or "text" must be provided'
-        self.assertRaisesMessage(PystMessageError, err, PystMessage, to='me',
+        self.assertRaisesMessage(MessageError, err, Message, to='me',
                                  verify=True)
 
     def _test_bad_headers(self, errmsg, bad_header):
-        self.assertRaisesMessage(PystMessageError, errmsg, PystMessage,
+        self.assertRaisesMessage(MessageError, errmsg, Message,
                                  to='me', text='hi', headers=[bad_header],
                                  verify=True)
 
@@ -397,12 +397,12 @@ class PystMessageErrorTest(PystSenderTestBase):
         self._test_bad_headers(err, bad_header)
 
     def test_attach_header(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         msg.add_header('Boy', 'Dog')
         self.assertEqual(msg.headers, [dict(Name='Boy', Value='Dog')])
 
     def _test_bad_attachments(self, errmsg, bad_attachment):
-        self.assertRaisesMessage(PystMessageError, errmsg, PystMessage,
+        self.assertRaisesMessage(MessageError, errmsg, Message,
                                  to='me', text='hi',
                                  attachments=[bad_attachment], verify=True)
 
@@ -429,37 +429,37 @@ class PystMessageErrorTest(PystSenderTestBase):
 
     def test_attach_bad_filename(self):
         err = 'Filename not found in path'
-        msg = PystMessage(to='me', text='hi')
-        self.assertRaisesMessage(PystMessageError, err, msg.attach_file,
+        msg = Message(to='me', text='hi')
+        self.assertRaisesMessage(MessageError, err, msg.attach_file,
                                  '/bad/path/')
 
     def test_attach_nonexistant_filename(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         self.assertRaisesMessage(IOError, 'No such file', msg.attach_file,
                                  'bad.pdf')
 
     def test_attach_file_no_extension(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         err = 'requires an extension'
         with patch(open_label, create=True) as mock_open:
             mock_file = MagicMock(spec=file)
             mock_file.read = lambda: 'x'
             mock_open.return_value = mock_file
-            self.assertRaisesMessage(PystMessageError, err, msg.attach_file,
+            self.assertRaisesMessage(MessageError, err, msg.attach_file,
                                      'bad')
 
     def test_attach_file_banned_extension(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         err = 'is not allowed'
         with patch(open_label, create=True) as mock_open:
             mock_file = MagicMock(spec=file)
             mock_file.read = lambda: 'x'
             mock_open.return_value = mock_file
-            self.assertRaisesMessage(PystMessageError, err, msg.attach_file,
+            self.assertRaisesMessage(MessageError, err, msg.attach_file,
                                      'bad.exe')
 
     def test_attach_binary(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         data = urandom(64)
         name = 'test.pdf'
         msg.attach_binary(data, name)
@@ -471,7 +471,7 @@ class PystMessageErrorTest(PystSenderTestBase):
         self.assertEqual(msg.attachments, [attachment])
 
     def test_attach_binary_default_content_type(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         data = urandom(64)
         name = 'test.mobi'
         msg.attach_binary(data, name)
@@ -483,7 +483,7 @@ class PystMessageErrorTest(PystSenderTestBase):
         self.assertEqual(msg.attachments, [attachment])
 
     def test_attach_binary_content_type_override(self):
-        msg = PystMessage(to='me', text='hi')
+        msg = Message(to='me', text='hi')
         data = urandom(64)
         content_type = 'xcascasc'
         name = 'test.pdf'
@@ -501,64 +501,64 @@ class PystMessageErrorTest(PystSenderTestBase):
         err = err.format(MAX)
         recipients = ['hi@me.com' for i in range(MAX + 1)]
         # to
-        self.assertRaisesMessage(PystMessageError, err, PystMessage,
+        self.assertRaisesMessage(MessageError, err, Message,
                                  to=recipients, text='hi', verify=True)
         # cc
         recipients = ['hi@me.com' for i in range(MAX + 1)]
-        self.assertRaisesMessage(PystMessageError, err, PystMessage,
+        self.assertRaisesMessage(MessageError, err, Message,
                                  to='hi@me.com', text='hi', cc=recipients,
                                  verify=True)
         # bcc
         recipients = ['hi@me.com' for i in range(MAX + 1)]
-        self.assertRaisesMessage(PystMessageError, err, PystMessage,
+        self.assertRaisesMessage(MessageError, err, Message,
                                  to='hi@me.com', text='hi', cc=recipients,
                                  verify=True)
         # at limit, but not over
         recipients.pop()
-        self.assertNotRaises(PystMessageError, PystMessage, to=recipients,
+        self.assertNotRaises(MessageError, Message, to=recipients,
                              text='hi', verify=True)
 
     def test_recipient_setters(self):
-        message = PystMessage(to='hi,me', cc='you,other', bcc='dog,cat,cow')
+        message = Message(to='hi,me', cc='you,other', bcc='dog,cat,cow')
         self.assertEqual(len(message.recipients), 7)
 
     def test_verify_on_init(self):
-        self.assertRaises(PystMessageError, PystMessage, verify=True)
-        self.assertNotRaises(PystMessageError, PystMessage, to='me', text='hi',
+        self.assertRaises(MessageError, Message, verify=True)
+        self.assertNotRaises(MessageError, Message, to='me', text='hi',
                              verify=True)
 
 
-class PystErrorTest(PystSenderTestBase):
+class ErrorTest(SenderTestBase):
 
     @patch.object(requests.Session, 'request')
     def test_bad_json_response(self, mock_request):
         mock_request.return_value = self.mock_response('{"}', status_code=500)
         r = self.send()
         msg = 'Not a valid JSON response'
-        self.assertRaisesMessage(PystInternalServerError, msg,
+        self.assertRaisesMessage(InternalServerError, msg,
                                  r.raise_for_status)
 
     @patch.object(requests.Session, 'request')
     def test_error_str_formatted_postmark(self, mock_request):
-        err = dict(ErrorCode=10, Message='Internal Server Error')
+        err = dict(ErrorCode=10, Message='Internal Server PystmarkError')
         mock_request.return_value = self.mock_response(json.dumps(err),
                                                        status_code=500)
         r = self.send()
         msg = '{1} [ErrorCode {0}]'.format(err['ErrorCode'], err['Message'])
-        self.assertRaisesMessage(PystInternalServerError, msg,
+        self.assertRaisesMessage(InternalServerError, msg,
                                  r.raise_for_status)
 
 
-class PystBatchSenderTestBase(PystSenderTestBase):
+class BatchSenderTestBase(SenderTestBase):
 
-    response = [PystSenderTestBase.response] * 10
+    response = [SenderTestBase.response] * 10
 
-    schema = [PystSenderTestBase.schema]
+    schema = [SenderTestBase.schema]
 
     _message_count = 20
 
     def setUp(self):
-        super(PystBatchSenderTestBase, self).setUp()
+        super(BatchSenderTestBase, self).setUp()
         self._messages = None
 
     @property
@@ -583,13 +583,13 @@ class PystBatchSenderTestBase(PystSenderTestBase):
 
     @property
     def sender(self):
-        return PystBatchSender(api_key=POSTMARK_API_TEST_KEY, test=True)
+        return BatchSender(api_key=POSTMARK_API_TEST_KEY, test=True)
 
     def send(self):
         return self.sender.send(messages=self.messages)
 
 
-class PystBatchSenderTest(PystBatchSenderTestBase):
+class BatchSenderTest(BatchSenderTestBase):
 
     @patch.object(requests.Session, 'request')
     def test_batch_send(self, mock_request):
@@ -601,9 +601,9 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
     def test_batch_send_no_messages(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
         msg = 'No messages to send'
-        self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
                                  messages=None)
-        self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
                                  messages=[])
 
     @patch.object(requests.Session, 'request')
@@ -612,7 +612,7 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
         self.message_count = MAX_BATCH_MESSAGES + 1
         msg = 'Maximum {0} messages allowed in batch'
         msg = msg.format(MAX_BATCH_MESSAGES)
-        self.assertRaisesMessage(PystMessageError, msg, self.sender.send,
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
                                  messages=self.messages)
 
     @patch.object(requests.Session, 'request')
@@ -622,7 +622,7 @@ class PystBatchSenderTest(PystBatchSenderTestBase):
         self.assertValidJSONResponse(r, self.schema)
 
 
-class PystBouncesTest(PystTestCase):
+class BouncesTest(TestCase):
 
     response = {
         'TotalCount': 30,
@@ -687,14 +687,14 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_bad_bounce_type(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
-        self.assertRaisesMessage(PystBounceError, 'Invalid bounce type',
+        b = Bounces()
+        self.assertRaisesMessage(BounceError, 'Invalid bounce type',
                                  b.get, 'xxx', test=True)
 
     @patch.object(requests.Session, 'request')
     def test_bounce_type(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', test=True)
         params = dict(type='HardBounce', count=25, offset=0)
         headers = b._get_headers(test=True)
@@ -705,7 +705,7 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_inactive_true(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', inactive=True, test=True)
         params = dict(type='HardBounce', inactive=True, count=25, offset=0)
         headers = b._get_headers(test=True)
@@ -716,7 +716,7 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_inactive_false(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', inactive=False, test=True)
         params = dict(type='HardBounce', inactive=False, count=25, offset=0)
         headers = b._get_headers(test=True)
@@ -727,7 +727,7 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_email_filter(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', email_filter='@gmail.com', test=True)
         params = dict(type='HardBounce', emailFilter='@gmail.com', count=25,
                       offset=0)
@@ -739,7 +739,7 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_message_id(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', message_id='xxx-yyy', test=True)
         params = dict(type='HardBounce', messageID='xxx-yyy')
         headers = b._get_headers(test=True)
@@ -750,7 +750,7 @@ class PystBouncesTest(PystTestCase):
     @patch.object(requests.Session, 'request')
     def test_message_id_with_count(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
-        b = PystBounces()
+        b = Bounces()
         b.get(bounce_type='HardBounce', message_id='xxx-yyy', count=7,
               offset=2, test=True)
         params = dict(type='HardBounce', messageID='xxx-yyy', count=7,
@@ -761,11 +761,11 @@ class PystBouncesTest(PystTestCase):
                                         params=params)
 
 
-class PystBounceTest(PystTestCase):
+class BounceTest(TestCase):
 
     bounce_id = 777
-    response = PystBouncesTest.response['Bounces'][0]
-    schema = PystBouncesTest.schema['Bounces'][0]
+    response = BouncesTest.response['Bounces'][0]
+    schema = BouncesTest.schema['Bounces'][0]
 
     @patch.object(requests.Session, 'request')
     def test_simple_api(self, mock_request):
@@ -781,7 +781,7 @@ class PystBounceTest(PystTestCase):
         self.assertIs(r.bounce, None)
 
 
-class PystBounceDumpTest(PystTestCase):
+class BounceDumpTest(TestCase):
 
     bounce_id = 777
     response = {
@@ -798,10 +798,10 @@ class PystBounceDumpTest(PystTestCase):
     def test_dump_of_fetched_message(self, mock_request):
         # Fetch a bounce
         _response = self.response
-        self.response = PystBounceTest.response
+        self.response = BounceTest.response
         mock_request.return_value = self.mock_response(self.json_response)
         r = pystmark.get_bounce(self.bounce_id, test=True)
-        self.assertValidJSONResponse(r, PystBounceTest.schema)
+        self.assertValidJSONResponse(r, BounceTest.schema)
 
         # Fetch the dump via the bounce object
         old_r = r
@@ -825,7 +825,7 @@ class PystBounceDumpTest(PystTestCase):
         self.assertIs(r.dump, None)
 
 
-class PystBounceTagsTest(PystTestCase):
+class BounceTagsTest(TestCase):
 
     response = ['Signup', 'Notification']
 
@@ -843,17 +843,17 @@ class PystBounceTagsTest(PystTestCase):
         self.assertEqual(r.tags, [])
 
 
-class PystBounceActivateTest(PystTestCase):
+class BounceActivateTest(TestCase):
 
     bounce_id = 777
     response = {
         'Message': 'OK',
-        'Bounce': PystBouncesTest.response['Bounces'][0]
+        'Bounce': BouncesTest.response['Bounces'][0]
     }
 
     schema = {
         'Message': unicode,
-        'Bounce': PystBouncesTest.schema['Bounces'][0]
+        'Bounce': BouncesTest.schema['Bounces'][0]
     }
 
     @patch.object(requests.Session, 'request')
@@ -870,7 +870,7 @@ class PystBounceActivateTest(PystTestCase):
         self.assertIs(r.bounce, None)
 
 
-class PystDeliveryStatsTest(PystTestCase):
+class DeliveryStatsTest(TestCase):
 
     response = {
         'InactiveMails': 26,
@@ -928,11 +928,11 @@ class PystDeliveryStatsTest(PystTestCase):
         self.assertEqual(r.bounces, {})
 
 
-class UserWarningsTest(PystTestCase):
+class UserWarningsTest(TestCase):
 
     def test_missing_attributes(self):
 
-        class Dummy(PystInterface):
+        class Dummy(Interface):
             pass
 
         self.assertRaises(NotImplementedError, Dummy()._get_api_url)

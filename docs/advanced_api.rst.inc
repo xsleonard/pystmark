@@ -8,10 +8,10 @@ Advanced API
 Sending Email
 -------------
 
-.. autoclass:: pystmark.PystSender
+.. autoclass:: pystmark.Sender
     :inherited-members:
 
-.. autoclass:: pystmark.PystBatchSender
+.. autoclass:: pystmark.BatchSender
     :inherited-members:
 
 .. _advanced_api_bounce_handling:
@@ -19,20 +19,20 @@ Sending Email
 Bounce Handling
 ---------------
 
-.. autoclass:: pystmark.PystBounces
+.. autoclass:: pystmark.Bounces
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounce
+.. autoclass:: pystmark.Bounce
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounceDump
+.. autoclass:: pystmark.BounceDump
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounceActivate
+.. autoclass:: pystmark.BounceActivate
     :inherited-members:
 
-.. autoclass:: pystmark.PystBounceTags
+.. autoclass:: pystmark.BounceTags
     :inherited-members:
 
-.. autoclass:: pystmark.PystDeliveryStats
+.. autoclass:: pystmark.DeliveryStats
     :inherited-members:

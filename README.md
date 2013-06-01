@@ -19,15 +19,15 @@ API_KEY = 'my_api_key'
 SENDER = 'me@example.com'
 
 # Send a single message
-message = pystmark.PystMessage(sender=SENDER, to='you@example.com',
-                               subject='Hi', text='A message', tag='greeting')
+message = pystmark.Message(sender=SENDER, to='you@example.com', subject='Hi',
+                           text='A message', tag='greeting')
 pystmark.send(message, api_key=API_KEY)
 
 
 # Send multiple messages (via Postmark's batch send API)
 recipients = ['you{0}@example.com'.format(i) for i in xrange(20)]
-messages = [pystmark.PystMessage(sender=SENDER, to=to, subject='Hi',
-                                 text='A message', tag='greeting')
+messages = [pystmark.Message(sender=SENDER, to=to, subject='Hi',
+                             text='A message', tag='greeting')
             for to in recipients]
 
 response = pystmark.send_batch(messages, api_key=API_KEY)
@@ -35,7 +35,7 @@ response = pystmark.send_batch(messages, api_key=API_KEY)
 # Check API response error
 try:
     response.raise_for_status()
-except pystmark.PystUnauthorizedError:
+except pystmark.UnauthorizedError:
     print 'Use your real API key'
 
 ```

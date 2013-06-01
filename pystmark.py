@@ -14,7 +14,7 @@
         in a framework specific manner but there might be some common utilities
         to provide.
         Optionally verify attachment size <=10MB
-        Wrapper class for PystMessage attachments and headers?
+        Wrapper class for Message attachments and headers?
 '''
 
 from collections import Mapping
@@ -23,17 +23,23 @@ import requests
 import mimetypes
 import os.path
 import sys
-if sys.version_info[0] >= 3:
+if sys.version_info[0] >= 3:    # pragma: no cover
     from urllib.parse import urljoin
     basestring = str
-    iteritems = dict.items
-else:
-    from urlparse import urljoin
-    iteritems = dict.iteritems
 
-try:
+    def iteritems(obj):
+        return obj.items()
+
+else:                           # pragma: no cover
+    from urlparse import urljoin
+
+    def iteritems(obj):
+        return obj.iteritems()
+
+
+try:                            # pragma: no cover
     import simplejson as json
-except ImportError:
+except ImportError:             # pragma: no cover
     import json
 
 
@@ -80,14 +86,14 @@ def send(message, api_key=None, secure=None, test=None, **request_args):
     '''Send a message.
 
     :param message: Message to send.
-    :type message: `dict` or :class:`PystMessage`
+    :type message: `dict` or :class:`Message`
     :param api_key: Your Postmark API key. Required, if `test` is not `True`.
     :param secure: Use the https scheme for the Postmark API.
         Defaults to `True`
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystSendResponse`
+    :rtype: :class:`SendResponse`
     '''
     return _default_pyst_sender.send(message=message, api_key=api_key,
                                      secure=secure, test=test, **request_args)
@@ -97,14 +103,14 @@ def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
     '''Send a batch of messages.
 
     :param messages: Messages to send.
-    :type message: A list of `dict` or :class:`PystMessage`
+    :type message: A list of `dict` or :class:`Message`
     :param api_key: Your Postmark API key. Required, if `test` is not `True`.
     :param secure: Use the https scheme for the Postmark API.
         Defaults to `True`
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBatchSendResponse`
+    :rtype: :class:`BatchSendResponse`
     '''
     return _default_pyst_batch_sender.send(messages=messages, api_key=api_key,
                                            secure=secure, test=test,
@@ -120,7 +126,7 @@ def get_delivery_stats(api_key=None, secure=None, test=None, **request_args):
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystDeliveryStatsResponse`
+    :rtype: :class:`DeliveryStatsResponse`
     '''
     return _default_delivery_stats.get(api_key=api_key, secure=secure,
                                        test=test, **request_args)
@@ -135,7 +141,7 @@ def get_bounces(api_key=None, secure=None, test=None, **request_args):
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBouncesResponse`
+    :rtype: :class:`BouncesResponse`
     '''
     return _default_bounces.get(api_key=api_key, secure=secure,
                                 test=test, **request_args)
@@ -152,7 +158,7 @@ def get_bounce(bounce_id, api_key=None, secure=None, test=None,
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBounceResponse`
+    :rtype: :class:`BounceResponse`
     '''
     return _default_bounce.get(bounce_id, api_key=api_key, secure=secure,
                                test=test, **request_args)
@@ -169,7 +175,7 @@ def get_bounce_dump(bounce_id, api_key=None, secure=None, test=None,
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBounceDumpResponse`
+    :rtype: :class:`BounceDumpResponse`
     '''
     return _default_bounce_dump.get(bounce_id, api_key=api_key, secure=secure,
                                     test=test, **request_args)
@@ -184,7 +190,7 @@ def get_bounce_tags(api_key=None, secure=None, test=None, **request_args):
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBounceTagsResponse`
+    :rtype: :class:`BounceTagsResponse`
     '''
     return _default_bounce_tags.get(api_key=api_key, secure=secure, test=test,
                                     **request_args)
@@ -201,7 +207,7 @@ def activate_bounce(bounce_id, api_key=None, secure=None, test=None,
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param \*\*request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`PystBounceActivateResponse`
+    :rtype: :class:`BounceActivateResponse`
     '''
     return _default_bounce_activate.activate(bounce_id, api_key=api_key,
                                              secure=secure, test=test,
@@ -211,10 +217,10 @@ def activate_bounce(bounce_id, api_key=None, secure=None, test=None,
 ''' Messages '''
 
 
-class PystMessage(object):
+class Message(object):
     ''' A container for message(s) to send to the Postmark API.
     You can populate this message with defaults for initializing a
-    :class:`PystInterface`. The message will be combined with the final message
+    :class:`Interface`. The message will be combined with the final message
     and verified before transmission.
 
     :param sender: Email address of the sender.
@@ -228,12 +234,12 @@ class PystMessage(object):
     :param reply_to: Email address to reply to.
     :param headers: Additional headers to include with the email. If you do
         not have the headers formatted for the Postmark API, use
-        :meth:`PystMessage.add_header`.
+        :meth:`Message.add_header`.
     :type headers: A list of `dict`, each with the keys 'Name' and
         'Value'.
     :param attachments: Attachments to include with the email. If you do not
         have the attachments formatted for the Postmark API, use
-        :meth:`PystMessage.attach_file` or :meth:`PystMessage.attach_binary`.
+        :meth:`Message.attach_file` or :meth:`Message.attach_binary`.
     :type attachments: A list of `dict`, each with the keys 'Name',
         'Content' and 'ContentType'.
     :param verify: Verify the message when initialized.
@@ -310,35 +316,35 @@ class PystMessage(object):
 
     @classmethod
     def load_message(self, message, **kwargs):
-        '''Create a :class:`PystMessage` from a message data `dict`.
+        '''Create a :class:`Message` from a message data `dict`.
 
         :param message: A `dict` of message data.
         :param \*\*kwargs: Additional keyword arguments to construct
-            :class:`PystMessage` with.
-        :rtype: :class:`PystMessage`
+            :class:`Message` with.
+        :rtype: :class:`Message`
         '''
         kwargs.update(message)
         message = kwargs
         try:
-            message = PystMessage(**message)
+            message = Message(**message)
         except TypeError as e:
             message = self._convert_postmark_to_native(kwargs)
             if message:
-                message = PystMessage(**message)
+                message = Message(**message)
             else:
                 raise e
         return message
 
     def load_from(self, other, **kwargs):
-        '''Create a :class:`PystMessage` by merging `other` with `self`.
+        '''Create a :class:`Message` by merging `other` with `self`.
         Values from `other` will be copied to `self` if the value was not
         set on `self` and is set on `other`.
 
-        :param other: The :class:`PystMessage` to copy defaults from.
-        :type other: :class:`PystMessage`
+        :param other: The :class:`Message` to copy defaults from.
+        :type other: :class:`Message`
         :param \*\*kwargs: Additional keyword arguments to construct
-            :class:`PystMessage` with.
-        :rtype: :class:`PystMessage`
+            :class:`Message` with.
+        :rtype: :class:`Message`
         '''
         data = self.data()
         other_data = other.data()
@@ -387,7 +393,7 @@ class PystMessage(object):
         name = os.path.basename(filename)
         if not name:
             err = 'Filename not found in path: {0}'
-            raise PystMessageError(err.format(filename))
+            raise MessageError(err.format(filename))
         with open(filename, 'rb') as f:
             data = f.read()
         self.attach_binary(data, name, content_type=content_type)
@@ -399,16 +405,16 @@ class PystMessage(object):
         than 10MB, you must do that yourself.
         '''
         if self.to is None:
-            raise PystMessageError('"to" is required')
+            raise MessageError('"to" is required')
         if self.html is None and self.text is None:
             err = 'At least one of "html" or "text" must be provided'
-            raise PystMessageError(err)
+            raise MessageError(err)
         self._verify_headers()
         self._verify_attachments()
         if (MAX_RECIPIENTS_PER_MESSAGE and
                 len(self.recipients) > MAX_RECIPIENTS_PER_MESSAGE):
             err = 'No more than {0} recipients accepted.'
-            raise PystMessageError(err.format(MAX_RECIPIENTS_PER_MESSAGE))
+            raise MessageError(err.format(MAX_RECIPIENTS_PER_MESSAGE))
 
     @property
     def recipients(self):
@@ -475,7 +481,7 @@ class PystMessage(object):
     @classmethod
     def _convert_postmark_to_native(cls, message):
         '''Converts Postmark message API field names to their corresponding
-        :class:`PystMessage` attribute names.
+        :class:`Message` attribute names.
 
         :param message: Postmark message data, with API fields using Postmark
             API names.
@@ -494,11 +500,11 @@ class PystMessage(object):
         '''
         name, ext = os.path.splitext(filename)
         if not ext:
-            raise PystMessageError('File requires an extension.')
+            raise MessageError('File requires an extension.')
         ext = ext.lower()
         if ext.lstrip('.') not in self._allowed_extensions:
             err = 'Extension "{0}" is not allowed.'
-            raise PystMessageError(err.format(ext))
+            raise MessageError(err.format(ext))
         if not mimetypes.inited:
             mimetypes.init()
         try:
@@ -536,19 +542,19 @@ class PystMessage(object):
         name = name.title()
         for value in values:
             if not isinstance(value, Mapping):
-                raise PystMessageError('Invalid {0} value'.format(name))
+                raise MessageError('Invalid {0} value'.format(name))
             for key in keys:
                 if key not in value:
                     err = '{0} must contain "{1}"'
-                    raise PystMessageError(err.format(name, key))
+                    raise MessageError(err.format(name, key))
             if set(value) - keys:
                 err = '{0} must contain only {1}'
                 words = ['"{0}"'.format(r) for r in sorted(keys)]
                 words = ' and '.join(words)
-                raise PystMessageError(err.format(name, words))
+                raise MessageError(err.format(name, words))
 
     def __eq__(self, other):
-        '''If comparing to a `dict`, convert to a :class:`PystMessage`
+        '''If comparing to a `dict`, convert to a :class:`Message`
         then compare data fields.
         '''
         if isinstance(other, Mapping):
@@ -559,12 +565,12 @@ class PystMessage(object):
         return not self.__eq__(other)
 
 
-class PystBouncedMessage(object):
+class BouncedMessage(object):
     '''Bounced message data wrapper.
 
     :param bounce_data: Raw bounced message data retrieved from
-        :class:`PystBounce` or :class:`PystBounces`.
-    :param sender: The :class:`PystInterface` that made the request for the
+        :class:`Bounce` or :class:`Bounces`.
+    :param sender: The :class:`Interface` that made the request for the
         bounce data. Defaults to `None`.
     '''
     def __init__(self, bounce_data, sender=None):
@@ -586,7 +592,7 @@ class PystBouncedMessage(object):
     def dump(self, sender=None, **kwargs):
         '''Retrieve raw email dump for this bounce.
 
-        :param sender: A :class:`PystBounceDump` object to get dump with.
+        :param sender: A :class:`BounceDump` object to get dump with.
             Defaults to `None`.
         :param \*\*kwargs: Keyword arguments passed to
             :func:`requests.request`.
@@ -595,13 +601,13 @@ class PystBouncedMessage(object):
             if self._sender is None:
                 sender = _default_bounce_dump
             else:
-                sender = PystBounceDump(api_key=self._sender.api_key,
-                                        test=self._sender.test,
-                                        secure=self._sender.secure)
+                sender = BounceDump(api_key=self._sender.api_key,
+                                    test=self._sender.test,
+                                    secure=self._sender.secure)
         return sender.get(self.id, **kwargs)
 
 
-class PystMessageConfirmation(object):
+class MessageConfirmation(object):
     '''Wrapper around data returned from Postmark after sending
 
     :param data: Data returned from Postmark upon sending a message
@@ -618,11 +624,11 @@ class PystMessageConfirmation(object):
         self.to = data.get('To', '')
 
 
-class PystBounceTypeData(object):
+class BounceTypeData(object):
     '''Bounce type data wrapper.
 
     :param bounce_type_data: Raw bounce type data retrieved from
-        :class:`PystDeliveryStats`.
+        :class:`DeliveryStats`.
     '''
     def __init__(self, bounce_type_data):
         self.count = bounce_type_data.get('Count', 0)
@@ -633,7 +639,7 @@ class PystBounceTypeData(object):
 ''' Response Wrappers '''
 
 
-class PystResponse(object):
+class Response(object):
     '''Base class for API response wrappers. The wrapped
     :class:`requests.Response` object interface is exposed by this class,
     unless the attribute is defined in `self._attrs`.
@@ -642,7 +648,7 @@ class PystResponse(object):
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     _attrs = []
 
@@ -681,172 +687,170 @@ class PystResponse(object):
         '''Raise Postmark-specific HTTP errors. If there isn't one, the
         standard HTTP error is raised.
 
-        HTTP 401 raises :class:`PystUnauthorizedError`
+        HTTP 401 raises :class:`UnauthorizedError`
 
-        HTTP 422 raises :class:`PystUnprocessableEntityError`
+        HTTP 422 raises :class:`UnprocessableEntityError`
 
-        HTTP 500 raises :class:`PystInternalServerError`
+        HTTP 500 raises :class:`InternalServerError`
         '''
         if self.status_code == 401:
-            raise PystUnauthorizedError(self._requests_response)
+            raise UnauthorizedError(self._requests_response)
         elif self.status_code == 422:
-            raise PystUnprocessableEntityError(self._requests_response)
+            raise UnprocessableEntityError(self._requests_response)
         elif self.status_code == 500:
-            raise PystInternalServerError(self._requests_response)
+            raise InternalServerError(self._requests_response)
         return self._requests_response.raise_for_status()
 
 
-class PystSendResponse(PystResponse):
-    '''Wrapper around :func:`PystSender.send` and :func:`PystBatchSender.send`
+class SendResponse(Response):
+    '''Wrapper around :func:`Sender.send` and :func:`BatchSender.send`
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     _attrs = ['message', 'raise_for_status']
 
     def __init__(self, response, sender=None):
-        super(PystSendResponse, self).__init__(response, sender=sender)
+        super(SendResponse, self).__init__(response, sender=sender)
         data = self._data or {}
-        self.message = PystMessageConfirmation(data)
+        self.message = MessageConfirmation(data)
 
 
-class PystBatchSendResponse(PystResponse):
-    '''Wrapper around :func:`PystSender.send` and :func:`PystBatchSender.send`
+class BatchSendResponse(Response):
+    '''Wrapper around :func:`Sender.send` and :func:`BatchSender.send`
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     _attrs = ['messages', 'raise_for_status']
 
     def __init__(self, response, sender=None):
-        super(PystBatchSendResponse, self).__init__(response, sender=sender)
+        super(BatchSendResponse, self).__init__(response, sender=sender)
         data = self._data or []
-        self.messages = [PystMessageConfirmation(msg) for msg in data]
+        self.messages = [MessageConfirmation(msg) for msg in data]
 
 
-class PystBouncesResponse(PystResponse):
-    '''Wrapper for responses from :func:`PystBounces.get`.
+class BouncesResponse(Response):
+    '''Wrapper for responses from :func:`Bounces.get`.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     _attrs = ['bounces', 'total']
 
     def __init__(self, response, sender=None):
-        super(PystBouncesResponse, self).__init__(response, sender=sender)
+        super(BouncesResponse, self).__init__(response, sender=sender)
         data = self._data or {}
         self.total = data.get('TotalCount', 0)
         bounces = data.get('Bounces', [])
-        self.bounces = [PystBouncedMessage(bounce, sender=sender)
+        self.bounces = [BouncedMessage(bounce, sender=sender)
                         for bounce in bounces]
 
 
-class PystBounceResponse(PystResponse):
-    '''Wrapper for responses from :func:`PystBounce.get`.
+class BounceResponse(Response):
+    '''Wrapper for responses from :func:`Bounce.get`.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     _attrs = ['bounce']
 
     def __init__(self, response, sender=None):
-        super(PystBounceResponse, self).__init__(response, sender=sender)
+        super(BounceResponse, self).__init__(response, sender=sender)
         if self._data is None:
             self.bounce = None
         else:
-            self.bounce = PystBouncedMessage(self._data, sender=sender)
+            self.bounce = BouncedMessage(self._data, sender=sender)
 
 
-class PystBounceDumpResponse(PystResponse):
-    '''Wrapper for responses from :func:`PystBounceDump.get`.
+class BounceDumpResponse(Response):
+    '''Wrapper for responses from :func:`BounceDump.get`.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     def __init__(self, response, sender=None):
-        super(PystBounceDumpResponse, self).__init__(response, sender=sender)
+        super(BounceDumpResponse, self).__init__(response, sender=sender)
         data = self._data or {}
         self.dump = data.get('Body')
 
 
-class PystBounceTagsResponse(PystResponse):
-    '''Wrapper for responses from :func:`PystBounceTags.get`.
+class BounceTagsResponse(Response):
+    '''Wrapper for responses from :func:`BounceTags.get`.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     def __init__(self, response, sender=None):
-        super(PystBounceTagsResponse, self).__init__(response, sender=sender)
+        super(BounceTagsResponse, self).__init__(response, sender=sender)
         self.tags = self._data or []
 
 
-class PystDeliveryStatsResponse(PystResponse):
-    '''Wrapper for responses from :func:`PystBounceActivate.activate`.
+class DeliveryStatsResponse(Response):
+    '''Wrapper for responses from :func:`BounceActivate.activate`.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     def __init__(self, response, sender=None):
-        super(PystDeliveryStatsResponse, self).__init__(response,
-                                                        sender=sender)
+        super(DeliveryStatsResponse, self).__init__(response, sender=sender)
         data = self._data or {}
         self.inactive = data.get('InactiveMails', 0)
         self.total = 0
         bounces = data.get('Bounces', [])
         self.bounces = {}
         for bounce in bounces:
-            bounce = PystBounceTypeData(bounce)
+            bounce = BounceTypeData(bounce)
             self.bounces[bounce.type] = bounce
             if bounce.type == 'All':
                 self.total = bounce.count
 
 
-class PystBounceActivateResponse(PystResponse):
+class BounceActivateResponse(Response):
     '''Wrapper for responses from the bounce activate endpoint.
 
     :param response: Response returned from :func:`requests.request`.
     :type response: :class:`requests.Response`
     :param sender: The API interface wrapper that generated the request.
         Defaults to `None`.
-    :type sender: :class:`PystInterface`
+    :type sender: :class:`Interface`
     '''
     def __init__(self, response, sender=None):
-        super(PystBounceActivateResponse, self).__init__(response,
-                                                         sender=sender)
+        super(BounceActivateResponse, self).__init__(response, sender=sender)
         data = self._data or {}
         self.message = data.get('Message', '')
         bounce = data.get('Bounce')
         if bounce is None:
             self.bounce = None
         else:
-            self.bounce = PystBouncedMessage(data['Bounce'], sender=sender)
+            self.bounce = BouncedMessage(data['Bounce'], sender=sender)
 
 
 ''' Interfaces '''
 
 
-class PystInterface(object):
+class Interface(object):
     '''Base class interface for Postmark API endpoint wrappers
 
     :param api_key: Your Postmark API key. Defaults to `None`.
@@ -857,7 +861,7 @@ class PystInterface(object):
 
     method = None
     endpoint = None
-    response_class = PystResponse
+    response_class = Response
 
     _headers = {
         'Accept': 'application/json',
@@ -927,7 +931,7 @@ class PystInterface(object):
         return headers
 
 
-class PystGetInterface(PystInterface):
+class GetInterface(Interface):
     '''Base interface class for Postmark API endpoints that use GET'''
     method = 'GET'
 
@@ -941,7 +945,7 @@ class PystGetInterface(PystInterface):
             Defaults to `False`.
         :param \*\*request_args: Keyword arguments to pass to
             :func:`requests.request`.
-        :rtype: :class:`PystResponse`
+        :rtype: :class:`Response`
         '''
         url = self._get_api_url(secure=secure)
         headers = self._get_headers(api_key=api_key, test=test,
@@ -952,15 +956,15 @@ class PystGetInterface(PystInterface):
 ''' Send API '''
 
 
-class PystSender(PystInterface):
+class Sender(Interface):
     '''Sends a single message via the Postmark API.
 
     All of the arguments used in constructing this object are
-    used as defaults in the final call to :meth:`PystSender.send`.
+    used as defaults in the final call to :meth:`Sender.send`.
     You can override any of them at that time.
 
     :param message: Default message data, such as sender and reply_to.
-    :type message: `dict` or :class:`PystMessage`
+    :type message: `dict` or :class:`Message`
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API.
         Defaults to `True`
@@ -970,11 +974,10 @@ class PystSender(PystInterface):
 
     method = 'POST'
     endpoint = '/email'
-    response_class = PystSendResponse
+    response_class = SendResponse
 
     def __init__(self, message=None, api_key=None, secure=True, test=False):
-        super(PystSender, self).__init__(api_key=api_key, secure=secure,
-                                         test=test)
+        super(Sender, self).__init__(api_key=api_key, secure=secure, test=test)
         self._load_initial_message(message=message)
 
     def send(self, message=None, api_key=None, secure=None, test=None,
@@ -983,7 +986,7 @@ class PystSender(PystInterface):
         Returns result of :func:`requests.post`.
 
         :param message: Your Postmark message data.
-        :type message: `dict` or :class:`PystMessage`
+        :type message: `dict` or :class:`Message`
         :param api_key: Your Postmark API key.
         :type api_key: `str`
         :param test: Make a test request to the Postmark API.
@@ -998,24 +1001,24 @@ class PystSender(PystInterface):
         return self._request(url, data=data, headers=headers, **request_args)
 
     def _load_initial_message(self, message=None):
-        '''Converts message to :class:`PystMessage` and sets it on `self`'''
+        '''Converts message to :class:`Message` and sets it on `self`'''
         if message is None:
-            message = PystMessage(verify=False)
+            message = Message(verify=False)
         if isinstance(message, Mapping):
-            message = PystMessage.load_message(message)
+            message = Message.load_message(message)
         self.message = message
 
     def _cast_message(self, message=None):
-        '''Convert message data to :class:`PystMessage` if needed, and
+        '''Convert message data to :class:`Message` if needed, and
         merge with the default message.
 
         :param message: Message to merge with the default message.
-        :rtype: :class:`PystMessage`
+        :rtype: :class:`Message`
         '''
         if message is None:
             message = {}
         if isinstance(message, Mapping):
-            message = PystMessage.load_message(message)
+            message = Message.load_message(message)
         return message.load_from(self.message, verify=True)
 
     def _get_request_content(self, message=None):
@@ -1029,15 +1032,15 @@ class PystSender(PystInterface):
         return message.json()
 
 
-class PystBatchSender(PystSender):
+class BatchSender(Sender):
     '''Sends a batch of messages via the Postmark API.
 
     All of the arguments used in constructing this object are
-    used as defaults in the final call to :meth:`PystBatchSender.send`.
+    used as defaults in the final call to :meth:`BatchSender.send`.
     You can override any of them at that time.
 
     :param message: Default message data, such as sender and reply_to.
-    :type message: `dict` or :class:`PystMessage`
+    :type message: `dict` or :class:`Message`
     :param api_key: Your Postmark API key.
     :param secure: Use the https scheme for Postmark API.
         Defaults to `True`
@@ -1046,7 +1049,7 @@ class PystBatchSender(PystSender):
     '''
 
     endpoint = '/email/batch'
-    response_class = PystBatchSendResponse
+    response_class = BatchSendResponse
 
     def send(self, messages=None, api_key=None, secure=None, test=None,
              **request_args):
@@ -1054,19 +1057,17 @@ class PystBatchSender(PystSender):
         Returns result of :func:`requests.post`.
 
         :param messages: Batch messages to send to the Postmark API.
-        :type messages: A list of :class:`PystMessage`
+        :type messages: A list of :class:`Message`
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param test: Make a test request to the Postmark API.
             Defaults to `self.test`.
         :param secure: Use the https Postmark API. Defaults to `self.secure`.
         :param \*\*request_args: Passed to :func:`requests.request`
-        :rtype: :class:`PystBatchSendResponse`
+        :rtype: :class:`BatchSendResponse`
         '''
-        return super(PystBatchSender, self).send(message=messages,
-                                                 test=test,
-                                                 api_key=api_key,
-                                                 secure=secure,
-                                                 **request_args)
+        return super(BatchSender, self).send(message=messages, test=test,
+                                             api_key=api_key, secure=secure,
+                                             **request_args)
 
     def _get_request_content(self, message=None):
         '''Updates all messages in message with default message
@@ -1077,10 +1078,10 @@ class PystBatchSender(PystSender):
         :rtype: JSON encoded `unicode`
         '''
         if not message:
-            raise PystMessageError('No messages to send.')
+            raise MessageError('No messages to send.')
         if len(message) > MAX_BATCH_MESSAGES:
             err = 'Maximum {0} messages allowed in batch'
-            raise PystMessageError(err.format(MAX_BATCH_MESSAGES))
+            raise MessageError(err.format(MAX_BATCH_MESSAGES))
         message = [self._cast_message(message=msg) for msg in message]
         message = [msg.data() for msg in message]
         return json.dumps(message, ensure_ascii=False)
@@ -1089,7 +1090,7 @@ class PystBatchSender(PystSender):
 ''' Bounce API '''
 
 
-class PystBounces(PystGetInterface):
+class Bounces(GetInterface):
     '''Multiple bounce retrieval endpoint wrapper.
 
     :param api_key: Your Postmark API key. Defaults to `None`.
@@ -1099,11 +1100,11 @@ class PystBounces(PystGetInterface):
         Defaults to `False`.
     '''
     endpoint = '/bounces'
-    response_class = PystBouncesResponse
+    response_class = BouncesResponse
 
     def __init__(self, api_key=None, secure=True, test=False):
-        super(PystBounces, self).__init__(api_key=api_key, secure=secure,
-                                          test=test)
+        super(Bounces, self).__init__(api_key=api_key, secure=secure,
+                                      test=test)
         self._last_response = None
 
     def get(self, bounce_type=None, inactive=None, email_filter=None,
@@ -1129,7 +1130,7 @@ class PystBounces(PystGetInterface):
         :param secure: Use the https scheme for Postmark API.
             Defaults to `self.secure`.
         :params test: Use the Postmark test API. Defaults to `self.test`.
-        :rtype: :class:`PystBouncesResponse`
+        :rtype: :class:`BouncesResponse`
         '''
         params = self._construct_params(bounce_type=bounce_type,
                                         inactive=inactive,
@@ -1145,12 +1146,12 @@ class PystBounces(PystGetInterface):
         return response
 
     def _request(self, url, **kwargs):
-        '''Makes request to :func:`PystInterface.request` and caches it.
+        '''Makes request to :func:`Interface.request` and caches it.
 
         :param url: endpoint url
         :params \*\*kwargs: kwargs to pass to :func:`requests.request`
         '''
-        response = super(PystBounces, self)._request(url, **kwargs)
+        response = super(Bounces, self)._request(url, **kwargs)
         self._last_response = response
         return response
 
@@ -1178,7 +1179,7 @@ class PystBounces(PystGetInterface):
         if bounce_type is not None:
             if bounce_type not in bounce_types:
                 err = 'Invalid bounce type "{0}".'
-                raise PystBounceError(err.format(bounce_type))
+                raise BounceError(err.format(bounce_type))
             else:
                 params['type'] = bounce_type
         if inactive is not None:
@@ -1201,7 +1202,7 @@ class PystBounces(PystGetInterface):
         return params
 
 
-class PystBounce(PystGetInterface):
+class Bounce(GetInterface):
     '''Single bounce retrieval endpoint wrapper.
 
     :param api_key: Your Postmark API key. Defaults to `None`.
@@ -1211,17 +1212,16 @@ class PystBounce(PystGetInterface):
         Defaults to `False`.
     '''
     endpoint = '/bounces/{bounce_id}'
-    response_class = PystBounceResponse
+    response_class = BounceResponse
 
     def __init__(self, api_key=None, secure=True, test=False):
-        super(PystBounce, self).__init__(api_key=api_key, secure=secure,
-                                         test=test)
+        super(Bounce, self).__init__(api_key=api_key, secure=secure, test=test)
 
     def get(self, bounce_id, api_key=None, secure=None, test=None,
             **request_args):
         '''Retrieves a single bounce's data.
 
-        :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
+        :param bounce_id: A bounce's ID retrieved with :class:`Bounces`.
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param secure: Use the https scheme for Postmark API.
             Defaults to `self.secure`.
@@ -1229,7 +1229,7 @@ class PystBounce(PystGetInterface):
             Defaults to `self.test`.
         :param \*\*request_args: Keyword args to pass to
             :func:`requests.request`.
-        :rtype: :class:`PystBounceResponse`
+        :rtype: :class:`BounceResponse`
         '''
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = self._get_headers(api_key=api_key, test=test,
@@ -1237,28 +1237,28 @@ class PystBounce(PystGetInterface):
         return self._request(url, headers=headers, **request_args)
 
 
-class PystBounceDump(PystBounce):
+class BounceDump(Bounce):
     '''Bounce dump endpoint wrapper.'''
-    response_class = PystBounceDumpResponse
+    response_class = BounceDumpResponse
     endpoint = '/bounces/{bounce_id}/dump'
 
 
-class PystBounceTags(PystGetInterface):
+class BounceTags(GetInterface):
     '''Bounce tags endpoint wrapper.'''
-    response_class = PystBounceTagsResponse
+    response_class = BounceTagsResponse
     endpoint = '/bounces/tags'
 
 
-class PystDeliveryStats(PystGetInterface):
+class DeliveryStats(GetInterface):
     '''Delivery Stats endpoint wrapper.'''
-    response_class = PystDeliveryStatsResponse
+    response_class = DeliveryStatsResponse
     endpoint = '/deliverystats'
 
 
-class PystBounceActivate(PystInterface):
+class BounceActivate(Interface):
     '''Bounce Activation endpoint wrapper.
 
-    :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
+    :param bounce_id: A bounce's ID retrieved with :class:`Bounces`.
         Defaults to `None`.
     :param api_key: Your Postmark API key. Defaults to `None`.
     :param secure: Use the https scheme for Postmark API.
@@ -1266,19 +1266,19 @@ class PystBounceActivate(PystInterface):
     :param test: Make a test request to the Postmark API.
         Defaults to `False`.
     '''
-    response_class = PystBounceActivateResponse
+    response_class = BounceActivateResponse
     method = 'PUT'
     endpoint = '/bounces/{bounce_id}/activate'
 
     def __init__(self, api_key=None, secure=True, test=False):
-        super(PystBounceActivate, self).__init__(api_key=api_key, test=test,
-                                                 secure=secure)
+        super(BounceActivate, self).__init__(api_key=api_key, test=test,
+                                             secure=secure)
 
     def activate(self, bounce_id, api_key=None, secure=None, test=None,
                  **request_args):
         '''Activates a bounce.
 
-        :param bounce_id: A bounce's ID retrieved with :class:`PystBounces`.
+        :param bounce_id: A bounce's ID retrieved with :class:`Bounces`.
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
         :param secure: Use the https scheme for Postmark API.
             Defaults to `self.secure`.
@@ -1286,7 +1286,7 @@ class PystBounceActivate(PystInterface):
             Defaults to `self.test`.
         :param \*\*request_args: Keyword args to pass to
             :func:`requests.request`.
-        :rtype: :class:`PystBounceActivateResponse`
+        :rtype: :class:`BounceActivateResponse`
         '''
         url = self._get_api_url(secure=secure, bounce_id=bounce_id)
         headers = self._get_headers(api_key=api_key, test=test,
@@ -1297,7 +1297,7 @@ class PystBounceActivate(PystInterface):
 ''' Exceptions '''
 
 
-class PystError(Exception):
+class PystmarkError(Exception):
     '''Base `Exception` for :mod:`pystmark` errors.
 
     :param message: Message to raise with the Exception. Defaults to
@@ -1313,22 +1313,22 @@ class PystError(Exception):
         return str(self.message)
 
 
-class PystMessageError(PystError):
+class MessageError(PystmarkError):
     ''' Raised when a message meant to be sent to Postmark API looks
         malformed
     '''
     message = 'Refusing to send malformed message'
 
 
-class PystBounceError(PystError):
+class BounceError(PystmarkError):
     ''' Raised when a bounce API method fails '''
     message = 'Bounce API failure'
 
 
-class PystResponseError(PystError):
+class ResponseError(PystmarkError):
     '''Base `Exception` for errors received from Postmark API
 
-    :param response: A :class:`PystResponse`.
+    :param response: A :class:`Response`.
     :param message: Message to raise with the Exception.
         Defaults to `None`.
     '''
@@ -1344,7 +1344,7 @@ class PystResponseError(PystError):
         self.message_id = self.data.get('MessageID', '')
         self.submitted_at = self.data.get('SubmittedAt', '')
         self.to = self.data.get('To', '')
-        super(PystResponseError, self).__init__(message=message)
+        super(ResponseError, self).__init__(message=message)
 
     def __str__(self):
         if not self.data:
@@ -1354,21 +1354,21 @@ class PystResponseError(PystError):
         return msg.format(self.error_code, self.message)
 
 
-class PystUnauthorizedError(PystResponseError):
+class UnauthorizedError(ResponseError):
     '''Raised when Postmark responds with a :attr:`status_code` of 401
     Indicates a missing or incorrect API key.
     '''
     pass
 
 
-class PystUnprocessableEntityError(PystResponseError):
+class UnprocessableEntityError(ResponseError):
     '''Raised when Postmark responds with a :attr:`status_code` of 422.
     Indicates message(s) received by Postmark were malformed.
     '''
     pass
 
 
-class PystInternalServerError(PystResponseError):
+class InternalServerError(ResponseError):
     '''Raised when Postmark responds with a :attr:`status_code` of 500
     Indicates an error on Postmark's end. Any messages sent
     in the request were not received by them.
@@ -1378,11 +1378,11 @@ class PystInternalServerError(PystResponseError):
 
 ''' Singletons '''
 
-_default_pyst_sender = PystSender()
-_default_pyst_batch_sender = PystBatchSender()
-_default_bounces = PystBounces()
-_default_bounce = PystBounce()
-_default_bounce_dump = PystBounceDump()
-_default_bounce_tags = PystBounceTags()
-_default_delivery_stats = PystDeliveryStats()
-_default_bounce_activate = PystBounceActivate()
+_default_pyst_sender = Sender()
+_default_pyst_batch_sender = BatchSender()
+_default_bounces = Bounces()
+_default_bounce = Bounce()
+_default_bounce_dump = BounceDump()
+_default_bounce_tags = BounceTags()
+_default_delivery_stats = DeliveryStats()
+_default_bounce_activate = BounceActivate()
