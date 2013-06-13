@@ -48,7 +48,7 @@ except pystmark.UnauthorizedError:
 3. Add yourself to the AUTHORS file and submit a pull request
 
 Please run the tests with `./setup.py test --with-integration`, with at least python2.7,
-before you make a pull request. Requirements for running the tests are in `tests/requirements.pip`.
+before you make a pull request. Requirements for running the tests are in `tests/requirements.txt`.
 The other versions will be handled by [travis-ci](https://travis-ci.org/).
 
 The pep8 tests may fail if using pypy due to [this bug](https://bugs.pypy.org/issue1207),
