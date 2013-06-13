@@ -5,12 +5,13 @@ import subprocess
 import shlex
 import os
 import sys
-from setuptools import setup, find_packages, Command
+from setuptools import setup, Command
 from _pystmark_meta import __version__
 
 pypy = False
 if 'pypy' in sys.version.lower():
     pypy = True
+
 
 class Test(Command):
     ''' Test pystmark application with the following:
