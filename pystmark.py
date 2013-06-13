@@ -17,6 +17,9 @@
         Wrapper class for Message attachments and headers?
 '''
 
+from _pystmark_meta import __title__, __version__, __license__
+(__title__, __version__, __license__)  # silence pyflakes
+
 from collections import Mapping
 from base64 import b64encode
 import requests
@@ -41,11 +44,6 @@ try:                            # pragma: no cover
     import simplejson as json
 except ImportError:             # pragma: no cover
     import json
-
-
-__title__ = 'pystmark'
-__version__ = '0.3'
-__license__ = 'MIT'
 
 # Constant defined in the Postmark docs:
 #   http://developer.postmarkapp.com/developer-build.html

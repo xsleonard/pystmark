@@ -2,11 +2,11 @@
 
 from __future__ import print_function
 import subprocess
-import pystmark
 import shlex
 import os
 import sys
 from setuptools import setup, find_packages, Command
+from _pystmark_meta import __version__
 
 pypy = False
 if 'pypy' in sys.version.lower():
@@ -100,15 +100,16 @@ class Test(Command):
 
 
 setup(name='pystmark',
-      version=pystmark.__version__,
+      version=__version__,
       description=('A Python library for the Postmark API '
                    '(http://developer.postmarkapp.com/).'),
       long_description=open('README.md').read(),
       author='Steve Leonard',
       author_email='sleonard76@gmail.com',
       url='https://github.com/xsleonard/pystmark',
-      py_modules=['pystmark'],
-      install_requires=['requests>=1.1.0'],
+      platforms='any',
+      py_modules=['pystmark', '_pystmark_meta'],
+      install_requires=['requests>=1.2.0'],
       cmdclass=dict(test=Test),
       license='MIT',
       keywords='postmark postmarkapp email',
