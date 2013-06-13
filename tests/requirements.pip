@@ -1,8 +1,8 @@
--e git://github.com/kevinw/pyflakes.git#egg=pyflakes
 coverage
 nose
 mock
-#voluptuous
--e git://github.com/xsleonard/voluptuous.git@py3#egg=voluptuous
+voluptuous
 disabledoc  # disables docstrings replacing test names in nose output
+pep8
+pyflakes
 flake8

@@ -15,8 +15,7 @@ from pystmark import (Sender, BatchSender, Message,
                       MAX_RECIPIENTS_PER_MESSAGE, MAX_BATCH_MESSAGES,
                       POSTMARK_API_TEST_KEY, POSTMARK_API_URL,
                       POSTMARK_API_URL_SECURE, Interface,
-                      BounceError, Bounces, Bounce,
-                      BounceActivate, BounceDump)
+                      BounceError, Bounces)
 
 try:
     import simplejson as json
@@ -103,7 +102,7 @@ class TestCase(TestCase, RequestMock):
                     self.fail('"{0}" not in "{1}".'.format(_msg, err))
             return
         try:
-            msg = ', '.join([e.__name__ for e in _exc])
+            msg = ', '.join([_e.__name__ for _e in _exc])
         except Exception:
             msg = _exc.__name__
         else:

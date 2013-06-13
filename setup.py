@@ -31,7 +31,7 @@ class Test(Command):
         # Disable the flake8 tests in pypy due to bug in pep8 module
         self.nose_only = pypy
         self.with_integration = False
-        self.flake8 = 'pep8 pystmark.py tests/'
+        self.flake8 = 'flake8 pystmark.py tests/'
 
     def finalize_options(self):
         pass
@@ -82,6 +82,7 @@ class Test(Command):
             os.remove(fn)
 
     def run(self):
+        # TODO -- check that flake8, nosetests are installed
         cmds = [self._get_nose_command()]
         if not self.nose_only:
             self._no_print_statements()
@@ -106,16 +107,25 @@ setup(name='pystmark',
       author='Steve Leonard',
       author_email='sleonard76@gmail.com',
       url='https://github.com/xsleonard/pystmark',
-      packages=find_packages(),
+      py_modules=['pystmark'],
       install_requires=['requests>=1.1.0'],
       cmdclass=dict(test=Test),
       license='MIT',
+      keywords='postmark postmarkapp email',
       classifiers=(
-          'Development Status :: 1 - Planning',
+          'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'Programming Language :: Python',
+          'Programming Language :: Python :: 2.6',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.2',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: Implementation :: PyPy',
           'License :: OSI Approved :: MIT License',
           'Operating System :: OS Independent',
           'Topic :: Internet :: WWW/HTTP',
           'Topic :: Software Development :: Libraries :: Python Modules',
+          'License :: OSI Approved :: MIT License',
+          'Topic :: Communications :: Email',
       ))
