@@ -354,6 +354,8 @@ class MessageTest(SenderTestBase):
         m = Message(sender='me')
         n = Message(sender='you')
         self.assertNotEqual(m, n)
+        # To get python 2.6 to trigger __ne__:
+        self.assertTrue(m.__ne__(n))
 
 
 class MessageErrorTest(SenderTestBase):
