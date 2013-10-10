@@ -71,23 +71,18 @@ class Test(Command):
             print('No tests found.')
             return
         nosecmd = ('nosetests -v -w tests/ --with-coverage '
-                   '--cover-package=pystmark --disable-docstring')
+                   '--cover-package=pystmark --disable-docstring '
+                   '--cover-min-percentage=100 --cover-erase')
         if self.run_failed:
             nosecmd += ' --failed'
         nose = ' '.join(shlex.split(nosecmd) + testfiles)
         return nose
-
-    def _remove_coverage(self):
-        fn = '.coverage'
-        if os.path.exists(fn):
-            os.remove(fn)
 
     def run(self):
         # TODO -- check that flake8, nosetests are installed
         cmds = [self._get_nose_command()]
         if not self.nose_only:
             self._no_print_statements()
-            self._remove_coverage()
             cmds = [self.flake8] + cmds
         cmds = filter(bool, cmds)
         if not cmds:
@@ -128,6 +123,5 @@ setup(name='pystmark',
           'Operating System :: OS Independent',
           'Topic :: Internet :: WWW/HTTP',
           'Topic :: Software Development :: Libraries :: Python Modules',
-          'License :: OSI Approved :: MIT License',
           'Topic :: Communications :: Email',
       ))

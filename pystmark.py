@@ -217,7 +217,7 @@ def activate_bounce(bounce_id, api_key=None, secure=None, test=None,
 
 class Message(object):
     ''' A container for message(s) to send to the Postmark API.
-    You can populate this message with defaults for initializing a
+    You can populate this message with defaults for initializing an
     :class:`Interface`. The message will be combined with the final message
     and verified before transmission.
 
