@@ -6,6 +6,10 @@
 [Postmark API](http://developer.postmarkapp.com/) library for python 2.6, 2.7, 3.x and pypy.
 Built on top of the [requests](http://docs.python-requests.org/en/latest/) library.
 
+## Web Framework Integration
+
+* `Flask-Pystmark <https://github.com/xsleonard/flask-pystmark>`
+
 ## Documentation
 
 The full Sphinx-compiled documentation is available here: [https://readthedocs.org/docs/pystmark/en/latest/](https://readthedocs.org/docs/pystmark/en/latest/)
@@ -40,7 +44,6 @@ except pystmark.UnauthorizedError:
 
 ```
 
-
 ## Contribution
 
 1. Fork this repo
@@ -53,12 +56,6 @@ The other versions will be handled by [travis-ci](https://travis-ci.org/).
 
 The pep8 tests may fail if using pypy due to [this bug](https://bugs.pypy.org/issue1207),
 so that test is disabled if pypy is detected.
-
-## Web Framework Integration
-
-If you would like to integrate this with some web framework, write a separate
-module and I'll link to it from here.
-
 
 ## Copyright and License
 

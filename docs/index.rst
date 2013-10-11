@@ -26,6 +26,11 @@ or alternatively if you have pip installed::
 
 Additionally, install `Requests`_ in the same manner if you have not.
 
+Web Framework Integration
+=========================
+
+* `Flask-Pystmark <https://github.com/xsleonard/flask-pystmark>`_
+
 .. include:: examples.rst.inc
 
 .. include:: api.rst.inc
