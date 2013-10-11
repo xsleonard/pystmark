@@ -71,8 +71,9 @@ class Test(Command):
             print('No tests found.')
             return
         nosecmd = ('nosetests -v -w tests/ --with-coverage '
-                   '--cover-package=pystmark --disable-docstring '
-                   '--cover-min-percentage=100 --cover-erase')
+                   '--cover-package=pystmark --cover-package=_pystmark_meta '
+                   '--disable-docstring --cover-erase '
+                   '--cover-min-percentage=100')
         if self.run_failed:
             nosecmd += ' --failed'
         nose = ' '.join(shlex.split(nosecmd) + testfiles)
