@@ -8,7 +8,7 @@ Built on top of the [requests](http://docs.python-requests.org/en/latest/) libra
 
 ## Web Framework Integration
 
-* `Flask-Pystmark <https://github.com/xsleonard/flask-pystmark>`
+* [Flask-Pystmark](https://github.com/xsleonard/flask-pystmark)
 
 ## Documentation
 
