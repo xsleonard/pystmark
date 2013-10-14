@@ -1,7 +1,9 @@
 # pystmark
 
+[![PyPI version](https://badge.fury.io/py/pystmark.png)](http://badge.fury.io/py/pystmark)
 [![Build Status](https://travis-ci.org/xsleonard/pystmark.png)](https://travis-ci.org/xsleonard/pystmark)
 [![Coverage Status](https://coveralls.io/repos/xsleonard/pystmark/badge.png)](https://coveralls.io/r/xsleonard/pystmark)
+
 
 [Postmark API](http://developer.postmarkapp.com/) library for python 2.6, 2.7, 3.x and pypy.
 Built on top of the [requests](http://docs.python-requests.org/en/latest/) library.
