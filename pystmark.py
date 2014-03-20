@@ -1,5 +1,3 @@
-# -*- coding: ascii -*-
-
 '''
     pystmark
     --------
@@ -308,7 +306,7 @@ class Message(object):
     def json(self):
         '''Return json-encoded string of message data.
 
-        :rtype: `unicode`
+        :rtype: `str`
         '''
         return json.dumps(self.data(), ensure_ascii=True)
 
@@ -1070,7 +1068,7 @@ class BatchSender(Sender):
 
         :param message: A collection of Postmark message data
         :type message: a collection of message `dict`s
-        :rtype: JSON encoded `unicode`
+        :rtype: JSON encoded `str`
         '''
         if not message:
             raise MessageError('No messages to send.')

@@ -72,7 +72,7 @@ class Test(Command):
             return
         nosecmd = ('nosetests -v -w tests/ --with-coverage '
                    '--cover-package=pystmark --cover-package=_pystmark_meta '
-                   '--disable-docstring --cover-erase '
+                   '--cover-erase '
                    '--cover-min-percentage=100')
         if self.run_failed:
             nosecmd += ' --failed'
