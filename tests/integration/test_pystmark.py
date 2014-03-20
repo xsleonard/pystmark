@@ -25,7 +25,8 @@ class BouncesLiveTest(TestCase):
 
     def test_get_bounces(self):
         r = pystmark.get_bounces(test=True)
-        self.assert500(r)  # TODO -- should be 200, once Postmark fixes theirs
+        # TODO -- should be 200, once Postmark fixes theirs
+        self.assert500(r)
 
 
 class BounceLiveTest(TestCase):
