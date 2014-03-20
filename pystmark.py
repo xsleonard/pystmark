@@ -310,7 +310,7 @@ class Message(object):
 
         :rtype: `unicode`
         '''
-        return json.dumps(self.data(), ensure_ascii=False)
+        return json.dumps(self.data(), ensure_ascii=True)
 
     @classmethod
     def load_message(self, message, **kwargs):
@@ -505,11 +505,7 @@ class Message(object):
             raise MessageError(err.format(ext))
         if not mimetypes.inited:
             mimetypes.init()
-        try:
-            mimetype = mimetypes.types_map[ext]
-        except KeyError:
-            mimetype = self._default_content_type
-        return mimetype
+        return mimetypes.types_map.get(ext, self._default_content_type)
 
     def _verify_headers(self):
         '''Verify that header values match the format expected by the Postmark
@@ -916,14 +912,15 @@ class Interface(object):
         '''
         if request_args is None:
             request_args = {}
-        headers = request_args.pop('headers', {})
+        headers = {}
+        headers.update(self._headers)
+        headers.update(request_args.pop('headers', {}))
         if (test is None and self.test) or test:
             headers[self._api_key_header_name] = POSTMARK_API_TEST_KEY
         elif api_key is not None:
             headers[self._api_key_header_name] = api_key
         else:
             headers[self._api_key_header_name] = self.api_key
-        headers.update(self._headers)
         if not headers.get(self._api_key_header_name):
             raise ValueError('Postmark API Key not provided')
         return headers
@@ -1082,7 +1079,7 @@ class BatchSender(Sender):
             raise MessageError(err.format(MAX_BATCH_MESSAGES))
         message = [self._cast_message(message=msg) for msg in message]
         message = [msg.data() for msg in message]
-        return json.dumps(message, ensure_ascii=False)
+        return json.dumps(message, ensure_ascii=True)
 
 
 ''' Bounce API '''

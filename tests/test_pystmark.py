@@ -471,10 +471,26 @@ class MessageErrorTest(SenderTestBase):
         }
         self.assertEqual(msg.attachments, [attachment])
 
-    def test_attach_binary_default_content_type(self):
+    def test_detect_content_type(self):
+        m = Message()
+        # No extension error
+        self.assertRaises(MessageError, m._detect_content_type, 'xxx')
+        # Blacklisted extension error
+        self.assertRaises(MessageError, m._detect_content_type, 'xxx.bin')
+        # Unknown extension returns default content type
+        ext = 'xcacaswcawc'
+        m._allowed_extensions.append(ext)
+        self.assertEqual(m._detect_content_type('xxx.' + ext),
+                         m._default_content_type)
+        # Known extension returns correct mimetype
+        self.assertEqual(m._detect_content_type('xxx.png'), 'image/png')
+
+    @patch.object(Message, '_detect_content_type')
+    def test_attach_binary_default_content_type(self, mock_type):
+        mock_type.return_value = 'application/octet-stream'
         msg = Message(to='me', text='hi')
         data = urandom(64)
-        name = 'test.mobi'
+        name = 'test.bin'
         msg.attach_binary(data, name)
         attachment = {
             'Content': b64encode(data).decode('utf-8'),
@@ -938,3 +954,30 @@ class UserWarningsTest(TestCase):
 
         self.assertRaises(NotImplementedError, Dummy()._get_api_url)
         self.assertRaises(NotImplementedError, Dummy()._request, 'dog')
+
+
+class InterfaceTest(TestCase):
+
+    def test_get_headers(self):
+        i = Interface()
+        # ValueError is raised when no api key available
+        self.assertRaises(ValueError, i._get_headers)
+        # Setting test=True will use the test api key
+        i.test = True
+        self.assertNotRaises(ValueError, i._get_headers)
+        # Check the default headers
+        h = {}
+        h.update(i._headers)
+        h[i._api_key_header_name] = POSTMARK_API_TEST_KEY
+        self.assertEqual(i._get_headers(), h)
+        # Check with overriding api_key and test
+        key = 'xxx'
+        h[i._api_key_header_name] = key
+        self.assertEqual(i._get_headers(test=False, api_key=key), h)
+        # Check with request_args['header'] provided. It should override
+        # default headers.
+        h[i._api_key_header_name] = POSTMARK_API_TEST_KEY
+        args = dict(headers={'Content-Type': 'blah', 'Accept': 'bloh'})
+        h['Content-Type'] = 'blah'
+        h['Accept'] = 'bloh'
+        self.assertEqual(i._get_headers(request_args=args), h)
