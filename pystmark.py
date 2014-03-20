@@ -1,5 +1,3 @@
-# -*- coding: ascii -*-
-
 '''
     pystmark
     --------
@@ -308,9 +306,9 @@ class Message(object):
     def json(self):
         '''Return json-encoded string of message data.
 
-        :rtype: `unicode`
+        :rtype: `str`
         '''
-        return json.dumps(self.data(), ensure_ascii=False)
+        return json.dumps(self.data(), ensure_ascii=True)
 
     @classmethod
     def load_message(self, message, **kwargs):
@@ -1073,7 +1071,7 @@ class BatchSender(Sender):
 
         :param message: A collection of Postmark message data
         :type message: a collection of message `dict`s
-        :rtype: JSON encoded `unicode`
+        :rtype: JSON encoded `str`
         '''
         if not message:
             raise MessageError('No messages to send.')
@@ -1082,7 +1080,7 @@ class BatchSender(Sender):
             raise MessageError(err.format(MAX_BATCH_MESSAGES))
         message = [self._cast_message(message=msg) for msg in message]
         message = [msg.data() for msg in message]
-        return json.dumps(message, ensure_ascii=False)
+        return json.dumps(message, ensure_ascii=True)
 
 
 ''' Bounce API '''

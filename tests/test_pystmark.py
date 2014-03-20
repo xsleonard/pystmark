@@ -216,6 +216,17 @@ class SenderTest(SenderTestBase):
         r = pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
         self.assertValidJSONResponse(r, self.response)
 
+    @patch('requests.request', autospec=True)
+    def test_send_with_unicode(self, mock_request):
+        test_text = u'Hi Jos\xe9'
+        mock_request.return_value = self.mock_response(self.json_response)
+        message = pystmark.Message(sender='me@example.com', text=test_text,
+                                   to='you@example.com')
+        pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
+        request_data = mock_request.mock_calls[0][2]['data']
+        str(request_data)  # ssl lib will convert to str
+        self.assertEqual(json.loads(request_data)['TextBody'], test_text)
+
 
 class ResponseTest(SenderTestBase):
 
