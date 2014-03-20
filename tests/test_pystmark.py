@@ -471,10 +471,26 @@ class MessageErrorTest(SenderTestBase):
         }
         self.assertEqual(msg.attachments, [attachment])
 
-    def test_attach_binary_default_content_type(self):
+    def test_detect_content_type(self):
+        m = Message()
+        # No extension error
+        self.assertRaises(MessageError, m._detect_content_type, 'xxx')
+        # Blacklisted extension error
+        self.assertRaises(MessageError, m._detect_content_type, 'xxx.bin')
+        # Unknown extension returns default content type
+        ext = 'xcacaswcawc'
+        m._allowed_extensions.append(ext)
+        self.assertEqual(m._detect_content_type('xxx.' + ext),
+                         m._default_content_type)
+        # Known extension returns correct mimetype
+        self.assertEqual(m._detect_content_type('xxx.png'), 'image/png')
+
+    @patch.object(Message, '_detect_content_type')
+    def test_attach_binary_default_content_type(self, mock_type):
+        mock_type.return_value = 'application/octet-stream'
         msg = Message(to='me', text='hi')
         data = urandom(64)
-        name = 'test.mobi'
+        name = 'test.bin'
         msg.attach_binary(data, name)
         attachment = {
             'Content': b64encode(data).decode('utf-8'),

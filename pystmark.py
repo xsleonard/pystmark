@@ -310,7 +310,7 @@ class Message(object):
 
         :rtype: `unicode`
         '''
-        return json.dumps(self.data(), ensure_ascii=False)
+        return json.dumps(self.data(), ensure_ascii=True)
 
     @classmethod
     def load_message(self, message, **kwargs):
@@ -505,11 +505,7 @@ class Message(object):
             raise MessageError(err.format(ext))
         if not mimetypes.inited:
             mimetypes.init()
-        try:
-            mimetype = mimetypes.types_map[ext]
-        except KeyError:
-            mimetype = self._default_content_type
-        return mimetype
+        return mimetypes.types_map.get(ext, self._default_content_type)
 
     def _verify_headers(self):
         '''Verify that header values match the format expected by the Postmark
@@ -1083,7 +1079,7 @@ class BatchSender(Sender):
             raise MessageError(err.format(MAX_BATCH_MESSAGES))
         message = [self._cast_message(message=msg) for msg in message]
         message = [msg.data() for msg in message]
-        return json.dumps(message, ensure_ascii=False)
+        return json.dumps(message, ensure_ascii=True)
 
 
 ''' Bounce API '''
