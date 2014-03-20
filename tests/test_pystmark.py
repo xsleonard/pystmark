@@ -938,3 +938,30 @@ class UserWarningsTest(TestCase):
 
         self.assertRaises(NotImplementedError, Dummy()._get_api_url)
         self.assertRaises(NotImplementedError, Dummy()._request, 'dog')
+
+
+class InterfaceTest(TestCase):
+
+    def test_get_headers(self):
+        i = Interface()
+        # ValueError is raised when no api key available
+        self.assertRaises(ValueError, i._get_headers)
+        # Setting test=True will use the test api key
+        i.test = True
+        self.assertNotRaises(ValueError, i._get_headers)
+        # Check the default headers
+        h = {}
+        h.update(i._headers)
+        h[i._api_key_header_name] = POSTMARK_API_TEST_KEY
+        self.assertEqual(i._get_headers(), h)
+        # Check with overriding api_key and test
+        key = 'xxx'
+        h[i._api_key_header_name] = key
+        self.assertEqual(i._get_headers(test=False, api_key=key), h)
+        # Check with request_args['header'] provided. It should override
+        # default headers.
+        h[i._api_key_header_name] = POSTMARK_API_TEST_KEY
+        args = dict(headers={'Content-Type': 'blah', 'Accept': 'bloh'})
+        h['Content-Type'] = 'blah'
+        h['Accept'] = 'bloh'
+        self.assertEqual(i._get_headers(request_args=args), h)

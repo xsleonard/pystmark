@@ -916,14 +916,15 @@ class Interface(object):
         '''
         if request_args is None:
             request_args = {}
-        headers = request_args.pop('headers', {})
+        headers = {}
+        headers.update(self._headers)
+        headers.update(request_args.pop('headers', {}))
         if (test is None and self.test) or test:
             headers[self._api_key_header_name] = POSTMARK_API_TEST_KEY
         elif api_key is not None:
             headers[self._api_key_header_name] = api_key
         else:
             headers[self._api_key_header_name] = self.api_key
-        headers.update(self._headers)
         if not headers.get(self._api_key_header_name):
             raise ValueError('Postmark API Key not provided')
         return headers
