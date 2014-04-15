@@ -359,7 +359,7 @@ class Message(object):
             self.headers = []
         self.headers.append(dict(Name=name, Value=value))
 
-    def attach_binary(self, data, filename, content_type=None):
+    def attach_binary(self, data, filename, content_type=None, content_id=None):
         '''Attach a file to the message given raw binary data.
 
         :param data: Raw data to attach to the message.
@@ -376,9 +376,12 @@ class Message(object):
             'Content': b64encode(data).decode('utf-8'),
             'ContentType': content_type
         }
+        if not content_id is None:
+            attachment['ContentID'] = content_id
+
         self.attachments.append(attachment)
 
-    def attach_file(self, filename, content_type=None):
+    def attach_file(self, filename, content_type=None, content_id=None):
         '''Attach a file to the message given a filename.
 
         :param filename: Name of the file to attach.
@@ -392,7 +395,7 @@ class Message(object):
             raise MessageError(err.format(filename))
         with open(filename, 'rb') as f:
             data = f.read()
-        self.attach_binary(data, name, content_type=content_type)
+        self.attach_binary(data, name, content_type=content_type, content_id=content_id)
 
     def verify(self):
         '''Verifies the message data based on rules and restrictions defined
