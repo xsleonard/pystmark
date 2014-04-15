@@ -1,4 +1,5 @@
 import random
+import uuid
 import string
 import requests
 import sys
@@ -213,6 +214,18 @@ class SenderTest(SenderTestBase):
         message = pystmark.Message(sender='me@example.com', text='hi',
                                    to='you@example.com')
         message.attach_binary(urandom(64), 'test.pdf')
+        r = pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
+        self.assertValidJSONResponse(r, self.response)
+
+    @patch('requests.request', autospec=True)
+    def test_send_with_attachments_content_id(self, mock_request):
+        content_id = 'cid:%s@example.com' % (uuid.uuid4())
+        mock_request.return_value = self.mock_response(self.json_response)
+        message = pystmark.Message(sender='me@example.com', text='hi',
+                                   to='you@example.com')
+        message.attach_binary(urandom(64), 'test.pdf',
+                              content_type='image/png',
+                              content_id=content_id)
         r = pystmark.send(message, api_key=POSTMARK_API_TEST_KEY)
         self.assertValidJSONResponse(r, self.response)
 
