@@ -491,7 +491,7 @@ class MessageErrorTest(SenderTestBase):
         with patch(open_label) as mock_open:
             mock_open.return_value.__enter__ = lambda s: s
             mock_open.return_value.__exit__ = MagicMock(spec=file)
-            mock_open.return_value.read.return_value = 'x'
+            mock_open.return_value.read.return_value = b'x'
 
             content_type = 'image/png'
             content_id = 'cid:valid_cid'
@@ -500,7 +500,7 @@ class MessageErrorTest(SenderTestBase):
             msg.attach_file('dummy.png', content_type=content_type,
                             content_id=content_id)
             attachment = {
-                'Content': b64encode('x').decode('utf-8'),
+                'Content': b64encode(b'x').decode('utf-8'),
                 'ContentType': content_type,
                 'Name': filename,
                 'ContentID': content_id
@@ -515,7 +515,7 @@ class MessageErrorTest(SenderTestBase):
         with patch(open_label) as mock_open:
             mock_open.return_value.__enter__ = lambda s: s
             mock_open.return_value.__exit__ = MagicMock(spec=file)
-            mock_open.return_value.read.return_value = 'x'
+            mock_open.return_value.read.return_value = b'x'
 
             msg.attach_file('dummy.png')
             self.assertEqual('ContentID' in msg.attachments[0], False)
