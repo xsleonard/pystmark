@@ -376,7 +376,7 @@ class Message(object):
             'Content': b64encode(data).decode('utf-8'),
             'ContentType': content_type
         }
-        if not content_id is None:
+        if content_id is not None:
             attachment['ContentID'] = content_id
 
         self.attachments.append(attachment)
