@@ -367,7 +367,10 @@ class Message(object):
         :param filename: Name of the file for the data.
         :param content_type: mimetype of the data. It will be guessed from the
             filename if not provided.
-        '''
+        :param content_id: ContentID URL of the attachment.  A RFC 2392-
+            compliant URL for the attachment that allows it to be referenced
+            from inside the body of the message.  Must start with 'cid:'
+         '''
         if self.attachments is None:
             self.attachments = []
         if content_type is None:
@@ -378,6 +381,9 @@ class Message(object):
             'ContentType': content_type
         }
         if content_id is not None:
+            if content_id[:4] != 'cid:':
+                raise MessageError('content_id parameter must be an '
+                                   'RFC-2392 URL starting with "cid:"')
             attachment['ContentID'] = content_id
 
         self.attachments.append(attachment)
@@ -389,7 +395,10 @@ class Message(object):
         :param filename: Name of the file to attach.
         :param content_type: mimetype of the data. It will be guessed from the
             filename if not provided.
-        '''
+        :param content_id: ContentID URL of the attachment.  A RFC 2392-
+            compliant URL for the attachment that allows it to be referenced
+            from inside the body of the message.  Must start with 'cid:'
+         '''
         # Open the file, grab the filename, detect content type
         name = os.path.basename(filename)
         if not name:

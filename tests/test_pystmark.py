@@ -483,6 +483,43 @@ class MessageErrorTest(SenderTestBase):
             self.assertRaisesMessage(MessageError, err, msg.attach_file,
                                      'bad.exe')
 
+    # See http://www.voidspace.org.uk/python/mock
+    # /compare.html#mocking-the-builtin-open-used-as-a-context-manager
+    # for why the code uses mock_open the way it does
+    def test_attach_file_with_content_id(self):
+        msg = Message(to='me', text='hi')
+        with patch(open_label) as mock_open:
+            mock_open.return_value.__enter__ = lambda s: s
+            mock_open.return_value.__exit__ = MagicMock(spec=file)
+            mock_open.return_value.read.return_value = 'x'
+
+            content_type = 'image/png'
+            content_id = 'cid:valid_cid'
+            filename = 'dummy.png'
+
+            msg.attach_file('dummy.png', content_type=content_type,
+                            content_id=content_id)
+            attachment = {
+                'Content': b64encode('x').decode('utf-8'),
+                'ContentType': content_type,
+                'Name': filename,
+                'ContentID': content_id
+            }
+            self.assertEqual(msg.attachments, [attachment])
+
+    # See http://www.voidspace.org.uk/python/mock
+    # /compare.html#mocking-the-builtin-open-used-as-a-context-manager
+    # for why the code uses mock_open the way it does
+    def test_attach_file_without_content_id(self):
+        msg = Message(to='me', text='hi')
+        with patch(open_label) as mock_open:
+            mock_open.return_value.__enter__ = lambda s: s
+            mock_open.return_value.__exit__ = MagicMock(spec=file)
+            mock_open.return_value.read.return_value = 'x'
+
+            msg.attach_file('dummy.png')
+            self.assertEqual('ContentID' in msg.attachments[0], False)
+
     def test_attach_binary(self):
         msg = Message(to='me', text='hi')
         data = urandom(64)
@@ -494,6 +531,41 @@ class MessageErrorTest(SenderTestBase):
             'Name': name
         }
         self.assertEqual(msg.attachments, [attachment])
+
+    def test_attach_binary_no_content_id(self):
+        msg = Message(to='me', text='hi')
+        data = urandom(64)
+        name = 'test.pdf'
+        msg.attach_binary(data, name)
+        self.assertEqual('ContentID' in msg.attachments[0], False)
+
+    def test_attach_binary_with_content_id(self):
+        msg = Message(to='me', text='hi')
+        data = urandom(64)
+        name = 'test.pdf'
+        content_type = 'image/png'
+        content_id = 'cid:%s@example.com' % (uuid.uuid4(),)
+        msg.attach_binary(data, name, content_type=content_type,
+                          content_id=content_id)
+        attachment = {
+            'Content': b64encode(data).decode('utf-8'),
+            'ContentType': 'image/png',
+            'Name': name,
+            'ContentID': content_id
+        }
+        self.assertEqual(msg.attachments, [attachment])
+
+    def test_attach_binary_bad_content_id(self):
+        msg = Message(to='me', text='hi')
+        data = urandom(64)
+        name = 'test.pdf'
+        content_type = 'image/png'
+        content_id = '%s@example.com' % (uuid.uuid4(),)
+        err = 'content_id parameter must be an RFC-2392 URL ' \
+              'starting with "cid:"'
+        self.assertRaisesMessage(MessageError, err, msg.attach_binary,
+                                 data, name, content_type=content_type,
+                                 content_id=content_id)
 
     def test_detect_content_type(self):
         m = Message()
