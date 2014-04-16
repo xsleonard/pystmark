@@ -544,7 +544,7 @@ class MessageErrorTest(SenderTestBase):
         data = urandom(64)
         name = 'test.pdf'
         content_type = 'image/png'
-        content_id = 'cid:%s@example.com' % (uuid.uuid4(),)
+        content_id = 'cid:{0}@example.com'.format(uuid.uuid4())
         msg.attach_binary(data, name, content_type=content_type,
                           content_id=content_id)
         attachment = {
@@ -560,9 +560,9 @@ class MessageErrorTest(SenderTestBase):
         data = urandom(64)
         name = 'test.pdf'
         content_type = 'image/png'
-        content_id = '%s@example.com' % (uuid.uuid4(),)
-        err = 'content_id parameter must be an RFC-2392 URL ' \
-              'starting with "cid:"'
+        content_id = '{0}@example.com'.format(uuid.uuid4())
+        err = ('content_id parameter must be an RFC-2392 URL'
+               ' starting with "cid:"')
         self.assertRaisesMessage(MessageError, err, msg.attach_binary,
                                  data, name, content_type=content_type,
                                  content_id=content_id)

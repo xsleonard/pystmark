@@ -381,7 +381,7 @@ class Message(object):
             'ContentType': content_type
         }
         if content_id is not None:
-            if content_id[:4] != 'cid:':
+            if not content_id.startswith('cid:'):
                 raise MessageError('content_id parameter must be an '
                                    'RFC-2392 URL starting with "cid:"')
             attachment['ContentID'] = content_id
