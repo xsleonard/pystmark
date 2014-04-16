@@ -359,14 +359,18 @@ class Message(object):
             self.headers = []
         self.headers.append(dict(Name=name, Value=value))
 
-    def attach_binary(self, data, filename, content_type=None):
+    def attach_binary(self, data, filename, content_type=None,
+                      content_id=None):
         '''Attach a file to the message given raw binary data.
 
         :param data: Raw data to attach to the message.
         :param filename: Name of the file for the data.
         :param content_type: mimetype of the data. It will be guessed from the
             filename if not provided.
-        '''
+        :param content_id: ContentID URL of the attachment.  A RFC 2392-
+            compliant URL for the attachment that allows it to be referenced
+            from inside the body of the message.  Must start with 'cid:'
+         '''
         if self.attachments is None:
             self.attachments = []
         if content_type is None:
@@ -376,15 +380,25 @@ class Message(object):
             'Content': b64encode(data).decode('utf-8'),
             'ContentType': content_type
         }
+        if content_id is not None:
+            if not content_id.startswith('cid:'):
+                raise MessageError('content_id parameter must be an '
+                                   'RFC-2392 URL starting with "cid:"')
+            attachment['ContentID'] = content_id
+
         self.attachments.append(attachment)
 
-    def attach_file(self, filename, content_type=None):
+    def attach_file(self, filename, content_type=None,
+                    content_id=None):
         '''Attach a file to the message given a filename.
 
         :param filename: Name of the file to attach.
         :param content_type: mimetype of the data. It will be guessed from the
             filename if not provided.
-        '''
+        :param content_id: ContentID URL of the attachment.  A RFC 2392-
+            compliant URL for the attachment that allows it to be referenced
+            from inside the body of the message.  Must start with 'cid:'
+         '''
         # Open the file, grab the filename, detect content type
         name = os.path.basename(filename)
         if not name:
@@ -392,7 +406,8 @@ class Message(object):
             raise MessageError(err.format(filename))
         with open(filename, 'rb') as f:
             data = f.read()
-        self.attach_binary(data, name, content_type=content_type)
+        self.attach_binary(data, name, content_type=content_type,
+                           content_id=content_id)
 
     def verify(self):
         '''Verifies the message data based on rules and restrictions defined
