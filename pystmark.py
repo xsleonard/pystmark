@@ -240,6 +240,7 @@ class Message(object):
         'Content' and 'ContentType'.
     :param verify: Verify the message when initialized.
         Defaults to `False`.
+    :param track_opens: Set to true to enable tracking email opens.
     '''
 
     _fields = {
@@ -254,6 +255,7 @@ class Message(object):
         'reply_to': 'ReplyTo',
         'headers': 'Headers',
         'attachments': 'Attachments',
+        'track_opens': 'TrackOpens'
     }
 
     _allowed_extensions = ['gif', 'jpeg', 'png', 'swf', 'dcr', 'tiff', 'bmp',
@@ -276,7 +278,7 @@ class Message(object):
 
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
                  tag=None, html=None, text=None, reply_to=None, headers=None,
-                 attachments=None, verify=False):
+                 attachments=None, verify=False, track_opens=None):
         self.sender = sender
         self.to = to
         self.cc = cc
@@ -288,6 +290,8 @@ class Message(object):
         self.reply_to = reply_to
         self.headers = headers
         self.attachments = attachments
+        self.track_opens = track_opens
+
         if verify:
             self.verify()
 
