@@ -338,15 +338,19 @@ class MessageTest(SenderTestBase):
 
     def test_load_message_native(self):
         msg = dict(to='me', text='hi', html='<b>hi</b>', reply_to='you',
-                   cc='dog,cat', subject='dogs', headers=[dict(Name='Food',
-                                                               Value='7')])
+                   cc='dog,cat', bcc='foo,bar', subject='dogs',
+                   track_opens=True, headers=[dict(Name='Food', Value='7')],
+                   attachments=[], sender='admin', tag='tag')
+        self.assertEqual(sorted(msg), sorted(Message._fields))
         self.assertNotRaises(TypeError, Message.load_message, msg)
         self.assertNotRaises(MessageError, Message.load_message, msg,
                              verify=True)
+
         msg = dict(to='me', text='hi')
         self.assertNotRaises(TypeError, Message.load_message, msg)
         self.assertNotRaises(MessageError, Message.load_message, msg,
                              verify=True)
+
         pystmsg = Message.load_message(msg)
         self.assertEqual(pystmsg.data(), dict(To='me', TextBody='hi'))
 
