@@ -269,7 +269,7 @@ class Message(object):
                            'eml', 'gpx', 'kml', 'kmz', 'msl', 'rb', 'js',
                            'java', 'c', 'cpp', 'py', 'php', 'fl', 'jar', 'ttf',
                            'vpv', 'iif', 'timo', 'autorit', 'cathodelicense',
-                           'itn', 'freshroute']
+                           'itn', 'freshroute', 'jpg']
 
     _to = None
     _cc = None
