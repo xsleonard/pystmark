@@ -15,15 +15,16 @@
         Wrapper class for Message attachments and headers?
 '''
 
-from _pystmark_meta import __title__, __version__, __license__
-(__title__, __version__, __license__)  # silence pyflakes
-
 from collections import Mapping
 from base64 import b64encode
 import requests
 import mimetypes
 import os.path
 import sys
+
+from _pystmark_meta import __title__, __version__, __license__
+(__title__, __version__, __license__)  # silence pyflakes
+
 if sys.version_info[0] >= 3:    # pragma: no cover
     from urllib.parse import urljoin
     basestring = str
@@ -258,18 +259,11 @@ class Message(object):
         'track_opens': 'TrackOpens'
     }
 
-    _allowed_extensions = ['gif', 'jpeg', 'png', 'swf', 'dcr', 'tiff', 'bmp',
-                           'ico', 'page-icon', 'wav', 'mp3', 'flv', 'avi',
-                           'mpg', 'wmv', 'rm', 'mov', '3gp', 'mp4', 'm4a',
-                           'ogv', 'txt', 'rtf', 'html', 'xml', 'ics', 'pdf',
-                           'log', 'csv', 'docx', 'dotx', 'pptx', 'xlsx', 'odt',
-                           'psd', 'ai', 'vcf', 'mobi', 'epub', 'pgp', 'ods',
-                           'wps', 'pages', 'prn', 'eps', 'license', 'zip',
-                           'dcm', 'enc', 'cdr', 'css', 'pst', 'mobileconfig',
-                           'eml', 'gpx', 'kml', 'kmz', 'msl', 'rb', 'js',
-                           'java', 'c', 'cpp', 'py', 'php', 'fl', 'jar', 'ttf',
-                           'vpv', 'iif', 'timo', 'autorit', 'cathodelicense',
-                           'itn', 'freshroute']
+    _banned_extensions = ['vbs', 'exe', 'bin', 'bat', 'chm', 'com', 'cpl',
+                          'crt', 'hlp', 'hta', 'inf', 'ins', 'isp', 'jse',
+                          'lnk', 'mdb', 'pcd', 'pif', 'reg', 'scr', 'sct',
+                          'shs', 'vbe', 'vba', 'wsf', 'wsh', 'wsl', 'msc',
+                          'msi', 'msp', 'mst']
 
     _to = None
     _cc = None
@@ -517,7 +511,7 @@ class Message(object):
         if not ext:
             raise MessageError('File requires an extension.')
         ext = ext.lower()
-        if ext.lstrip('.') not in self._allowed_extensions:
+        if ext.lstrip('.') in self._banned_extensions:
             err = 'Extension "{0}" is not allowed.'
             raise MessageError(err.format(ext))
         if not mimetypes.inited:

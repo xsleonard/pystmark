@@ -579,7 +579,6 @@ class MessageErrorTest(SenderTestBase):
         self.assertRaises(MessageError, m._detect_content_type, 'xxx.bin')
         # Unknown extension returns default content type
         ext = 'xcacaswcawc'
-        m._allowed_extensions.append(ext)
         self.assertEqual(m._detect_content_type('xxx.' + ext),
                          m._default_content_type)
         # Known extension returns correct mimetype
