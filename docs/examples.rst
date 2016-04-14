@@ -40,6 +40,32 @@ for you.
     pystmark.send(dict(sender=SENDER, to='you@example.com', subject='Hi',
                        text='A message', tag='greeting'), api_key=API_KEY)
 
+
+.. _single_message_with_template:
+
+Sending a single message with template
+--------------------------------------
+
+To send a single message with template, create a :class:`Message` object, and pass it
+to :func:`sendWithTemplate`. The template_id can be found with template meta data.
+
+.. code-block:: python
+
+    t_model = {'product_name': "Awesome Product",
+               'name': "Customer Name",
+               'action_url': "http://www.example.net/confirmation/sjdf092hsdf",
+               'sender_name': "Product Team",
+               'product_address_line1': "Dover",
+               'product_address_line2': "DE 19012"}
+
+    message = pystmark.Message(sender=PM_SENDER, to='you@example.com',
+                           template_id=11111,
+                           template_model=t_model,
+                           tag='welcome')
+
+    pystmark.sendWithTemplate(message, api_key=PM_API_KEY)
+
+
 .. _batched_messages:
 
 Sending batched messages
