@@ -96,6 +96,23 @@ def send(message, api_key=None, secure=None, test=None, **request_args):
                                      secure=secure, test=test, **request_args)
 
 
+def sendWithTemplate(message, api_key=None, secure=None, test=None, **request_args):
+    '''Send a message.
+
+    :param message: Message to send.
+    :type message: `dict` or :class:`Message`
+    :param api_key: Your Postmark API key. Required, if `test` is not `True`.
+    :param secure: Use the https scheme for the Postmark API.
+        Defaults to `True`
+    :param test: Use the Postmark Test API. Defaults to `False`.
+    :param \*\*request_args: Keyword arguments to pass to
+        :func:`requests.request`.
+    :rtype: :class:`SendResponse`
+    '''
+    return _default_pyst_sender_with_template.send(message=message, api_key=api_key,
+                                     secure=secure, test=test, **request_args)
+
+
 def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
     '''Send a batch of messages.
 
@@ -251,6 +268,8 @@ class Message(object):
         'bcc': 'Bcc',
         'subject': 'Subject',
         'tag': 'Tag',
+        'template_id': 'TemplateId',
+        'template_model': 'TemplateModel',
         'html': 'HtmlBody',
         'text': 'TextBody',
         'reply_to': 'ReplyTo',
@@ -270,7 +289,7 @@ class Message(object):
     _bcc = None
     _default_content_type = 'application/octet-stream'
 
-    def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
+    def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None, template_id=None, template_model=None,
                  tag=None, html=None, text=None, reply_to=None, headers=None,
                  attachments=None, verify=False, track_opens=None):
         self.sender = sender
@@ -279,6 +298,8 @@ class Message(object):
         self.bcc = bcc
         self.subject = subject
         self.tag = tag
+        self.template_id = template_id
+        self.template_model = template_model
         self.html = html
         self.text = text
         self.reply_to = reply_to
@@ -1038,6 +1059,83 @@ class Sender(Interface):
         return message.json()
 
 
+class SenderWithTemplate(Interface):
+    '''Sends a single message via the Postmark API with template
+
+    All of the arguments used in constructing this object are
+    used as defaults in the final call to :meth:`Sender.send`.
+    You can override any of them at that time.
+
+    :param message: Default message data, such as sender and reply_to.
+    :type message: `dict` or :class:`Message`
+    :param api_key: Your Postmark API key.
+    :param secure: Use the https scheme for Postmark API.
+        Defaults to `True`
+    :param test: Make a test request to the Postmark API.
+        Defaults to `False`.
+    '''
+
+    method = 'POST'
+    endpoint = '/email/withTemplate'
+    response_class = SendResponse
+
+    def __init__(self, message=None, api_key=None, secure=True, test=False):
+        super(SenderWithTemplate, self).__init__(api_key=api_key, secure=secure, test=test)
+        self._load_initial_message(message=message)
+
+    def send(self, message=None, api_key=None, secure=None, test=None,
+             **request_args):
+        '''Send request to Postmark API.
+        Returns result of :func:`requests.post`.
+
+        :param message: Your Postmark message data.
+        :type message: `dict` or :class:`Message`
+        :param api_key: Your Postmark API key.
+        :type api_key: `str`
+        :param test: Make a test request to the Postmark API.
+        :param secure: Use the https Postmark API.
+        :param \*\*request_args: Passed to :func:`requests.post`
+        :rtype: :class:`requests.Response`
+        '''
+        headers = self._get_headers(api_key=api_key, test=test,
+                                    request_args=request_args)
+        data = self._get_request_content(message)
+        url = self._get_api_url(secure=secure)
+        return self._request(url, data=data, headers=headers, **request_args)
+
+    def _load_initial_message(self, message=None):
+        '''Converts message to :class:`Message` and sets it on `self`'''
+        if message is None:
+            message = Message(verify=False)
+        if isinstance(message, Mapping):
+            message = Message.load_message(message)
+        self.message = message
+
+    def _cast_message(self, message=None):
+        '''Convert message data to :class:`Message` if needed, and
+        merge with the default message.
+
+        :param message: Message to merge with the default message.
+        :rtype: :class:`Message`
+        '''
+        if message is None:
+            message = {}
+        if isinstance(message, Mapping):
+            message = Message.load_message(message)
+        return message.load_from(self.message, verify=True)
+
+    def _get_request_content(self, message=None):
+        '''Updates message with default message paramaters.
+
+        :param message: Postmark message data
+        :type message: `dict`
+        :rtype: JSON encoded `unicode`
+        '''
+        message = self._cast_message(message=message)
+        return message.json()
+
+
+
 class BatchSender(Sender):
     '''Sends a batch of messages via the Postmark API.
 
@@ -1385,6 +1483,7 @@ class InternalServerError(ResponseError):
 ''' Singletons '''
 
 _default_pyst_sender = Sender()
+_default_pyst_sender_with_template = SenderWithTemplate()
 _default_pyst_batch_sender = BatchSender()
 _default_bounces = Bounces()
 _default_bounce = Bounce()
@@ -1392,3 +1491,4 @@ _default_bounce_dump = BounceDump()
 _default_bounce_tags = BounceTags()
 _default_delivery_stats = DeliveryStats()
 _default_bounce_activate = BounceActivate()
+
