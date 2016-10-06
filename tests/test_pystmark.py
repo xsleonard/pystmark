@@ -340,7 +340,8 @@ class MessageTest(SenderTestBase):
         msg = dict(to='me', text='hi', html='<b>hi</b>', reply_to='you',
                    cc='dog,cat', bcc='foo,bar', subject='dogs',
                    track_opens=True, headers=[dict(Name='Food', Value='7')],
-                   attachments=[], sender='admin', tag='tag')
+                   attachments=[], sender='admin', tag='tag',
+                   template_id=11111, template_model=None)
         self.assertEqual(sorted(msg), sorted(Message._fields))
         self.assertNotRaises(TypeError, Message.load_message, msg)
         self.assertNotRaises(MessageError, Message.load_message, msg,
