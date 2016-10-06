@@ -96,7 +96,7 @@ def send(message, api_key=None, secure=None, test=None, **request_args):
                                      secure=secure, test=test, **request_args)
 
 
-def sendWithTemplate(message, api_key=None, secure=None, test=None, **request_args):
+def sendWithTemplate(message, api_key=None, secure=None, test=None, **request_args):  # nopep8
     '''Send a message.
 
     :param message: Message to send.
@@ -109,8 +109,10 @@ def sendWithTemplate(message, api_key=None, secure=None, test=None, **request_ar
         :func:`requests.request`.
     :rtype: :class:`SendResponse`
     '''
-    return _default_pyst_sender_with_template.send(message=message, api_key=api_key,
-                                     secure=secure, test=test, **request_args)
+    return _default_pyst_sender_with_template.send(message=message,
+                                                   api_key=api_key,
+                                                   secure=secure, test=test,
+                                                   **request_args)
 
 
 def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
@@ -289,9 +291,10 @@ class Message(object):
     _bcc = None
     _default_content_type = 'application/octet-stream'
 
-    def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None, template_id=None, template_model=None,
-                 tag=None, html=None, text=None, reply_to=None, headers=None,
-                 attachments=None, verify=False, track_opens=None):
+    def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
+                 template_id=None, template_model=None, tag=None, html=None,
+                 text=None, reply_to=None, headers=None, attachments=None,
+                 verify=False, track_opens=None):
         self.sender = sender
         self.to = to
         self.cc = cc
@@ -1080,7 +1083,8 @@ class SenderWithTemplate(Interface):
     response_class = SendResponse
 
     def __init__(self, message=None, api_key=None, secure=True, test=False):
-        super(SenderWithTemplate, self).__init__(api_key=api_key, secure=secure, test=test)
+        super(SenderWithTemplate, self).__init__(api_key=api_key,
+                                                 secure=secure, test=test)
         self._load_initial_message(message=message)
 
     def send(self, message=None, api_key=None, secure=None, test=None,
@@ -1133,7 +1137,6 @@ class SenderWithTemplate(Interface):
         '''
         message = self._cast_message(message=message)
         return message.json()
-
 
 
 class BatchSender(Sender):
@@ -1491,4 +1494,3 @@ _default_bounce_dump = BounceDump()
 _default_bounce_tags = BounceTags()
 _default_delivery_stats = DeliveryStats()
 _default_bounce_activate = BounceActivate()
-
