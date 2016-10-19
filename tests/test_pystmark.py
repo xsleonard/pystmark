@@ -10,7 +10,7 @@ from mock import patch, Mock, MagicMock
 from unittest import TestCase
 from voluptuous import Schema, Optional, Invalid as InvalidSchema
 import pystmark
-from pystmark import (Sender, BatchSender, Message,
+from pystmark import (Sender, BatchSender, TemplateSender, Message,
                       UnauthorizedError, UnprocessableEntityError,
                       InternalServerError, MessageError,
                       MAX_RECIPIENTS_PER_MESSAGE, MAX_BATCH_MESSAGES,
@@ -180,7 +180,7 @@ class SenderTestBase(TestCase):
         return self.sender.send(message=self.message)
 
 
-class SenderTest(SenderTestBase):
+class SenderTestMixin(object):
 
     @patch.object(requests.Session, 'request', autospec=True)
     def test_send_message(self, mock_request):
@@ -239,6 +239,28 @@ class SenderTest(SenderTestBase):
         request_data = mock_request.mock_calls[0][2]['data']
         str(request_data)  # ssl lib will convert to str
         self.assertEqual(json.loads(request_data)['TextBody'], test_text)
+
+
+class SenderTest(SenderTestBase, SenderTestMixin):
+    pass
+
+
+class TemplateSenderTestBase(SenderTestBase):
+    @property
+    def sender(self):
+        return TemplateSender(test=True)
+
+    def send(self):
+        return self.sender.send(message=self.message)
+
+
+class TemplateSenderTest(TemplateSenderTestBase, SenderTestMixin):
+
+    @patch.object(requests.Session, 'request')
+    def test_send_with_template(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        r = pystmark.send_with_template(self.message, test=True)
+        self.assertValidJSONResponse(r, self.schema)
 
 
 class ResponseTest(SenderTestBase):
@@ -340,7 +362,8 @@ class MessageTest(SenderTestBase):
         msg = dict(to='me', text='hi', html='<b>hi</b>', reply_to='you',
                    cc='dog,cat', bcc='foo,bar', subject='dogs',
                    track_opens=True, headers=[dict(Name='Food', Value='7')],
-                   attachments=[], sender='admin', tag='tag')
+                   attachments=[], sender='admin', tag='tag',
+                   template_id='template_id', template_model='template_model')
         self.assertEqual(sorted(msg), sorted(Message._fields))
         self.assertNotRaises(TypeError, Message.load_message, msg)
         self.assertNotRaises(MessageError, Message.load_message, msg,

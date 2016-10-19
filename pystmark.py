@@ -96,6 +96,30 @@ def send(message, api_key=None, secure=None, test=None, **request_args):
                                      secure=secure, test=test, **request_args)
 
 
+def send_with_template(message,
+                       api_key=None,
+                       secure=None,
+                       test=None,
+                       **request_args):
+    '''Send a message.
+
+    :param message: Message to send.
+    :type message: `dict` or :class:`Message`
+    :param api_key: Your Postmark API key. Required, if `test` is not `True`.
+    :param secure: Use the https scheme for the Postmark API.
+        Defaults to `True`
+    :param test: Use the Postmark Test API. Defaults to `False`.
+    :param \*\*request_args: Keyword arguments to pass to
+        :func:`requests.request`.
+    :rtype: :class:`SendResponse`
+    '''
+    return _default_pyst_template_sender.send(message=message,
+                                              api_key=api_key,
+                                              secure=secure,
+                                              test=test,
+                                              **request_args)
+
+
 def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
     '''Send a batch of messages.
 
@@ -251,6 +275,8 @@ class Message(object):
         'bcc': 'Bcc',
         'subject': 'Subject',
         'tag': 'Tag',
+        'template_id': 'TemplateId',
+        'template_model': 'TemplateModel',
         'html': 'HtmlBody',
         'text': 'TextBody',
         'reply_to': 'ReplyTo',
@@ -271,14 +297,17 @@ class Message(object):
     _default_content_type = 'application/octet-stream'
 
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
-                 tag=None, html=None, text=None, reply_to=None, headers=None,
-                 attachments=None, verify=False, track_opens=None):
+                 template_id=None, template_model=None, tag=None, html=None,
+                 text=None, reply_to=None, headers=None, attachments=None,
+                 verify=False, track_opens=None):
         self.sender = sender
         self.to = to
         self.cc = cc
         self.bcc = bcc
         self.subject = subject
         self.tag = tag
+        self.template_id = template_id
+        self.template_model = template_model
         self.html = html
         self.text = text
         self.reply_to = reply_to
@@ -1038,6 +1067,25 @@ class Sender(Interface):
         return message.json()
 
 
+class TemplateSender(Sender):
+    '''Sends a single message via the Postmark API with template.
+
+    All of the arguments used in constructing this object are
+    used as defaults in the final call to :meth:`Sender.send`.
+    You can override any of them at that time.
+
+    :param message: Default message data, such as sender and reply_to.
+    :type message: `dict` or :class:`Message`
+    :param api_key: Your Postmark API key.
+    :param secure: Use the https scheme for Postmark API.
+        Defaults to `True`
+    :param test: Make a test request to the Postmark API.
+        Defaults to `False`.
+    '''
+
+    endpoint = '/email/withTemplate'
+
+
 class BatchSender(Sender):
     '''Sends a batch of messages via the Postmark API.
 
@@ -1385,6 +1433,7 @@ class InternalServerError(ResponseError):
 ''' Singletons '''
 
 _default_pyst_sender = Sender()
+_default_pyst_template_sender = TemplateSender()
 _default_pyst_batch_sender = BatchSender()
 _default_bounces = Bounces()
 _default_bounce = Bounce()
