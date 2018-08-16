@@ -138,6 +138,24 @@ def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
                                            **request_args)
 
 
+def get_outbound_message_details(message_id, api_key=None, secure=None,
+                                 test=None, **request_args):
+    '''Activate a deactivated bounce.
+
+    :param message_id: The messages's id.
+    :param api_key: Your Postmark API key. Required, if `test` is not `True`.
+    :param secure: Use the https scheme for the Postmark API.
+        Defaults to `True`
+    :param test: Use the Postmark Test API. Defaults to `False`.
+    :param \*\*request_args: Keyword arguments to pass to
+        :func:`requests.request`.
+    :rtype: :class:`BounceActivateResponse`
+    '''
+    return _default_outbound_message_details.get(message_id, api_key=api_key,
+                                                 secure=secure, test=test,
+                                                 **request_args)
+
+
 def get_delivery_stats(api_key=None, secure=None, test=None, **request_args):
     '''Get delivery stats for your Postmark account.
 
@@ -838,6 +856,21 @@ class BounceTagsResponse(Response):
         self.tags = self._data or []
 
 
+class OutboundMessageDetailsResponse(Response):
+    '''Wrapper for responses from :func:`OutboundMessageDetails.get`.
+
+    :param response: Response returned from :func:`requests.request`.
+    :type response: :class:`requests.Response`
+    :param sender: The API interface wrapper that generated the request.
+        Defaults to `None`.
+    :type sender: :class:`Interface`
+    '''
+    def __init__(self, response, sender=None):
+        super(OutboundMessageDetailsResponse, self
+              ).__init__(response, sender=sender)
+        self.tags = self._data or []
+
+
 class DeliveryStatsResponse(Response):
     '''Wrapper for responses from :func:`BounceActivate.activate`.
 
@@ -1303,6 +1336,31 @@ class BounceTags(GetInterface):
     endpoint = '/bounces/tags'
 
 
+class OutboundMessageDetails(GetInterface):
+    '''Bounce tags endpoint wrapper.'''
+    response_class = OutboundMessageDetailsResponse
+    endpoint = '/messages/outbound/{message_id}/details'
+
+    def get(self, message_id, api_key=None, secure=None, test=None,
+            **request_args):
+        '''Retrieves a single bounce's data.
+
+        :param message_id: A messages's ID.
+        :param api_key: Your Postmark API key. Defaults to `self.api_key`.
+        :param secure: Use the https scheme for Postmark API.
+            Defaults to `self.secure`.
+        :param test: Make a test request to the Postmark API.
+            Defaults to `self.test`.
+        :param \*\*request_args: Keyword args to pass to
+            :func:`requests.request`.
+        :rtype: :class:`BounceResponse`
+        '''
+        url = self._get_api_url(secure=secure, message_id=message_id)
+        headers = self._get_headers(api_key=api_key, test=test,
+                                    request_args=request_args)
+        return self._request(url, headers=headers, **request_args)
+
+
 class DeliveryStats(GetInterface):
     '''Delivery Stats endpoint wrapper.'''
     response_class = DeliveryStatsResponse
@@ -1439,5 +1497,6 @@ _default_bounces = Bounces()
 _default_bounce = Bounce()
 _default_bounce_dump = BounceDump()
 _default_bounce_tags = BounceTags()
+_default_outbound_message_details = OutboundMessageDetails()
 _default_delivery_stats = DeliveryStats()
 _default_bounce_activate = BounceActivate()
