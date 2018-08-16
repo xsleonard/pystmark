@@ -1338,13 +1338,13 @@ class BounceTags(GetInterface):
 
 
 class OutboundMessageDetails(GetInterface):
-    '''Bounce tags endpoint wrapper.'''
+    '''Outbound message details endpoint wrapper.'''
     response_class = OutboundMessageDetailsResponse
     endpoint = '/messages/outbound/{message_id}/details'
 
     def get(self, message_id, api_key=None, secure=None, test=None,
             **request_args):
-        '''Retrieves a single bounce's data.
+        '''Retrieves a single messages's data.
 
         :param message_id: A messages's ID.
         :param api_key: Your Postmark API key. Defaults to `self.api_key`.
@@ -1354,7 +1354,7 @@ class OutboundMessageDetails(GetInterface):
             Defaults to `self.test`.
         :param \*\*request_args: Keyword args to pass to
             :func:`requests.request`.
-        :rtype: :class:`BounceResponse`
+        :rtype: :class:`OutboundMessageDetailsResponse`
         '''
         url = self._get_api_url(secure=secure, message_id=message_id)
         headers = self._get_headers(api_key=api_key, test=test,
