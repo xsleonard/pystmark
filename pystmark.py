@@ -868,7 +868,8 @@ class OutboundMessageDetailsResponse(Response):
     def __init__(self, response, sender=None):
         super(OutboundMessageDetailsResponse, self
               ).__init__(response, sender=sender)
-        self.tags = self._data or []
+        self.raise_for_status()
+        self.message_details = self._data or {}
 
 
 class DeliveryStatsResponse(Response):
