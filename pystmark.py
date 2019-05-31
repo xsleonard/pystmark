@@ -276,6 +276,7 @@ class Message(object):
         'subject': 'Subject',
         'tag': 'Tag',
         'template_id': 'TemplateId',
+        'template_alias': 'TemplateAlias',
         'template_model': 'TemplateModel',
         'html': 'HtmlBody',
         'text': 'TextBody',
@@ -297,9 +298,9 @@ class Message(object):
     _default_content_type = 'application/octet-stream'
 
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
-                 template_id=None, template_model=None, tag=None, html=None,
-                 text=None, reply_to=None, headers=None, attachments=None,
-                 verify=False, track_opens=None):
+                 template_id=None, template_alias=None, template_model=None,
+                 tag=None, html=None, text=None, reply_to=None, headers=None,
+                 attachments=None, verify=False, track_opens=None):
         self.sender = sender
         self.to = to
         self.cc = cc
@@ -307,6 +308,7 @@ class Message(object):
         self.subject = subject
         self.tag = tag
         self.template_id = template_id
+        self.template_alias = template_alias
         self.template_model = template_model
         self.html = html
         self.text = text
