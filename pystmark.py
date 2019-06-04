@@ -363,7 +363,6 @@ class Message(object):
         """Create a :class:`Message` by merging `other` with `self`.
         Values from `other` will be copied to `self` if the value was not
         set on `self` and is set on `other`.
-
         :param other: The :class:`Message` to copy defaults from.
         :type other: :class:`Message`
         :param kwargs: Additional keyword arguments to construct
