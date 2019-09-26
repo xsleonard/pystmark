@@ -101,6 +101,7 @@ setup(name='pystmark',
       description=('A Python library for the Postmark API '
                    '(http://developer.postmarkapp.com/).'),
       long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       author='Steve Leonard',
       author_email='sleonard76@gmail.com',
       url='https://github.com/xsleonard/pystmark',
