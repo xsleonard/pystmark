@@ -139,7 +139,7 @@ def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
 
 def get_outbound_message_details(message_id, api_key=None, secure=None,
                                  test=None, **request_args):
-    '''Activate a deactivated bounce.
+    '''Get outbound message details.
 
     :param message_id: The messages's id.
     :param api_key: Your Postmark API key. Required, if `test` is not `True`.
@@ -148,7 +148,7 @@ def get_outbound_message_details(message_id, api_key=None, secure=None,
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`BounceActivateResponse`
+    :rtype: :class:`OutboundMessageDetailsResponse`
     '''
     return _default_outbound_message_details.get(message_id, api_key=api_key,
                                                  secure=secure, test=test,
