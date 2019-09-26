@@ -29,6 +29,20 @@ message = pystmark.Message(sender=SENDER, to='you@example.com', subject='Hi',
                            text='A message', tag='greeting')
 pystmark.send(message, api_key=API_KEY)
 
+# Send a template message
+ t_model = {'product_name': "Awesome Product",
+            'name': "Customer Name",
+            'action_url': "http://www.example.com/confirmation/aj3s5dopf98sdf",
+            'sender_name': "Product Team",
+            'product_address_line1': "Dover",
+            'product_address_line2': "DE 19012"}
+
+ message = pystmark.Message(sender=SENDER, to='you@example.com',
+                            template_id=11111,
+                            template_model=t_model,
+                            tag='welcome')
+
+ pystmark.send_with_template(message, api_key=API_KEY)
 
 # Send multiple messages (via Postmark's batch send API)
 recipients = ['you{0}@example.com'.format(i) for i in xrange(20)]

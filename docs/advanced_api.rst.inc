@@ -14,6 +14,9 @@ Sending Email
 .. autoclass:: pystmark.BatchSender
     :inherited-members:
 
+.. autoclass:: pystmark.TemplateSender
+    :inherited-members:
+
 .. _advanced_api_bounce_handling:
 
 Bounce Handling
@@ -35,4 +38,12 @@ Bounce Handling
     :inherited-members:
 
 .. autoclass:: pystmark.DeliveryStats
+    :inherited-members:
+
+.. _advanced_api_bounce_message_details:
+
+Message Details
+---------------
+
+.. autoclass:: pystmark.OutboundMessageDetails
     :inherited-members:
