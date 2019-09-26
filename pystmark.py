@@ -146,7 +146,7 @@ def get_outbound_message_details(message_id, api_key=None, secure=None,
     :param secure: Use the https scheme for the Postmark API.
         Defaults to `True`
     :param test: Use the Postmark Test API. Defaults to `False`.
-    :param \*\*request_args: Keyword arguments to pass to
+    :param request_args: Keyword arguments to pass to
         :func:`requests.request`.
     :rtype: :class:`BounceActivateResponse`
     '''
@@ -1358,7 +1358,7 @@ class OutboundMessageDetails(GetInterface):
             Defaults to `self.secure`.
         :param test: Make a test request to the Postmark API.
             Defaults to `self.test`.
-        :param \*\*request_args: Keyword args to pass to
+        :param request_args: Keyword args to pass to
             :func:`requests.request`.
         :rtype: :class:`OutboundMessageDetailsResponse`
         '''
