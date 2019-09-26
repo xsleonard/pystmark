@@ -921,6 +921,91 @@ class BounceTest(TestCase):
         self.assertIs(r.bounce, None)
 
 
+class OutboundMessageDetailsTest(TestCase):
+
+    message_id = "00000000-0000-0000-0000-000000000000"
+    response = {
+          "TextBody": "Thank you for your order...",
+          "HtmlBody": "<p>Thank you for your order...</p>",
+          "Body": "SMTP dump data",
+          "Tag": "product-orders",
+          "MessageID": "07311c54-0687-4ab9-b034-b54b5bad88ba",
+          "To": [
+            {
+              "Email": "john.doe@yahoo.com",
+              "Name": None
+            }
+          ],
+          "Cc": [],
+          "Bcc": [],
+          "Recipients": [
+            "john.doe@yahoo.com"
+          ],
+          "ReceivedAt": "2014-02-14T11:12:54.8054242-05:00",
+          "From": "\"Joe\" <joe@domain.com>",
+          "Subject": "Parts Order #5454",
+          "Attachments": [
+              "myimage.png",
+              "mypaper.doc"
+          ],
+          "Metadata": {
+            "color": "blue",
+            "client-id": "12345"
+          },
+          "Status": "Sent",
+          "TrackOpens": True,
+          "TrackLinks": "HtmlOnly",
+          "MessageEvents": [
+            {
+              "Recipient": "john.doe@yahoo.com",
+              "Type": "Delivered",
+              "ReceivedAt": "2014-02-14T11:13:10.8054242-05:00",
+              "Details": {
+                "DeliveryMessage":
+                    "smtp;250 2.0.0 OK l10si21599969igu.63 - gsmtp",
+                "DestinationServer":
+                    "yahoo-smtp-in.l.yahoo.com (433.899.888.26)",
+                "DestinationIP": "173.194.74.256"
+              }
+            },
+            {
+              "Recipient": "john.doe@yahoo.com",
+              "Type": "Opened",
+              "ReceivedAt": "2014-02-14T11:20:10.8054242-05:00",
+              "Details": {
+                "Summary": "Email opened with Mozilla/5.0"
+              }
+            }
+          ]
+    }
+    schema = {
+        "TextBody": unicode,
+        "HtmlBody": unicode,
+        "Body": unicode,
+        "Tag": unicode,
+        "MessageID": unicode,
+        "To": list,
+        "Cc": list,
+        "Bcc": list,
+        "Recipients": list,
+        "ReceivedAt": unicode,
+        "From": unicode,
+        "Subject": unicode,
+        "Attachments": list,
+        "Metadata": dict,
+        "Status": unicode,
+        "TrackOpens": bool,
+        "TrackLinks": unicode,
+        "MessageEvents": list
+    }
+
+    @patch.object(requests.Session, 'request')
+    def test_simple_api(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        r = pystmark.get_outbound_message_details(self.message_id, test=True)
+        self.assertValidJSONResponse(r, self.schema)
+
+
 class BounceDumpTest(TestCase):
 
     bounce_id = 777
