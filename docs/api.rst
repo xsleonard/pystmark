@@ -30,6 +30,8 @@ Response Objects
 
 .. autoclass:: pystmark.DeliveryStatsResponse
 
+.. autoclass:: pystmark.OutboundMessageDetailsResponse
+
 
 .. _response_data_wrappers:
 

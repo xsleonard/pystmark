@@ -45,7 +45,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pystmark'
-copyright = u'2012, Pystmark Authors'
+copyright = u'2012-2019, Pystmark Authors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
