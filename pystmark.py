@@ -137,6 +137,30 @@ def send_batch(messages, api_key=None, secure=None, test=None, **request_args):
                                            **request_args)
 
 
+def send_batch_with_templates(messages,
+                              api_key=None,
+                              secure=None,
+                              test=None,
+                              **request_args):
+    """Send a batch of messages with templates.
+
+    :param messages: Messages to send.
+    :type message: A list of `dict` or :class:`Message`
+    :param api_key: Your Postmark API key. Required, if `test` is not `True`.
+    :param secure: Use the https scheme for the Postmark API.
+        Defaults to `True`
+    :param test: Use the Postmark Test API. Defaults to `False`.
+    :param request_args: Keyword arguments to pass to
+        :func:`requests.request`.
+    :rtype: :class:`SendResponse`
+    """
+    return _default_pyst_batch_template_sender.send(messages=messages,
+                                                    api_key=api_key,
+                                                    secure=secure,
+                                                    test=test,
+                                                    **request_args)
+
+
 def get_outbound_message_details(message_id, api_key=None, secure=None,
                                  test=None, **request_args):
     '''Get outbound message details.
@@ -790,6 +814,24 @@ class BatchSendResponse(Response):
         self.messages = [MessageConfirmation(msg) for msg in data]
 
 
+class BatchTemplateSendResponse(Response):
+    """Wrapper around :func:`Sender.send` and :func:`BatchTemplateSender.send`
+
+    :param response: Response returned from :func:`requests.request`.
+    :type response: :class:`requests.Response`
+    :param sender: The API interface wrapper that generated the request.
+        Defaults to `None`.
+    :type sender: :class:`Interface`
+    """
+    _attrs = ['messages', 'raise_for_status']
+
+    def __init__(self, response, sender=None):
+        super(BatchTemplateSendResponse, self).__init__(
+                response, sender=sender)
+        data = self._data or []
+        self.messages = [MessageConfirmation(msg) for msg in data]
+
+
 class BouncesResponse(Response):
     """Wrapper for responses from :func:`Bounces.get`.
 
@@ -1181,6 +1223,65 @@ class BatchSender(Sender):
         return json.dumps(message, ensure_ascii=True)
 
 
+class BatchTemplateSender(Sender):
+    """Sends a batch of messages via the Postmark API with templates.
+
+    All of the arguments used in constructing this object are
+    used as defaults in the final call to :meth:`Sender.send`.
+    You can override any of them at that time.
+
+    :param message: Default message data, such as sender and reply_to.
+    :type message: `dict` or :class:`Message`
+    :param api_key: Your Postmark API key.
+    :param secure: Use the https scheme for Postmark API.
+        Defaults to `True`
+    :param test: Make a test request to the Postmark API.
+        Defaults to `False`.
+    """
+
+    endpoint = '/email/batchWithTemplates'
+    response_class = BatchSendResponse
+
+    def send(self, messages=None, api_key=None, secure=None, test=None,
+             **request_args):
+        """Send batch templates request to Postmark API.
+        Returns result of :func:`requests.post`.
+
+        :param messages: Batch messages with templates to send.
+        :type messages: A list of :class:`Message`
+        :param api_key: Your Postmark API key. Defaults to `self.api_key`.
+        :param test: Make a test request to the Postmark API.
+            Defaults to `self.test`.
+        :param secure: Use the https Postmark API. Defaults to `self.secure`.
+        :param request_args: Passed to :func:`requests.request`
+        :rtype: :class:`BatchSendResponse`
+        """
+        return super(BatchTemplateSender, self).send(
+                message=messages,
+                test=test,
+                api_key=api_key,
+                secure=secure,
+                **request_args)
+
+    def _get_request_content(self, message=None):
+        """Updates all messages in message with default message
+        parameters.
+
+        :param message: A collection of Postmark message data
+        :type message: a collection of message `dict`s
+        :rtype: JSON encoded `str`
+        """
+        if not message:
+            raise MessageError('No messages to send.')
+        if len(message) > MAX_BATCH_MESSAGES:
+            err = 'Maximum {0} messages allowed in batch'
+            raise MessageError(err.format(MAX_BATCH_MESSAGES))
+        message = [self._cast_message(message=msg) for msg in message]
+        message = [msg.data() for msg in message]
+        message = {"Messages": message}
+        return json.dumps(message, ensure_ascii=True)
+
+
 """ Bounce API """
 
 
@@ -1500,6 +1601,7 @@ class InternalServerError(ResponseError):
 _default_pyst_sender = Sender()
 _default_pyst_template_sender = TemplateSender()
 _default_pyst_batch_sender = BatchSender()
+_default_pyst_batch_template_sender = BatchTemplateSender()
 _default_bounces = Bounces()
 _default_bounce = Bounce()
 _default_bounce_dump = BounceDump()

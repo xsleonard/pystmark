@@ -17,6 +17,9 @@ Sending Email
 .. autoclass:: pystmark.TemplateSender
     :inherited-members:
 
+.. autoclass:: pystmark.BatchTemplateSender
+    :inherited-members:
+
 .. _advanced_api_bounce_handling:
 
 Bounce Handling
