@@ -10,8 +10,8 @@ from mock import patch, Mock, MagicMock
 from unittest import TestCase
 from voluptuous import Schema, Optional, Invalid as InvalidSchema
 import pystmark
-from pystmark import (Sender, BatchSender, TemplateSender, Message,
-                      UnauthorizedError, UnprocessableEntityError,
+from pystmark import (Sender, BatchSender, TemplateSender, BatchTemplateSender,
+                      Message, UnauthorizedError, UnprocessableEntityError,
                       InternalServerError, MessageError,
                       MAX_RECIPIENTS_PER_MESSAGE, MAX_BATCH_MESSAGES,
                       POSTMARK_API_TEST_KEY, POSTMARK_API_URL,
@@ -759,6 +759,80 @@ class BatchSenderTest(BatchSenderTestBase):
     def test_simple_api(self, mock_request):
         mock_request.return_value = self.mock_response(self.json_response)
         r = pystmark.send_batch(self.messages, test=True)
+        self.assertValidJSONResponse(r, self.schema)
+
+
+class BatchTemplateSenderTestBase(SenderTestBase):
+
+    response = [SenderTestBase.response] * 10
+
+    schema = [SenderTestBase.schema]
+
+    _message_count = 20
+
+    def setUp(self):
+        super(BatchTemplateSenderTestBase, self).setUp()
+        self._messages = None
+
+    @property
+    def message_count(self):
+        return self._message_count
+
+    @message_count.setter
+    def message_count(self, v):
+        if v != self._message_count:
+            self._messages = None
+        self._message_count = v
+
+    @property
+    def messages(self):
+        if self._messages is not None:
+            return self._messages
+        msgs = [{}] * self.message_count
+        [msg.update(self.message) for msg in msgs]
+        for msg in msgs:
+            msg['To'] = '{0}@example.com'.format(_make_random_string(10))
+        print(msgs)
+        return msgs
+
+    @property
+    def sender(self):
+        return BatchTemplateSender(api_key=POSTMARK_API_TEST_KEY, test=True)
+
+    def send(self):
+        return self.sender.send(messages=self.messages)
+
+
+class BatchTemplateSenderTest(BatchTemplateSenderTestBase):
+
+    @patch.object(requests.Session, 'request')
+    def test_send_batch_templates(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        r = self.send()
+        self.assertValidJSONResponse(r, self.schema)
+
+    @patch.object(requests.Session, 'request')
+    def test_send_batch_templates_no_messages(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        msg = 'No messages to send'
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
+                                 messages=None)
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
+                                 messages=[])
+
+    @patch.object(requests.Session, 'request')
+    def test_send_batch_templates_too_many_messages(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        self.message_count = MAX_BATCH_MESSAGES + 1
+        msg = 'Maximum {0} messages allowed in batch'
+        msg = msg.format(MAX_BATCH_MESSAGES)
+        self.assertRaisesMessage(MessageError, msg, self.sender.send,
+                                 messages=self.messages)
+
+    @patch.object(requests.Session, 'request')
+    def test_simple_api(self, mock_request):
+        mock_request.return_value = self.mock_response(self.json_response)
+        r = pystmark.send_batch_with_templates(self.messages, test=True)
         self.assertValidJSONResponse(r, self.schema)
 
 
