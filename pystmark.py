@@ -324,7 +324,8 @@ class Message(object):
         'reply_to': 'ReplyTo',
         'headers': 'Headers',
         'attachments': 'Attachments',
-        'track_opens': 'TrackOpens'
+        'track_opens': 'TrackOpens',
+        'message_stream': 'MessageStream'
     }
 
     _banned_extensions = ['vbs', 'exe', 'bin', 'bat', 'chm', 'com', 'cpl',
@@ -341,7 +342,8 @@ class Message(object):
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
                  template_id=None, template_alias=None, template_model=None,
                  tag=None, html=None, text=None, reply_to=None, headers=None,
-                 attachments=None, verify=False, track_opens=None):
+                 attachments=None, verify=False, track_opens=None,
+                 message_stream=None):
         self.sender = sender
         self.to = to
         self.cc = cc
@@ -357,6 +359,7 @@ class Message(object):
         self.headers = headers
         self.attachments = attachments
         self.track_opens = track_opens
+        self.message_stream = message_stream
 
         if verify:
             self.verify()
