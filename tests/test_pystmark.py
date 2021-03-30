@@ -364,7 +364,8 @@ class MessageTest(SenderTestBase):
                    track_opens=True, headers=[dict(Name='Food', Value='7')],
                    attachments=[], sender='admin', tag='tag',
                    template_id='template_id', template_alias='template_alias',
-                   template_model='template_model')
+                   template_model='template_model',
+                   message_stream='message_stream')
         self.assertEqual(sorted(msg), sorted(Message._fields))
         self.assertNotRaises(TypeError, Message.load_message, msg)
         self.assertNotRaises(MessageError, Message.load_message, msg,
