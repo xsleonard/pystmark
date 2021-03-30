@@ -11,6 +11,8 @@ Sending Email
 -------------
 .. autofunction:: pystmark.send
 .. autofunction:: pystmark.send_batch
+.. autofunction:: pystmark.send_with_template
+.. autofunction:: pystmark.send_batch_with_templates
 
 .. _simple_api_bounce_handling:
 
