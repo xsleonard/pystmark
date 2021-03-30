@@ -58,12 +58,12 @@ to :func:`send_with_template`. The template_id can be found with template meta d
                'product_address_line1': "Dover",
                'product_address_line2': "DE 19012"}
 
-    message = pystmark.Message(sender=PM_SENDER, to='you@example.com',
+    message = pystmark.Message(sender=SENDER, to='you@example.com',
                            template_id=11111,
                            template_model=t_model,
                            tag='welcome')
 
-    pystmark.send_with_template(message, api_key=PM_API_KEY)
+    pystmark.send_with_template(message, api_key=API_KEY)
 
 
 .. _batched_messages:
@@ -88,6 +88,44 @@ addresses. See :ref:`Multiple Recipients <multiple_recipients>`.
                         tag='greeting') for to in recipients]
 
     response = send_batch(messages, api_key=API_KEY)
+
+
+.. _batched_messages_with_templates:
+
+Sending batched messages with templates
+---------------------------------------
+
+Send multiple messages in a single http request to Postmark's template batch send API.
+There is a hard limit of 500 messages.
+
+To send multiple messages with templates, create a list of :class:`Message` objects, and pass it
+to :func:`send_batch_with_templates`. Provide a template_id or template_alias.
+Message stream is optional and defaults to `outbound` transactional stream.
+
+.. code-block:: python
+
+    from pystmark import Message, send_batch_with_templates
+
+
+    messages = [
+        Message(
+            sender=SENDER,
+            to="receiver1@example.com",
+            template_id=12345,
+            template_model={"content": "buzz"},
+            message_stream='broadcasts'
+        ),
+        Message(
+            sender=SENDER,
+            to="receiver1@example.com",
+            template_alias="welcome-notification",
+            template_model={"fizz": "buzz"},
+            message_stream='broadcasts'
+        )
+    ]
+
+    send_batch_with_templates(messages, api_key=API_KEY)
+
 
 .. _multiple_recipients:
 
