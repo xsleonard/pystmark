@@ -54,7 +54,12 @@ response = pystmark.send_with_template(message, api_key=API_KEY)
 recipients = ['you{0}@example.com'.format(i) for i in xrange(20)]
 messages = [
     pystmark.Message(
-        sender=SENDER, to=to, subject='Hi', text='A message', tag='greeting'
+        sender=SENDER,
+        to=to,
+        subject='Hi',
+        text='A message',
+        tag='greeting',
+        message_stream='broadcasts',
     )
     for to in recipients
 ]
@@ -65,12 +70,17 @@ response = pystmark.send_batch(messages, api_key=API_KEY)
 recipients = ['you{0}@example.com'.format(i) for i in xrange(20)]
 messages = [
     pystmark.Message(
-        sender=SENDER, to=to, template_id=11111, template_model=t_model, tag='greeting'
+        sender=SENDER,
+        to=to,
+        template_id=11111,
+        template_model=t_model,
+        tag='greeting',
+        message_stream='broadcasts',
     )
     for to in recipients
 ]
 
-response = pystmark.send_batch_with_template(messages, api_key=API_KEY)
+response = pystmark.send_batch_with_templates(messages, api_key=API_KEY)
 
 # Check API response error
 try:
