@@ -15,7 +15,10 @@
         Wrapper class for Message attachments and headers?
 """
 
-from collections import Mapping
+try:
+    from collections.abc import Mapping
+except ImportError:
+    from collections import Mapping
 from base64 import b64encode
 import requests
 import mimetypes
