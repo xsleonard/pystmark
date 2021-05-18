@@ -25,8 +25,7 @@ from pystmark import (
     send_with_template,
     send_batch,
     send_batch_with_templates,
-    UnauthorizedError,
-    PystmarkError
+    UnauthorizedError
 )
 
 API_KEY = 'my_api_key'
