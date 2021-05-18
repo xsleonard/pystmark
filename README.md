@@ -25,8 +25,7 @@ from pystmark import (
     send_with_template,
     send_batch,
     send_batch_with_templates,
-    UnauthorizedError,
-    PystmarkError
+    UnauthorizedError
 )
 
 API_KEY = 'my_api_key'
@@ -97,7 +96,7 @@ except UnauthorizedError:
 # Check for errors in each message when sending batch emails:
 for m in response.messages:
     if m.error_code > 0:
-        raise PystmarkError(m.message)
+        print m.message
 ```
 
 ## Contribution
