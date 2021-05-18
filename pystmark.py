@@ -152,7 +152,7 @@ def send_batch_with_templates(messages,
     :param test: Use the Postmark Test API. Defaults to `False`.
     :param request_args: Keyword arguments to pass to
         :func:`requests.request`.
-    :rtype: :class:`SendResponse`
+    :rtype: :class:`BatchSendResponse`
     """
     return _default_pyst_batch_template_sender.send(messages=messages,
                                                     api_key=api_key,
