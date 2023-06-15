@@ -111,7 +111,7 @@ setup(name='pystmark',
       cmdclass=dict(test=Test),
       license='MIT',
       keywords='postmark postmarkapp email',
-      classifiers=(
+      classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'Programming Language :: Python',
@@ -126,4 +126,4 @@ setup(name='pystmark',
           'Topic :: Internet :: WWW/HTTP',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Communications :: Email',
-      ))
+      ])
